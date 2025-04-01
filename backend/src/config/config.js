@@ -1,6 +1,6 @@
 const _config = {
     PORT:process.env.PORT,
-    MONO_URI:process.env.MONO_URI
+    MONGO_URI:process.env.MONGO_URI
 }
 
 const config = Object.freeze(_config);
