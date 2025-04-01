@@ -28,9 +28,13 @@ const userSchema = new monggoose.Schema({
         maxlength:['Maximum Length Is 6',20],
         required:true 
      },
+     image:{
+        type:String,
+        default:"https://www.vecteezy.com/vector-art/26619142-default-avatar-profile-icon-vector-of-social-media-user-photo-image"    
+     },
      refershToken:{
         type:String
-     }
+     },
 })
 
 userSchema.methods.accessToken = function(){
