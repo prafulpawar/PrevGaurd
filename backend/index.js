@@ -1,5 +1,5 @@
 const app = require('./src/app');
-
-app.listen(()=>{
-    console.log(`Server Is Running On ${PORT}`)
+const config = require('./src/config/config');
+app.listen(config.PORT,()=>{
+    console.log(`Server Is Running On ${config.PORT}`)
 })
