@@ -1,12 +1,14 @@
 const userModel = require("../models/user.model");
 const otpGenerator = require('otp-generator')
+const nodemailer = require('../services/nodeMailer');
+const redis = require('../utils/redis');
 
-function otpGenerator (){
+function getOtp (){
     const data = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
     return data
 }
 
-module.exports.userCreation = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         if (!username || !email || !password) {
@@ -28,28 +30,33 @@ module.exports.userCreation = async (req, res) => {
                 messae: "User Is Alredy Exists"
             })
         }
-          // generation of otp
-         // Now Send OTP 
 
+        // generation of otp
+        const otp = getOtp();
+        const otpSaved = await redis.set(email,otp)
+        // Now Send OTP 
+        await nodemailer.sendMail(email,'EmailVerification',otp);
         // hashpassword
-        const EncPassowrd = await userModel.hashPassword(password);
 
-        // not exists then lets create the user
-        const user = await userModel.create({
-            username,
+        return res.status(200).json({
             email,
-            password:EncPassowrd
-        });
-
-        // now accessToken 
-        const accessToken  = user.accessToken();
-        const refershToken = user.refershToken();
-        
-
+            otp,
+            message:"OTP Send SuccessFully"
+        })
     }
     catch (error) {
         return res.status(401).json({
             message: "Error In Creation "
         })
     }
+}
+
+module.exports.verfifyOtp  = async(req,res)=>{
+        const {otp} = req.body;
+        if(!otp){
+            return res.status(401).json({
+                message: "Error In GGetting Otp"
+            })
+        }
+        
 }
