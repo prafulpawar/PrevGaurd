@@ -23,6 +23,9 @@ module.exports.userCreation = async (req, res) => {
             })
         }
 
+         // Now Send OTP 
+         
+
         // hashpassword
         const EncPassowrd = await userModel.hashPassword(password);
 
@@ -36,7 +39,7 @@ module.exports.userCreation = async (req, res) => {
         // now accessToken 
         const accessToken  = user.accessToken();
         const refershToken = user.refershToken();
-
+        
 
     }
     catch (error) {
