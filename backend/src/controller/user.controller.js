@@ -33,7 +33,9 @@ module.exports.registerUser = async (req, res) => {
 
         // generation of otp
         const otp = getOtp();
-        const otpSaved = await redis.set(email, otp, 'EX', 300)
+        
+        await redis.set(email, JSON.stringify({otp, username ,password}),'EX',300)
+
         // Now Send OTP 
         await nodemailer.sendMail(email,'EmailVerification',otp);
         // hashpassword
@@ -58,6 +60,22 @@ module.exports.verfifyOtp  = async(req,res)=>{
                 message: "Error In GGetting Otp"
             })
         }
-        // 
-        const getOtp = await redis.get(email,otp);
+        const redisData = await redis.get(email);
+        if (!redisData) {
+            return res.status(401).json({ message: "OTP has expired or not sent" });
+        }
+
+        const { otp: storedOtp, username, password } = JSON.parse(redisData);
+
+        if(otp !== storedOtp){
+              return res.status(200).json({
+                  message:"Your OTP Is Invalid"
+              })
+        }
+
+        // agar otp valid hai toh fir hum kya kar sakte hai?
+        // user ko register kar sakte hai?
+        
+
+
 }
