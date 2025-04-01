@@ -60,6 +60,4 @@ module.exports.verfifyOtp  = async(req,res)=>{
         }
         // 
         const getOtp = await redis.get(email,otp);
-        
-        
 }
