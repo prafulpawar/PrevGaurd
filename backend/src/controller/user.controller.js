@@ -33,7 +33,7 @@ module.exports.registerUser = async (req, res) => {
 
         // generation of otp
         const otp = getOtp();
-        const otpSaved = await redis.set(email,otp)
+        const otpSaved = await redis.set(email, otp, 'EX', 300)
         // Now Send OTP 
         await nodemailer.sendMail(email,'EmailVerification',otp);
         // hashpassword
@@ -58,5 +58,8 @@ module.exports.verfifyOtp  = async(req,res)=>{
                 message: "Error In GGetting Otp"
             })
         }
+        // 
+        const getOtp = await redis.get(email,otp);
+        
         
 }
