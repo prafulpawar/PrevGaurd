@@ -1,4 +1,10 @@
 const userModel = require("../models/user.model");
+const otpGenerator = require('otp-generator')
+
+function otpGenerator (){
+    const data = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+    return data
+}
 
 module.exports.userCreation = async (req, res) => {
     try {
@@ -22,9 +28,8 @@ module.exports.userCreation = async (req, res) => {
                 messae: "User Is Alredy Exists"
             })
         }
-
+          // generation of otp
          // Now Send OTP 
-         
 
         // hashpassword
         const EncPassowrd = await userModel.hashPassword(password);
