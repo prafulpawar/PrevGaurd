@@ -37,9 +37,6 @@ module.exports.userCreation = async (req, res) => {
         const accessToken  = user.accessToken();
         const refershToken = user.refershToken();
 
-        
-
-
 
     }
     catch (error) {
