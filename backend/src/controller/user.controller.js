@@ -2,7 +2,8 @@ const userModel = require("../models/user.model");
 const otpGenerator = require('otp-generator')
 const redis = require('../utils/redis');
 const bcrypt = require('bcrypt')
-
+const createChannel = require('../services/emailQueue');
+const otpcreateChannel = require('../services/otpQueue');
 module.exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -34,12 +35,12 @@ module.exports.registerUser = async (req, res) => {
          });
 
     } catch (error) {
-      
+        console.log(error)
         return res.status(500).json({ message: "Error in user registration", error: error.message });
     }
 }
 
-module.exports.verfifyOtp  = async(req,res)=>{
+module.exports.verfifyOtp  = async(req,res,next)=>{
     try {
         const { email, otp } = req.body;
         if (!otp || !email) {
@@ -47,10 +48,11 @@ module.exports.verfifyOtp  = async(req,res)=>{
         }
 
         // ✅ Queue OTP verification task instead of direct checking
-        const channel = await createChannel();
+        const channel = await otpcreateChannel();
         channel.sendToQueue('otpVerificationQueue', Buffer.from(JSON.stringify({ email, otp })));
 
         return res.status(200).json({ message: "OTP verification in progress" });
+        
 
     } catch (error) {
         return res.status(500).json({ message: "Error in OTP verification", error: error.message });

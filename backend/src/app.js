@@ -7,6 +7,7 @@ connectDB()
 const router = require('./routes/user.routes');
 
 const app = express();
+const rabbitMQ = require('./services/rabbitMQ')
 
 
 
