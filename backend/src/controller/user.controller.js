@@ -27,7 +27,10 @@ module.exports.registerUser = async (req, res) => {
         const channel = await createChannel();
         channel.sendToQueue('emailQueue', Buffer.from(JSON.stringify({ email, otp })));
 
-        return res.status(200).json({ message: "OTP sent successfully" });
+        return res.status(200).json({ 
+            email,
+            message: "OTP sent successfully"
+         });
 
     } catch (error) {
         return res.status(500).json({ message: "Error in user registration", error: error.message });
