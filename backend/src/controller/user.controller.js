@@ -4,6 +4,7 @@ const redis = require('../utils/redis');
 const bcrypt = require('bcrypt')
 const createChannel = require('../services/emailQueue');
 const otpcreateChannel = require('../services/otpQueue');
+
 module.exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;

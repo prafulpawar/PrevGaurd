@@ -3,7 +3,7 @@ const redis = require('../utils/redis');
 const userModel = require('../models/user.model');
 
 async function consumeOtpQueue() {
-    console.log("✅ OTP Worker is Running"); // Added log 
+    
     const connection = await amqp.connect('amqp://localhost');
     const channel = await connection.createChannel();
     await channel.assertQueue('otpVerificationQueue');

@@ -1,4 +1,5 @@
 const app = require('./src/app');
+const connectWebSocket = require('./src/ws');  // Import WebSocket function
 const configData = require('./src/config/config');
 
 app.use((req, res, next) => {
@@ -9,7 +10,10 @@ app.use((req, res, next) => {
 });
 
 
-app.listen(configData.configData.PORT,(req,res)=>{
-    console.log(`Server Is Running On ${configData.configData.PORT}`)
-   
-})
+
+app.listen(configData.configData.PORT, () => {
+    console.log(`🚀 Server Is Running On ${configData.configData.PORT}`);
+});
+
+// Start WebSocket Connection Automatically
+connectWebSocket();

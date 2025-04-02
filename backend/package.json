@@ -17,6 +17,7 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.0",
-    "otp-generator": "^4.0.1"
+    "otp-generator": "^4.0.1",
+    "ws": "^8.18.1"
   }
 }
