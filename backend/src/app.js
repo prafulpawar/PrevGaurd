@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
     res.send('Server Is Running');
 });
 
+
+
 app.use('/user',router);
 // ✅ Start email worker in background
 require('./worker/emailWorker');

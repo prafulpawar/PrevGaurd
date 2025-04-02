@@ -31,6 +31,7 @@ async function consumeOtpQueue() {
 
             await redis.del(email);
             console.log(`✅ User registered successfully: ${email}`);
+            sendOtpStatus(requestId, "success");
 
             channel.ack(msg); // Confirm task completion
         } catch (error) {

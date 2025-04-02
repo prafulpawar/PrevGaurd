@@ -9,11 +9,10 @@ app.use((req, res, next) => {
     next();
 });
 
-
+connectWebSocket();
 
 app.listen(configData.configData.PORT, () => {
     console.log(`🚀 Server Is Running On ${configData.configData.PORT}`);
 });
 
 // Start WebSocket Connection Automatically
-connectWebSocket();

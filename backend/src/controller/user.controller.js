@@ -4,6 +4,7 @@ const redis = require('../utils/redis');
 const bcrypt = require('bcrypt')
 const createChannel = require('../services/emailQueue');
 const otpcreateChannel = require('../services/otpQueue');
+const crypto = require("crypto");
 
 module.exports.registerUser = async (req, res) => {
     try {
@@ -46,19 +47,20 @@ module.exports.verfifyOtp  = async(req,res,next)=>{
             return res.status(400).json({ message: "OTP and email are required" });
         }
 
-        // ✅ Queue OTP verification task instead of direct checking
+        const requestId = crypto.randomUUID(); // Generate a unique request ID
+
+        // ✅ Queue OTP verification task
         const channel = await otpcreateChannel();
-        channel.sendToQueue('otpVerificationQueue', Buffer.from(JSON.stringify({ email, otp })));
+        channel.sendToQueue(
+            "otpVerificationQueue",
+            Buffer.from(JSON.stringify({ email, otp, requestId }))
+        );
 
-        return res.status(200).json({ message: "OTP verification in progress" });
-        
-
+        return res.status(200).json({ message: "OTP verification in progress", requestId });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json({ message: "Error in OTP verification", error: error.message });
     }
-    
-
 }
 
 
