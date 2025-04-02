@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
    password: {
        type: String,
        minlength: [6, "Minimum Length Is 6"], // ✅ Corrected
-       maxlength: [20, "Maximum Length Is 20"], // ✅ Corrected
        required: true
    },
 
