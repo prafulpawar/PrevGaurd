@@ -41,8 +41,6 @@ module.exports.registerUser = async (req, res) => {
         // hashpassword
 
         return res.status(200).json({
-            email,
-            otp,
             message:"OTP Send SuccessFully"
         })
     }
@@ -54,7 +52,7 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.verfifyOtp  = async(req,res)=>{
-        const {email,otp} = req.body;
+        const {otp} = req.body;
         if(!otp){
             return res.status(401).json({
                 message: "Error In GGetting Otp"
