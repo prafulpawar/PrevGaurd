@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
 const {registerUser,verfifyOtp}  = require('../controller/user.controller');
-router.post('/register',registerUser);
-router.post('/verifyOtp',verfifyOtp);
+const {rateLimiter} = require('../middlewares/rateLimiter')
+router.post('/register',rateLimiter,registerUser);
+router.post('/verifyOtp',rateLimiter,verfifyOtp);
 
 module.exports = router;
