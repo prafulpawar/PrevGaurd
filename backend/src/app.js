@@ -7,10 +7,21 @@ connectDB()
 const router = require('./routes/user.routes');
 
 const app = express();
+
+
+
+
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
 // Default route
 app.get('/', (req, res) => {
     res.send('Server Is Running');
 });
 
 app.use('/user',router);
+
+
+
+
 module.exports = app;
