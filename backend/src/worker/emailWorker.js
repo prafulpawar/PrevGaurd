@@ -2,6 +2,7 @@ const amqp = require('amqplib');
 const nodemailer = require('../services/nodeMailer');
 
 async function consumeEmailQueue() {
+    console.log('hello from consume')
     const connection = await amqp.connect('amqp://localhost');
     const channel = await connection.createChannel();
     await channel.assertQueue('emailQueue');
