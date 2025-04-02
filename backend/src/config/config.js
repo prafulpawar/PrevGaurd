@@ -16,11 +16,11 @@ const _nodemailer ={
 }
 
 
-const config = Object.freeze(_config);
+const configData = Object.freeze(_config);
 const redisConfig = Object.freeze(redis_Config)
 const nodemailers = Object.freeze(_nodemailer);
 module.exports = {
-    config,
+    configData,
     redisConfig,
     nodemailers
 } 
