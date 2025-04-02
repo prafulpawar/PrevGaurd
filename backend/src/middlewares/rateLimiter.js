@@ -1,7 +1,7 @@
 const redis = require('../utils/redis');
 
-const RATE_LIMIT = 5; // Max requests per user
-const WINDOW_SIZE_IN_SECONDS = 60; // Time window
+const RATE_LIMIT = 5; 
+const WINDOW_SIZE_IN_SECONDS = 60; 
 
 const rateLimiter = async (req, res, next) => {
     try {

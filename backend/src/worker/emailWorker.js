@@ -12,10 +12,10 @@ async function consumeEmailQueue() {
 
         try {
             await nodemailer.sendMail(email, 'Email Verification', otp);
-            console.log(`✅ Email sent to ${email}`);
+            console.log(` Email sent to ${email}`);
             channel.ack(msg); // Acknowledge message after processing
         } catch (error) {
-            console.error(`❌ Email sending failed for ${email}:`, error);
+            console.error(` Email sending failed for ${email}:`, error);
         }
     });
 }

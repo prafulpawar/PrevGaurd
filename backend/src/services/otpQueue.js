@@ -8,7 +8,7 @@ async function otpcreateChannel() {
     channel = await connection.createChannel();
     await channel.assertQueue('otpVerificationQueue');
 
-    console.log('✅ RabbitMQ Channel Created OTP');
+    console.log(' RabbitMQ Channel Created OTP');
     return channel;
 }
 

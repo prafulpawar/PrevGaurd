@@ -7,7 +7,6 @@ connectDB()
 const router = require('./routes/user.routes');
 
 const app = express();
-const createChannel = require('./services/emailQueue'); 
 
 
 
@@ -23,7 +22,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/user',router);
-// ✅ Start email worker in background
+//  Start email worker in background
 require('./worker/emailWorker');
 require('./worker/otpWorker')
 

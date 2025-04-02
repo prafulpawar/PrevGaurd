@@ -25,7 +25,7 @@ module.exports.registerUser = async (req, res) => {
         const hashPassword = await bcrypt.hash(password, 10);
         await redis.set(email, JSON.stringify({ otp, username, hashPassword }), 'EX', 300);
 
-        // ✅ Use global channel
+        //  global channel
         const channel = await createChannel();
         channel.sendToQueue('emailQueue', Buffer.from(JSON.stringify({ email, otp })));
 
@@ -47,9 +47,9 @@ module.exports.verfifyOtp  = async(req,res,next)=>{
             return res.status(400).json({ message: "OTP and email are required" });
         }
 
-        const requestId = crypto.randomUUID(); // Generate a unique request ID
+        const requestId = crypto.randomUUID();
 
-        // ✅ Queue OTP verification task
+        
         const channel = await otpcreateChannel();
         channel.sendToQueue(
             "otpVerificationQueue",
