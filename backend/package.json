@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js", 
+    "dev": "nodemon server.js", 
+    "worker:email": "node runEmailWorker.js", 
+    "worker:otp": "node runOtpWorker.js", 
+    "start:all": "npm start & npm run worker:email & npm run worker:otp", 
+    "dev:all": "nodemon server.js & nodemon runEmailWorker.js & nodemon runOtpWorker.js", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

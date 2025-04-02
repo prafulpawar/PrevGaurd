@@ -19,11 +19,20 @@ app.get('/', (req, res) => {
     res.send('Server Is Running');
 });
 
+// Optional: Graceful shutdown handling
+process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing HTTP server');
+    server.close(() => {
+        console.log('HTTP server closed');
+        // Add cleanup for DB connection if needed
+        process.exit(0);
+    });
+});
 
 
 app.use('/user',router);
-//  Start email worker in background
-require('./worker/emailWorker');
-require('./worker/otpWorker')
+// //  Start email worker in background
+// require('./worker/emailWorker');
+// require('./worker/otpWorker')
 
 module.exports = app;
