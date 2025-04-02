@@ -5,8 +5,6 @@ const connectDB = require('../src/utils/db');
 connectDB()
 const router = require('./routes/user.routes');
 
-
-app.use('/user',router);
-
 const app = express();
+app.use('/user',router);
 module.exports = app;

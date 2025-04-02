@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('../config/config');
+console.log(config.MONGO_URI)
 const connectDB = async(req,res)=>{
       try{
          
@@ -11,4 +12,4 @@ const connectDB = async(req,res)=>{
       }
 }
 
-module.exports = connectDB;
+module.exports = connectDB

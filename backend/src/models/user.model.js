@@ -1,41 +1,45 @@
-const monggoose = require('mongoose');
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config')
 const bcrypt = require('bcrypt')
-const userSchema = new monggoose.Schema({
-     username:{
-        type:String,
-        minlength:['Minimum Length Is 6',6],
-        maxlength:['Maximum Length Is 6',6],
-        required:true
-     },
 
-     role:{
-        type:String,
-        enum:['user','admin'],
-        default:'user',
-     },
+const userSchema = new mongoose.Schema({
+   username: {
+       type: String,
+       minlength: [6, "Minimum Length Is 6"], // ✅ Corrected
+       maxlength: [20, "Maximum Length Is 20"], // ✅ Corrected
+       required: true
+   },
 
-     email:{
-        type:String,
-        minlength:['Minimum Length Is 6',10],
-        maxlength:['Maximum Length Is 6',50],
-        required:true
-     },
-     password:{
-        type:String,
-        minlength:['Minimum Length Is 6',6],
-        maxlength:['Maximum Length Is 6',20],
-        required:true 
-     },
-     image:{
-        type:String,
-        default:"https://www.vecteezy.com/vector-art/26619142-default-avatar-profile-icon-vector-of-social-media-user-photo-image"    
-     },
-     refershToken:{
-        type:String
-     },
-})
+   role: {
+       type: String,
+       enum: ["user", "admin"],
+       default: "user"
+   },
+
+   email: {
+       type: String,
+       minlength: [10, "Minimum Length Is 10"], // ✅ Corrected
+       maxlength: [50, "Maximum Length Is 50"], // ✅ Corrected
+       required: true
+   },
+
+   password: {
+       type: String,
+       minlength: [6, "Minimum Length Is 6"], // ✅ Corrected
+       maxlength: [20, "Maximum Length Is 20"], // ✅ Corrected
+       required: true
+   },
+
+   image: {
+       type: String,
+       default: "https://www.vecteezy.com/vector-art/26619142-default-avatar-profile-icon-vector-of-social-media-user-photo-image"
+   },
+
+   refreshToken: {
+       type: String
+   }
+});
 
 userSchema.methods.accessToken = function(){
   return jwt.sign({_id:this.id,email:this.email,user:this.username},config.accessToken,{expiresIn:'20min'})
@@ -56,5 +60,5 @@ userSchema.methods.comparePassoword = async function(password){
 
 
 
-const userModel = monggoose.model('User',userSchema);
+const userModel = mongoose.model('User',userSchema);
 module.exports  = userModel; 
