@@ -1,12 +1,7 @@
 const userModel = require("../models/user.model");
 const otpGenerator = require('otp-generator')
-const nodemailer = require('../services/nodeMailer');
 const redis = require('../utils/redis');
-
-function getOtp (){
-    const data = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
-    return data
-}
+const bcrypt = require('bcrypt')
 
 module.exports.registerUser = async (req, res) => {
     try {
@@ -20,12 +15,13 @@ module.exports.registerUser = async (req, res) => {
         if (isExists) {
             return res.status(409).json({ message: "User already exists" });
         }
-
+              
         // Generate OTP
         const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
-
+       
         // Store OTP in Redis
-        await redis.set(email, JSON.stringify({ otp, username, password }), 'EX', 300);
+        const hashPassword = await bcrypt.hash(password)
+        await redis.set(email, JSON.stringify({ otp, username,  hashPassword }), 'EX', 300);
 
         // ✅ Queue the email task instead of sending it directly
         const channel = await createChannel();

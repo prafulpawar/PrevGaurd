@@ -17,16 +17,15 @@ async function consumeOtpQueue() {
                 return channel.ack(msg);
             }
 
-            const { otp: storedOtp, username, password } = JSON.parse(redisData);
+            const { otp: storedOtp, username,  hashPassword } = JSON.parse(redisData);
 
             if (otp !== storedOtp) {
                 console.log(`❌ Invalid OTP for ${email}`);
                 return channel.ack(msg);
             }
 
-            // ✅ OTP valid, register user
-            const hashedPassword = await userModel.hashPassword(password);
-            await userModel.create({ username, password: hashedPassword, email });
+            
+            await userModel.create({ username, password:  hashPassword, email });
 
             await redis.del(email);
             console.log(`✅ User registered successfully: ${email}`);
