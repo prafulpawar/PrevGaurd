@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 module.exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+       
         if (!username || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
@@ -18,9 +19,9 @@ module.exports.registerUser = async (req, res) => {
               
         // Generate OTP
         const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
-       
+        console.log(otp)
         // Store OTP in Redis
-        const hashPassword = await bcrypt.hash(password)
+        const hashPassword = await bcrypt.hash(password,10)
         await redis.set(email, JSON.stringify({ otp, username,  hashPassword }), 'EX', 300);
 
         // ✅ Queue the email task instead of sending it directly
@@ -33,7 +34,7 @@ module.exports.registerUser = async (req, res) => {
          });
 
     } catch (error) {
-        console.log(error)
+      
         return res.status(500).json({ message: "Error in user registration", error: error.message });
     }
 }
