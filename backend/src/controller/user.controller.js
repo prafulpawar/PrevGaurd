@@ -12,89 +12,49 @@ module.exports.registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
         if (!username || !email || !password) {
-            return res.status(401).json({
-                message: "All Fields Must Be Required"
-            })
+            return res.status(400).json({ message: "All fields are required" });
         }
-        // find if user exists 
-        const isExists = await userModel.findOne({
-            $or: [
-                { email },
-                { username }
-            ]
-        })
 
-        // if exists
+        // Check if user already exists
+        const isExists = await userModel.findOne({ $or: [{ email }, { username }] });
         if (isExists) {
-            return res.status(409).json({
-                messae: "User Is Alredy Exists"
-            })
+            return res.status(409).json({ message: "User already exists" });
         }
 
-        // generation of otp
-        const otp = getOtp();
-        
-        await redis.set(email, JSON.stringify({otp, username ,password}),'EX',30)
+        // Generate OTP
+        const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
 
-        // Now Send OTP 
-        await nodemailer.sendMail(email,'EmailVerification',otp);
-        // hashpassword
+        // Store OTP in Redis
+        await redis.set(email, JSON.stringify({ otp, username, password }), 'EX', 300);
 
-        return res.status(200).json({
-            message:"OTP Send SuccessFully"
-        })
-    }
-    catch (error) {
-        return res.status(401).json({
-            message: "Error In Creation "
-        })
+        // ✅ Queue the email task instead of sending it directly
+        const channel = await createChannel();
+        channel.sendToQueue('emailQueue', Buffer.from(JSON.stringify({ email, otp })));
+
+        return res.status(200).json({ message: "OTP sent successfully" });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error in user registration", error: error.message });
     }
 }
 
 module.exports.verfifyOtp  = async(req,res)=>{
-        const {otp} = req.body;
-        if(!otp){
-            return res.status(401).json({
-                message: "Error In GGetting Otp"
-            })
-        }
-        const redisData = await redis.get(email);
-        if (!redisData) {
-            return res.status(401).json({ message: "OTP has expired or not sent" });
+    try {
+        const { email, otp } = req.body;
+        if (!otp || !email) {
+            return res.status(400).json({ message: "OTP and email are required" });
         }
 
-        const { otp: storedOtp, username, password } = JSON.parse(redisData);
+        // ✅ Queue OTP verification task instead of direct checking
+        const channel = await createChannel();
+        channel.sendToQueue('otpVerificationQueue', Buffer.from(JSON.stringify({ email, otp })));
 
-        if(otp !== storedOtp){
-              return res.status(400).json({
-                  message:"Your OTP Is Invalid"
-              })
-        }
+        return res.status(200).json({ message: "OTP verification in progress" });
 
-        // agar otp valid hai toh fir hum kya kar sakte hai?
-        // user ko register kar sakte hai?
-        const hashedPassword = await userModel.hashPassword(password);
-
-        // now ab ek user ko register karna
-        const user = await userModel.create({
-              username,
-              password:hashedPassword,
-              email
-        })
-        await redis.del(email);
-
-        const accessToken      = user.accessToken();
-        const refreshToken     = user.refershToken();
-        const expiresInSeconds = 7 * 24 * 60 * 60;
-
-        await redis.set(`refershToken ${user.email}`, refreshToken, 'EX', expiresInSeconds); 
-         // redis.set('key', 'value', 'mode', 'time')
-
-        return res.status(200).json({
-            accessToken,
-            message:"User Is Registered"
-        })
-
+    } catch (error) {
+        return res.status(500).json({ message: "Error in OTP verification", error: error.message });
+    }
+    
 
 }
 
