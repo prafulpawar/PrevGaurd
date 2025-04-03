@@ -4,7 +4,7 @@ module.exports = {
      {
        name   : "api-server",
        script : "./server.js",
-       instances : "1", // या 'max'
+       instances : "3", // या 'max'
        exec_mode : "cluster",
        env: {
          "NODE_ENV": "production",
@@ -18,7 +18,7 @@ module.exports = {
      {
        name   : "runemail-worker",
        script : "./src/worker/runemailWorker.js",
-       instances : "1",
+       instances : "8",
        exec_mode : "fork",
        env: {
          "NODE_ENV": "production",
@@ -29,7 +29,7 @@ module.exports = {
      {
        name   : "runotp-worker",
        script : "./src/worker/runotpWorker.js",
-       instances : "1",
+       instances : "8",
        exec_mode : "fork",
        env: {
          "NODE_ENV": "production",

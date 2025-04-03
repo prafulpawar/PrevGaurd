@@ -18,4 +18,3 @@ appAPI.listen(process.env.PORT, () => {
 });
 
 
-// Start WebSocket Connection Automatically

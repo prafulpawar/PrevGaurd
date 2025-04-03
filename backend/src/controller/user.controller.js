@@ -67,8 +67,8 @@ module.exports.verfifyOtp = async (req, res, next) => {
         const requestId = crypto.randomUUID();
         logger.info(`Initiating OTP verification for ${email} with RequestID: ${requestId}`);
 
-        // OTP वेरिफिकेशन के लिए मैसेज क्यू में डालें
-        const channel = await otpcreateChannel(); // RabbitMQ चैनल प्राप्त करें
+        
+        const channel = await otpcreateChannel(); 
          if (channel) {
             channel.sendToQueue(
                 "otpVerificationQueue",
@@ -81,8 +81,8 @@ module.exports.verfifyOtp = async (req, res, next) => {
         }
 
 
-        // क्लाइंट को requestId लौटाएं ताकि वह स्टेटस पोल कर सके
-        return res.status(202).json({ // 202 Accepted - अनुरोध स्वीकार कर लिया गया है, प्रोसेसिंग जारी है
+      
+        return res.status(202).json({ 
              message: "OTP verification request received. Check status using the requestId.",
              requestId: requestId
         });
@@ -93,7 +93,7 @@ module.exports.verfifyOtp = async (req, res, next) => {
     }
 };
 
-// --- नया पोलिंग एंडपॉइंट कंट्रोलर ---
+
 module.exports.getOtpStatus = async (req, res) => {
     const { requestId } = req.query;
 
@@ -104,11 +104,11 @@ module.exports.getOtpStatus = async (req, res) => {
 
     try {
         logger.debug(`Polling status for RequestID: ${requestId}`);
-        // Redis से requestId का उपयोग करके स्टेटस प्राप्त करें
+     
         const statusData = await redis.get(`status:${requestId}`); // Key में prefix जोड़ें
 
         if (!statusData) {
-             // अगर Redis में स्टेटस नहीं मिला, मतलब या तो प्रोसेसिंग चल रही है या requestId गलत/एक्सपायर है
+            
             logger.debug(`No status found yet for RequestID: ${requestId}`);
             return res.status(202).json({ // 202 Accepted या 404 Not Found भी इस्तेमाल कर सकते हैं
                 status: "pending",
@@ -116,12 +116,11 @@ module.exports.getOtpStatus = async (req, res) => {
             });
         }
 
-        // स्टेटस मिल गया, इसे क्लाइंट को भेजें
+     
         logger.info(`Returning status for RequestID: ${requestId}: ${statusData}`);
         const status = JSON.parse(statusData);
 
-        // स्टेटस मिलने के बाद Redis से key हटा सकते हैं (वैकल्पिक, क्योंकि TTL है)
-        // await redis.del(`status:${requestId}`);
+       
 
         return res.status(200).json(status); // स्टेटस ऑब्जेक्ट लौटाएं (जैसे { status: "success" } या { status: "invalid" })
 
