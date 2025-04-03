@@ -1,64 +1,34 @@
-import React, { useState } from 'react';
+import useForm from "../hooks/useForm";
+import InputField from "../components/forms/InputField";
+import ImageUpload from "../components/forms/ImageUpload";
 
-
-function Register() {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    image: null, 
+const Register = () => {
+  const { formData, handleChange, resetForm } = useForm({
+    username: "",
+    email: "",
+    password: "",
+    image: null,
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-     setFormData({ username: "", email: "", password: "", image: null });
-  };
-
-  const handleChange = (e) => {
-    if (e.target.name === 'image') {
-      setFormData({ ...formData, image: e.target.files[0] }); 
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
+    console.log("Registering User:", formData);
+    resetForm();
   };
 
   return (
     <div className="register-container">
       <div className="register-form-wrapper">
         <form onSubmit={handleSubmit} className="register-form">
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter Your Username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter Your Email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter Your Password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
-          />
+          <InputField label="Username" type="text" name="username" value={formData.username} onChange={handleChange} />
+          <InputField label="Email" type="email" name="email" value={formData.email} onChange={handleChange} />
+          <InputField label="Password" type="password" name="password" value={formData.password} onChange={handleChange} />
+          <ImageUpload name="image" onChange={handleChange} />
           <button type="submit">Register</button>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default Register;
