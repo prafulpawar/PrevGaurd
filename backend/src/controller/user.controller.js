@@ -6,14 +6,7 @@ const createChannel = require('../services/emailQueue');
 const otpcreateChannel = require('../services/otpQueue');
 const crypto = require("crypto");
 
-// const userModel = require("../models/user.model");
-// const otpGenerator = require('otp-generator');
-// const redis = require('../utils/redis');
-// const bcrypt = require('bcrypt');
-// const createChannel = require('../services/emailQueue'); // RabbitMQ चैनल सर्विस
-//  const otpcreateChannel = require('../services/otpQueue'); // RabbitMQ चैनल सर्विस
-// const crypto = require("crypto");
-// const logger = require('../utils/logger'); // मानें कि आपके पास लॉगर है
+ const logger = require('../utils/logger'); // मानें कि आपके पास लॉगर है
 
 module.exports.registerUser = async (req, res) => {
     try {
@@ -57,6 +50,7 @@ module.exports.registerUser = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error)
         logger.error("Error in user registration:", { error: error.message, stack: error.stack });
         return res.status(500).json({ message: "Error during user registration" });
     }

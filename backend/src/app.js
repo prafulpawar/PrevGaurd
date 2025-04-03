@@ -22,9 +22,7 @@ appAPI.get('/', (req, res) => {
 
 
 appAPI.use('/user',router);
-//  Start email worker in background
-require('./worker/emailWorker');
-require('./worker/otpWorker')
+
 
 module.exports = appAPI;
 
