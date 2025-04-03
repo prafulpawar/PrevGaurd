@@ -3,7 +3,7 @@
 // Load environment variables if needed, especially if config relies on them
 require('dotenv').config();
 
-const { consumeEmailQueue } = require('./worker/emailWorker'); // Adjust path
+const  consumeEmailQueue  = require('./src/worker/emailWorker'); // Adjust path
 
 consumeEmailQueue().catch(error => {
     console.error("Email Worker failed to start:", error);

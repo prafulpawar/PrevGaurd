@@ -6,16 +6,16 @@ const connectDB = require('../src/utils/db');
 connectDB()
 const router = require('./routes/user.routes');
 
-const app = express();
+const appAPI = express();
 
 
 
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+appAPI.use(express.json());
+appAPI.use(express.urlencoded({extended:true}));
 
 // Default route
-app.get('/', (req, res) => {
+appAPI.get('/', (req, res) => {
     res.send('Server Is Running');
 });
 
@@ -30,9 +30,11 @@ process.on('SIGTERM', () => {
 });
 
 
-app.use('/user',router);
+appAPI.use('/user',router);
 // //  Start email worker in background
 // require('./worker/emailWorker');
 // require('./worker/otpWorker')
 
-module.exports = app;
+module.exports = appAPI;
+
+

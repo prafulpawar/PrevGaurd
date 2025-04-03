@@ -64,4 +64,4 @@ async function consumeEmailQueue() {
 }
 
 // Export the function
-module.exports = { consumeEmailQueue };
+module.exports =  consumeEmailQueue ;

@@ -119,4 +119,4 @@ async function consumeOtpQueue() {
     });
 }
 
-module.exports = { consumeOtpQueue };
+module.exports =  consumeOtpQueue ;
