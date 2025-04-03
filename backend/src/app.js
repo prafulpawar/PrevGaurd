@@ -21,7 +21,7 @@ appAPI.get('/', (req, res) => {
 
 
 
-appAPI.use('/user',router);
+appAPI.use('/api',router);
 
 
 module.exports = appAPI;

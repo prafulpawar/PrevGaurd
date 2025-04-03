@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt')
 const userSchema = new mongoose.Schema({
    username: {
        type: String,
-      
        required: true
    },
 
@@ -51,8 +50,8 @@ userSchema.statics.hashPassword = async function(password){
    return await bcrypt.hash(password,10)
 }
 
-userSchema.methods.comparePassoword = async function(Plainpassword,hashPassword){
-    return await bcrypt.compare(Plainpassword,hashPassword)
+userSchema.methods.comparePassoword = async function(password){
+    return await bcrypt.compare(password,this.password)
 }
 
 

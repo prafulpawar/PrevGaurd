@@ -154,7 +154,7 @@ module.exports.loginUser = async (req, res) => {
             });
         }
 
-        // 3. Compare Password
+        
         const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
@@ -163,9 +163,8 @@ module.exports.loginUser = async (req, res) => {
             });
         }
 
-        // 4. Generate Tokens
-        const accessToken = user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
+        const accessToken = user.accessToken();
+        const refreshToken = user.refershToken();
         const userIdString = user._id.toString();
 
      
@@ -206,7 +205,6 @@ module.exports.loginUser = async (req, res) => {
     }
 };
 
-// --- Revised logoutUser ---
 module.exports.logoutUser = async (req, res) => {
     try {
         const authHeader = req.header("Authorization");
@@ -220,7 +218,7 @@ module.exports.logoutUser = async (req, res) => {
         let decoded;
         try {
            
-            decoded = await userModel.verifyAccessToken(accessToken);
+            decoded = await userModel.accessToken(accessToken);
             if (!decoded || !decoded._id) {
                  
                 return res.status(403).json({ message: "Invalid token payload" });
@@ -269,3 +267,19 @@ module.exports.logoutUser = async (req, res) => {
     }
 };
 
+module.exports.getUserInfo = async(req,res) =>{
+    try {
+        const user = req.user; 
+        const data = await userModel.findById(user._id); 
+
+        return res.status(200).json({
+            data,
+            message: 'hello'
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            message: 'failed'
+        });
+    }
+}

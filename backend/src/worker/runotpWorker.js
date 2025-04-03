@@ -18,7 +18,7 @@ async function consumeOtpQueue() {
         const channel = await connection.createChannel();
         const queueName = 'otpVerificationQueue';
 
-        await channel.assertQueue(queueName, { durable: true }); // टिकाऊ कतार
+        await channel.assertQueue(queueName, { durable: true }); 
       
         channel.prefetch(parseInt(process.env.OTP_WORKER_PREFETCH || '5', 10));
 
