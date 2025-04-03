@@ -39,11 +39,11 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.accessToken = function(){
-  return jwt.sign({_id:this.id,email:this.email,user:this.username},config.accessToken,{expiresIn:'20min'})
+  return jwt.sign({_id:this.id,email:this.email,user:this.username},process.env.ACCESS_TOKEN,{expiresIn:'20min'})
 }
 
 userSchema.methods.refershToken = function(){
- return jwt.sign({_id:this.id,email:this.email,user:this.username},config.refershToken,{expiresIn:'7d'});
+ return jwt.sign({_id:this.id,email:this.email,user:this.username},process.env.REFERSH_TOKEN,{expiresIn:'7d'});
 
 }
 

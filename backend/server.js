@@ -13,8 +13,8 @@ appAPI.set('trust proxy', 1);
 
 
 
-appAPI.listen(configData.configData.PORT, () => {
-    console.log(`🚀 Server Is Running On ${configData.configData.PORT}`);
+appAPI.listen(process.env.PORT, () => {
+    console.log(`🚀 Server Is Running On ${process.env.PORT}`);
 });
 
 

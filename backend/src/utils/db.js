@@ -1,15 +1,19 @@
-const mongoose = require('mongoose');
-const configData = require('../config/config');
+const mongoose = require("mongoose");
 
-const connectDB = async(req,res)=>{
-      try{
-         
-           const db = await mongoose.connect(configData.configData.MONGO_URI);
-           console.log(`Connected To Database `)
-      }
-      catch(error){
-          console.log(error);
-      }
-}
+const connectDB = async () => {
+  try {
+    const db = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true, // Ensure URL parsing is modern
+      useUnifiedTopology: true, // Enable new MongoDB engine
+      serverSelectionTimeoutMS: 10000, // Timeout after 10s if no response
+      bufferCommands: false, // Disable Mongoose buffering
+    });
 
-module.exports = connectDB
+    console.log("✅ Connected to Database");
+  } catch (error) {
+    console.error("❌ Database Connection Error:", error.message);
+    process.exit(1); // Exit process if DB fails
+  }
+};
+
+module.exports = connectDB;

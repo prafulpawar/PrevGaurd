@@ -17,30 +17,30 @@ module.exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // DB इंडेक्स का उपयोग करके तेज जांच
-        const isExists = await userModel.findOne({ $or: [{ email }, { username }] }).lean(); // .lean() for performance
+      
+        const isExists = await userModel.findOne({ $or: [{ email }, { username }] }).lean(); 
         if (isExists) {
             logger.info(`Registration attempt for existing user: ${email} or ${username}`);
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
 
         const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
-        logger.info(`Generated OTP ${otp} for ${email}`); // OTP को प्रोडक्शन में लॉग न करें या सुरक्षित रूप से करें
+        logger.info(`Generated OTP ${otp} for ${email}`); 
 
         const hashPassword = await bcrypt.hash(password, 10);
 
-        // Redis में OTP, यूजरनाम और हैश पासवर्ड स्टोर करें (TTL के साथ)
+       // TTL
         const otpData = JSON.stringify({ otp, username, hashPassword });
-        await redis.set(`otp:${email}`, otpData, 'EX', 300); // Key में prefix जोड़ना अच्छा अभ्यास है, 5 मिनट TTL
+        await redis.set(`otp:${email}`, otpData, 'EX', 300); 
 
-        // ईमेल भेजने के लिए मैसेज क्यू में डालें
-        const channel = await createChannel(); // RabbitMQ चैनल प्राप्त करें
+      
+        const channel = await createChannel();
         if (channel) {
              channel.sendToQueue('emailQueue', Buffer.from(JSON.stringify({ email, otp })));
              logger.info(`Email task queued for ${email}`);
         } else {
              logger.error("Failed to get RabbitMQ channel for emailQueue");
-             // यहां तय करें कि क्या यूजर को एरर दिखाना है या जारी रखना है
+            
         }
 
 
@@ -64,7 +64,6 @@ module.exports.verfifyOtp = async (req, res, next) => {
             return res.status(400).json({ message: "OTP and email are required" });
         }
 
-        // एक यूनिक requestId बनाएं जिसे क्लाइंट पोलिंग के लिए इस्तेमाल करेगा
         const requestId = crypto.randomUUID();
         logger.info(`Initiating OTP verification for ${email} with RequestID: ${requestId}`);
 
