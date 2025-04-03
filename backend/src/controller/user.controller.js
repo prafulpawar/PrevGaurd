@@ -64,3 +64,20 @@ module.exports.verfifyOtp  = async(req,res,next)=>{
 }
 
 
+
+module.exports.getOtpStatus = async (req, res) => {
+    const { requestId } = req.query;
+
+    if (!requestId) {
+        return res.status(400).json({ message: "Request ID is required" });
+    }
+
+    const status = await redis.get(requestId);
+    
+    if (!status) {
+        return res.status(404).json({ message: "No status found for this requestId" });
+    }
+
+    return res.status(200).json(JSON.parse(status));
+};
+
