@@ -271,8 +271,6 @@ module.exports.logoutUser = async (req, res) => {
     }
 };
 
-
-
 module.exports.getUserInfo = async (req, res) => {
     try {
         const user = req.user;
