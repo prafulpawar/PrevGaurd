@@ -9,10 +9,18 @@ const rebbitMQ = require('./services/rabbitMQ')
 const appAPI = express();
 
 
+appAPI.set('trust proxy', true);
 
 
 appAPI.use(express.json());
 appAPI.use(express.urlencoded({extended:true}));
+
+appAPI.use((req, res, next) => {
+    console.log('Client IP:', req.ip);
+    console.log('Forwarded IPs:', req.ips);
+    next();
+});
+
 
 // Default route
 appAPI.get('/', (req, res) => {
