@@ -284,7 +284,7 @@ module.exports.getUserInfo = async (req, res) => {
 
         return res.status(200).json({
             data,
-            message: 'hello'
+            message: 'Done'
         });
     } catch (error) {
         console.log(error);
