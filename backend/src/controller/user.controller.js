@@ -209,27 +209,7 @@ module.exports.loginUser = async (req, res) => {
 };
 
 
-module.exports.getUserInfo = async (req, res) => {
-    try {
-        const user = req.user;
-        console.log(req.user);
-        const data = await userModel.findById(user.id);
-
-        return res.status(200).json({
-            data,
-            message: 'hello'
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            error,
-            message: 'failed'
-        });
-    }
-}
-
-
-module.exports.logoutUser = async  (req, res) => {
+module.exports.logoutUser = async (req, res) => {
     try {
         const authHeader = req.header("Authorization");
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -292,3 +272,25 @@ module.exports.logoutUser = async  (req, res) => {
 };
 
 
+
+module.exports.getUserInfo = async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user || !user._id) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+        
+        const data = await userModel.findById(user._id).select('-password -role').lean();
+
+        return res.status(200).json({
+            data,
+            message: 'hello'
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            error,
+            message: 'failed'
+        });
+    }
+}

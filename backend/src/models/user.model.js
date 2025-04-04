@@ -43,6 +43,23 @@ userSchema.methods.refershToken = function(){
 
 }
 
+
+userSchema.statics.verifyAccessToken = function (token) {
+    try {
+        return jwt.verify(token,process.env.ACCESS_TOKEN);
+    } catch (error) {
+        return null; 
+    }
+};
+
+userSchema.statics.verifyRefreshToken = function (token) {
+    try {
+        return jwt.verify(token, process.env.ACCESS_TOKEN);
+    } catch (error) {
+        return null; 
+    }
+};
+
 userSchema.statics.hashPassword = async function(password){
    return await bcrypt.hash(password,10)
 }

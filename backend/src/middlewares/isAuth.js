@@ -9,7 +9,7 @@ module.exports.verifyAuth = async (req, res, next) => {
         }
 
         const token = authHeader.split(" ")[1];
-          console.log(token);
+        
         // Check if token is blacklisted
         const blacklistedKey = `blacklisted:accessToken:${token}`;
         const isBlacklisted = await redis.exists(blacklistedKey);
@@ -18,11 +18,9 @@ module.exports.verifyAuth = async (req, res, next) => {
         }
 
         
-        const decoded = await userModel.accessToken(token);
+        const decoded = await userModel.verifyAccessToken(token);
 
-       
         req.user = decoded; 
-         console.log(req.user)
         next();
     } catch (error) {
         
