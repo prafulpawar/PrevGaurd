@@ -2,14 +2,9 @@
 const amqp = require('amqplib');
 const connectDB = require('../utils/db');
 connectDB()
-const redis = require('../utils/redis'); // Redis यूटिलिटी
-const userModel = require('../models/user.model'); // User मॉडल
-const logger = require('../utils/logger'); // मानें कि आपके पास लॉगर है
-
-
-
-
-
+const redis = require('../utils/redis'); 
+const userModel = require('../models/user.model');
+const logger = require('../utils/logger'); 
 
 
 async function consumeOtpQueue() {
