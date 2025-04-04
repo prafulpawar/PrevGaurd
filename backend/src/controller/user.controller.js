@@ -5,10 +5,10 @@ const bcrypt = require('bcrypt')
 const createChannel = require('../services/emailQueue');
 const otpcreateChannel = require('../services/otpQueue');
 const crypto = require("crypto");
-const logger = require('../utils/logger'); 
+const logger = require('../utils/logger');
 
-const ACCESS_TOKEN_EXPIRY_SECONDS = 300; 
-const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 60 * 24 * 7; 
+const ACCESS_TOKEN_EXPIRY_SECONDS = 300;
+const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 60 * 24 * 7;
 
 
 module.exports.registerUser = async (req, res) => {
@@ -27,7 +27,7 @@ module.exports.registerUser = async (req, res) => {
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
 
-         const otp = '1234'
+        const otp = '1234'
         // otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
         logger.info(`Generated OTP ${otp} for ${email}`);
 
@@ -62,6 +62,7 @@ module.exports.registerUser = async (req, res) => {
 
 module.exports.verfifyOtp = async (req, res, next) => {
     try {
+
         const { email, otp } = req.body;
         if (!otp || !email) {
             logger.warn("OTP verification attempt with missing fields", { body: req.body });
@@ -139,15 +140,15 @@ module.exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         console.log(req.body);
-     
+
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email and password are required.",
             });
         }
 
-      
-        const user = await userModel.findOne({ email }).select('+password'); 
+
+        const user = await userModel.findOne({ email }).select('+password');
 
         if (!user) {
             return res.status(401).json({
@@ -155,8 +156,8 @@ module.exports.loginUser = async (req, res) => {
             });
         }
 
-        
-        const isMatch = await user.comparePassword(password);
+
+        const isMatch = await user.comparePassoword(password);
 
         if (!isMatch) {
             return res.status(401).json({
@@ -168,29 +169,29 @@ module.exports.loginUser = async (req, res) => {
         const refreshToken = user.refershToken();
         const userIdString = user._id.toString();
 
-     
+
         const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
         const refreshTokenKey = `refreshtoken:${refreshToken}`;
 
-      
+
         const pipeline = redis.pipeline();
-        
+
         pipeline.set(refreshTokenKey, userIdString, 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
-     
+
         pipeline.sadd(userRefreshTokensKey, refreshToken);
-       
-        pipeline.expire(userRefreshTokensKey, REFRESH_TOKEN_EXPIRY_SECONDS + 300); 
+
+        pipeline.expire(userRefreshTokensKey, REFRESH_TOKEN_EXPIRY_SECONDS + 300);
         await pipeline.exec();
 
 
-     
+
         const userResponse = {
-             _id: user._id,
-             email: user.email,
-            
+            _id: user._id,
+            email: user.email,
+
         };
 
-       
+
         return res.status(200).json({
             message: "User logged in successfully.",
             accessToken: accessToken,
@@ -201,11 +202,20 @@ module.exports.loginUser = async (req, res) => {
     } catch (error) {
         console.log("Login Error:", error);
         return res.status(500).json({
-            message:error,
-            
+            message: error,
+
         });
     }
 };
+
+
+
+
+
+
+
+
+
 
 module.exports.logoutUser = async (req, res) => {
     try {
@@ -216,63 +226,66 @@ module.exports.logoutUser = async (req, res) => {
 
         const accessToken = authHeader.split(" ")[1];
 
-       
+
         let decoded;
         try {
-           
+
             decoded = await userModel.accessToken(accessToken);
             if (!decoded || !decoded._id) {
-                 
+
                 return res.status(403).json({ message: "Invalid token payload" });
             }
         } catch (verificationError) {
-             
-             console.error("Access Token Verification Error:", verificationError.message);
-             return res.status(403).json({ message: "Invalid or expired token" });
+
+            console.error("Access Token Verification Error:", verificationError.message);
+            return res.status(403).json({ message: "Invalid or expired token" });
         }
 
-        const userId = decoded._id; 
+        const userId = decoded._id;
         const userIdString = userId.toString();
         const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
 
-    
+
         const userRefreshTokens = await redis.smembers(userRefreshTokensKey);
 
-      
+
         if (userRefreshTokens && userRefreshTokens.length > 0) {
             const pipeline = redis.pipeline();
-          
+
             const refreshKeysToDelete = userRefreshTokens.map(token => `refreshtoken:${token}`);
 
-          
+
             pipeline.del(refreshKeysToDelete);
 
-           
+
             pipeline.del(userRefreshTokensKey);
 
             await pipeline.exec();
         }
 
-        
+
         const blacklistedAccessTokenKey = `blacklisted:accessToken:${accessToken}`;
-      
+
         await redis.set(blacklistedAccessTokenKey, '1', 'EX', ACCESS_TOKEN_EXPIRY_SECONDS);
 
-       
+
 
         return res.status(200).json({ message: "Logged out successfully from all sessions." });
 
     } catch (error) {
-       
+
         console.error("Logout Error:", error);
         return res.status(500).json({ message: "An internal server error occurred during logout." });
     }
 };
 
-module.exports.getUserInfo = async(req,res) =>{
+
+
+module.exports.getUserInfo = async (req, res) => {
     try {
-        const user = req.user; 
-        const data = await userModel.findById(user._id); 
+        const user = req.user;
+        console.log(user)
+        const data = await userModel.findById(user.id);
 
         return res.status(200).json({
             data,
@@ -281,6 +294,7 @@ module.exports.getUserInfo = async(req,res) =>{
     } catch (error) {
         console.log(error);
         return res.status(400).json({
+            error,
             message: 'failed'
         });
     }
