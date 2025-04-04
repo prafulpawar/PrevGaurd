@@ -280,7 +280,7 @@ module.exports.getUserInfo = async (req, res) => {
             return res.status(400).json({ message: "Invalid user ID" });
         }
         
-        const data = await userModel.findById(user._id).select('-password -role').lean();
+        const data = await userModel.findById(user._id).select('-password -role -_id').lean();
 
         return res.status(200).json({
             data,
