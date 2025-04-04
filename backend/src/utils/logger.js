@@ -1,24 +1,35 @@
+// logger.js
 const winston = require('winston');
 
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info', 
+  level: 'info', 
   format: winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), 
-    winston.format.errors({ stack: true }),
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }), 
     winston.format.splat(),
-    winston.format.json() // 
+    winston.format.json() 
   ),
-  defaultMeta: { service: 'otp-worker' }, 
+  defaultMeta: { service: 'user-service' },
   transports: [
- 
+  
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.simple() 
+        winston.format.simple()
       )
     }),
-  
+    
   ],
 });
+
+
+if (process.env.NODE_ENV !== 'production') {
+ 
+  logger.transports.find(t => t.name === 'console').level = 'debug';
+} else {
+
+     logger.transports.find(t => t.name === 'console').level = 'info';
+}
+
 
 module.exports = logger;

@@ -284,7 +284,7 @@ module.exports.logoutUser = async (req, res) => {
 module.exports.getUserInfo = async (req, res) => {
     try {
         const user = req.user;
-        console.log(user)
+        console.log(req.user);
         const data = await userModel.findById(user.id);
 
         return res.status(200).json({
