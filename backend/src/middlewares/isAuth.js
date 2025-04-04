@@ -18,7 +18,7 @@ module.exports.verifyAuth = async (req, res, next) => {
         }
 
         
-        const decoded = await userModel.verifyAccessToken(token);
+        const decoded = await userModel.accessToken(token);
 
        
         req.user = decoded; 
