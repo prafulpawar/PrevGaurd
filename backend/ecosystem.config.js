@@ -12,7 +12,6 @@ module.exports = {
          "MONGO_URI": "mongodb+srv://prafuldukhi:u8Rn86IgXs7DxiK1@cluster0.uhxoonm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
          "ACCESS_TOKEN_SECRET": "DFUIHDSHIU",
          "REFRESH_TOKEN_SECRET": "DJJHUIDSHSSSWDT",
-         
        }
      },
 

@@ -27,7 +27,7 @@ module.exports.registerUser = async (req, res) => {
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
 
-         const otp = 1234
+         const otp = '1234'
         // otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
         logger.info(`Generated OTP ${otp} for ${email}`);
 
@@ -138,7 +138,7 @@ module.exports.getOtpStatus = async (req, res) => {
 module.exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        console.log(req.body);
      
         if (!email || !password) {
             return res.status(400).json({
