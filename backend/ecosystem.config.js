@@ -5,6 +5,7 @@ module.exports = {
        name   : "api-server1",
        script : "./server.js",
        exec_mode : "cluster",
+       instances: "2", 
        env: {
          "NODE_ENV": "production",
          PORT: 5001,
@@ -14,9 +15,13 @@ module.exports = {
          
        }
      },
+
+
      {
       name   : "api-server-2",
       script : "./server.js",
+      exec_mode : "cluster",
+      instances: "2", 
       env: {
         NODE_ENV: "production",
         PORT: 5002,
@@ -25,11 +30,13 @@ module.exports = {
         "REFRESH_TOKEN_SECRET": "DJJHUIDSHSSSWDT",
       }
     },
+
+    
      
      {
        name   : "runemail-worker",
        script : "./src/worker/runemailWorker.js",
-       instances : "8",
+       instances : "1",
        exec_mode : "fork",
        env: {
          "NODE_ENV": "production",
@@ -40,7 +47,7 @@ module.exports = {
      {
        name   : "runotp-worker",
        script : "./src/worker/runotpWorker.js",
-       instances : "8",
+       instances : "1",
        exec_mode : "fork",
        env: {
          "NODE_ENV": "production",

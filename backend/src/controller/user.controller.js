@@ -27,7 +27,8 @@ module.exports.registerUser = async (req, res) => {
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
 
-        const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+         const otp = 1234
+        // otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
         logger.info(`Generated OTP ${otp} for ${email}`);
 
         const hashPassword = await bcrypt.hash(password, 10);
