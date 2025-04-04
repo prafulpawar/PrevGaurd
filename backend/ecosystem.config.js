@@ -2,18 +2,29 @@
 module.exports = {
    apps : [
      {
-       name   : "api-server",
+       name   : "api-server1",
        script : "./server.js",
-       instances : "3", // या 'max'
        exec_mode : "cluster",
        env: {
          "NODE_ENV": "production",
+         PORT: 5001,
          "MONGO_URI": "mongodb+srv://prafuldukhi:u8Rn86IgXs7DxiK1@cluster0.uhxoonm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
          "ACCESS_TOKEN_SECRET": "DFUIHDSHIU",
          "REFRESH_TOKEN_SECRET": "DJJHUIDSHSSSWDT",
          
        }
      },
+     {
+      name   : "api-server-2",
+      script : "./server.js",
+      env: {
+        NODE_ENV: "production",
+        PORT: 5002,
+        "MONGO_URI": "mongodb+srv://prafuldukhi:u8Rn86IgXs7DxiK1@cluster0.uhxoonm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+        "ACCESS_TOKEN_SECRET": "DFUIHDSHIU",
+        "REFRESH_TOKEN_SECRET": "DJJHUIDSHSSSWDT",
+      }
+    },
      
      {
        name   : "runemail-worker",
