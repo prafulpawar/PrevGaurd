@@ -209,6 +209,26 @@ module.exports.loginUser = async (req, res) => {
 };
 
 
+module.exports.getUserInfo = async (req, res) => {
+    try {
+        const user = req.user;
+        console.log(req.user);
+        const data = await userModel.findById(user.id);
+
+        return res.status(200).json({
+            data,
+            message: 'hello'
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            error,
+            message: 'failed'
+        });
+    }
+}
+
+
 module.exports.logoutUser = async (req, res) => {
     try {
         const authHeader = req.header("Authorization");
@@ -272,21 +292,3 @@ module.exports.logoutUser = async (req, res) => {
 };
 
 
-module.exports.getUserInfo = async (req, res) => {
-    try {
-        const user = req.user;
-        console.log(req.user);
-        const data = await userModel.findById(user.id);
-
-        return res.status(200).json({
-            data,
-            message: 'hello'
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            error,
-            message: 'failed'
-        });
-    }
-}
