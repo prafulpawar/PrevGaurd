@@ -209,14 +209,6 @@ module.exports.loginUser = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
 module.exports.logoutUser = async (req, res) => {
     try {
         const authHeader = req.header("Authorization");
@@ -278,7 +270,6 @@ module.exports.logoutUser = async (req, res) => {
         return res.status(500).json({ message: "An internal server error occurred during logout." });
     }
 };
-
 
 
 module.exports.getUserInfo = async (req, res) => {

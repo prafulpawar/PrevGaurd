@@ -7,8 +7,9 @@ module.exports.verifyAuth = async (req, res, next) => {
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const token = authHeader.split(" ")[1];
 
+        const token = authHeader.split(" ")[1];
+          console.log(token);
         // Check if token is blacklisted
         const blacklistedKey = `blacklisted:accessToken:${token}`;
         const isBlacklisted = await redis.exists(blacklistedKey);
@@ -21,7 +22,7 @@ module.exports.verifyAuth = async (req, res, next) => {
 
        
         req.user = decoded; 
-
+         console.log(req.user)
         next();
     } catch (error) {
         
