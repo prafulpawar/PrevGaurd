@@ -229,7 +229,7 @@ module.exports.getUserInfo = async (req, res) => {
 }
 
 
-module.exports.logoutUser = async (req, res) => {
+module.exports.logoutUser = async  (req, res) => {
     try {
         const authHeader = req.header("Authorization");
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
