@@ -15,9 +15,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Logging in User:', formData);
-    // Add actual login logic here (API call)
-    // e.g., loginUser(formData).then(() => navigate('/dashboard'));
-    // resetForm(); // Maybe reset only on success/failure after API call
+   
   };
 
   return (
@@ -42,8 +40,8 @@ function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required // Add basic HTML validation
-              placeholder="you@example.com" // Add placeholder
+              required 
+              placeholder="you@example.com" 
             />
 
             <InputField
