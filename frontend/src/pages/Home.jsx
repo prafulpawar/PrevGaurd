@@ -1,47 +1,34 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import Navbar from '../pages/Navbar'; // Ensure path is correct
+import Navbar from '../pages/Navbar';
 
-// Icons used in the component - Make sure all are imported
 import {
-    UserPlusIcon, // Example for potential future use
+    UserPlusIcon,
     EyeIcon,
-    ScaleIcon,    // Example for potential future use
+    ScaleIcon,
     SparklesIcon,
     BellAlertIcon,
     CheckCircleIcon,
     LightBulbIcon,
     ShieldCheckIcon,
-    LockClosedIcon, // For commented-out Vault feature example
-    ArrowPathIcon,  // New: For How it Works
-    ChatBubbleLeftRightIcon, // New: For Testimonials
-    DocumentPlusIcon, // New: For How it Works
-    UserGroupIcon // New: For Testimonials (Placeholder)
+    LockClosedIcon,
+    ArrowPathIcon,
+    ChatBubbleLeftRightIcon,
+    DocumentPlusIcon,
+    UserGroupIcon
 } from '@heroicons/react/24/outline';
 
-// **** Placeholder for Auth State ****
-// In a real app, you'd use Context API or state management
-// This variable ONLY affects the Footer links in THIS file
-const isLoggedIn = false; // <-- Set to true or false to see FOOTER links change
-// Example using Context (you'd need to set up AuthContext.jsx)
-// import { useContext } from 'react';
-// import { AuthContext } from '../context/AuthContext'; // Adjust path
-// const { isLoggedIn } = useContext(AuthContext);
-// **** End Placeholder ****
-
+const isLoggedIn = false;
 
 function Home() {
     const navigate = useNavigate();
 
-    // Features data
     const features = [
         { name: 'Shared Data Dashboard', description: 'Visually track apps holding your data. Understand your exposure with our unique Data Risk Score.', icon: EyeIcon, bgColor: 'bg-blue-100', iconColor: 'text-blue-600', path: '/dashboard' },
         { name: 'Fake Data Generator', description: 'Create realistic, temporary identities to protect your real details. Save presets for quick use.', icon: SparklesIcon, bgColor: 'bg-green-100', iconColor: 'text-green-600', path: '/generator' },
         { name: 'Breach Monitoring', description: 'Actively check if your email appears in known data breaches. Get alerts directly in your dashboard.', icon: BellAlertIcon, bgColor: 'bg-red-100', iconColor: 'text-red-600', path: '/breach-monitor' },
-        // { name: 'Secure Data Vault', description: 'Optionally store sensitive notes like license keys or private info with local encryption.', icon: LockClosedIcon, bgColor: 'bg-yellow-100', iconColor: 'text-yellow-600', path: '/vault' }
     ];
 
-    // Benefits data
     const benefits = [
         { name: "Centralized Control", description: "Manage your data permissions and tracked apps from one secure place.", icon: CheckCircleIcon },
         { name: "Proactive Awareness", description: "Stay informed about potential breaches involving your email.", icon: CheckCircleIcon },
@@ -49,14 +36,12 @@ function Home() {
         { name: "Peace of Mind", description: "Take concrete steps towards better digital privacy habits.", icon: CheckCircleIcon },
     ];
 
-    // How it Works steps
     const howItWorksSteps = [
         { name: "Register Account", description: "Quickly sign up for a free PrivGuard account.", icon: DocumentPlusIcon },
-        { name: "Track & Generate", description: "Log apps holding your data or create secure fake identities.", icon: SparklesIcon }, // Reusing SparklesIcon
-        { name: "Monitor & Manage", description: "Check for breaches and review your tracked data easily.", icon: ShieldCheckIcon }, // Reusing ShieldCheckIcon
+        { name: "Track & Generate", description: "Log apps holding your data or create secure fake identities.", icon: SparklesIcon },
+        { name: "Monitor & Manage", description: "Check for breaches and review your tracked data easily.", icon: ShieldCheckIcon },
     ];
 
-    // Testimonials data
     const testimonials = [
         { quote: "PrivGuard finally gave me a clear picture of where my data is. The risk score is eye-opening!", author: "Alex R.", title: "Privacy Conscious User" },
         { quote: "The fake data generator is brilliant for signing up for newsletters without using my real email.", author: "Samantha B.", title: "Freelancer" },
@@ -64,7 +49,6 @@ function Home() {
     ];
 
 
-    // Helper function for smooth scroll
     const smoothScrollTo = (e, targetId) => {
         e.preventDefault();
         const element = document.getElementById(targetId);
@@ -75,14 +59,11 @@ function Home() {
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
-            {/* Navbar - Its links might depend on its own internal auth logic or a shared context */}
             <Navbar />
 
             <main className="flex-grow">
 
-                {/* Section 1: Hero */}
                 <section className="relative bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-700 text-white pt-24 pb-32 md:pt-32 md:pb-40 overflow-hidden">
-                    {/* ... (Hero content remains the same) ... */}
                      <div className="absolute inset-0 opacity-10">
                          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="a" patternUnits="userSpaceOnUse" width="40" height="40" patternTransform="scale(2) rotate(0)"><rect x="0" y="0" width="100%" height="100%" fill="hsla(0,0%,100%,1)" /><path d="M10-10 v40 M-10 10 h40" strokeWidth=".5" stroke="hsla(310, 100%, 56%, 0.1)" fill="none" /></pattern></defs><rect width="800%" height="800%" transform="translate(0,0)" fill="url(#a)" /></svg>
                      </div>
@@ -100,7 +81,7 @@ function Home() {
                             >
                                 Start Protecting Now
                             </button>
-                             <a // Changed to an anchor for smooth scroll example
+                             <a
                                 href="#features"
                                 onClick={(e) => smoothScrollTo(e, 'features')}
                                 className="w-full sm:w-auto text-white font-medium py-3 px-8 rounded-lg hover:bg-white hover:bg-opacity-20 transition duration-300 ease-in-out text-lg border border-white border-opacity-50"
@@ -111,9 +92,7 @@ function Home() {
                     </div>
                  </section>
 
-                {/* Section 2: Key Features */}
                 <section id="features" className="py-16 md:py-24 bg-white">
-                    {/* ... (Features content remains the same) ... */}
                      <div className="container mx-auto px-6">
                         <div className="text-center mb-14">
                             <span className="text-indigo-600 font-semibold uppercase tracking-wider text-sm">Core Features</span>
@@ -129,7 +108,7 @@ function Home() {
                             {features.map((feature) => (
                                 <div
                                     key={feature.name}
-                                    onClick={() => navigate(feature.path)} // Navigation added here
+                                    onClick={() => navigate(feature.path)}
                                     className={`p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-transparent hover:border-gray-300 ${feature.bgColor} cursor-pointer group`}
                                     role="link"
                                     tabIndex="0"
@@ -152,7 +131,6 @@ function Home() {
                     </div>
                 </section>
 
-                {/* Section 3: How It Works (NEW SECTION) */}
                 <section id="how-it-works" className="py-16 md:py-24 bg-gray-100">
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-14">
@@ -165,7 +143,6 @@ function Home() {
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative">
-                             {/* Connecting lines (optional visual flair) */}
                             <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-gray-300 transform -translate-y-1/2" style={{width: 'calc(100% - 10rem)', left: '5rem', zIndex: 0}}></div>
 
                             {howItWorksSteps.map((step, index) => (
@@ -181,10 +158,7 @@ function Home() {
                     </div>
                 </section>
 
-
-                {/* Section 4: Why Choose PrivGuard? (Benefits) */}
-                <section className="py-16 md:py-24 bg-white"> {/* Changed background for visual separation */}
-                    {/* ... (Benefits content remains the same, but changed background) ... */}
+                <section className="py-16 md:py-24 bg-white">
                      <div className="container mx-auto px-6">
                         <div className="text-center mb-14">
                            <span className="text-green-600 font-semibold uppercase tracking-wider text-sm">The PrivGuard Advantage</span>
@@ -199,7 +173,7 @@ function Home() {
                             {benefits.map(benefit => (
                                 <div key={benefit.name} className="text-center md:text-left flex flex-col items-center md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-4 p-4">
                                     <div className="flex-shrink-0">
-                                        <benefit.icon className="h-8 w-8 text-green-500" /> {/* Use benefit's icon */}
+                                        <benefit.icon className="h-8 w-8 text-green-500" />
                                     </div>
                                     <div>
                                         <h4 className="text-lg font-semibold text-gray-800">{benefit.name}</h4>
@@ -211,7 +185,6 @@ function Home() {
                     </div>
                 </section>
 
-                {/* Section 5: Testimonials (NEW SECTION) */}
                 <section id="testimonials" className="py-16 md:py-24 bg-indigo-50">
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-14">
@@ -223,7 +196,7 @@ function Home() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {testimonials.map((testimonial, index) => (
                                 <div key={index} className="bg-white p-6 rounded-lg shadow-md border border-gray-100 flex flex-col">
-                                    <ChatBubbleLeftRightIcon className="h-8 w-8 text-indigo-200 mb-4" /> {/* Subtle quote icon */}
+                                    <ChatBubbleLeftRightIcon className="h-8 w-8 text-indigo-200 mb-4" />
                                     <blockquote className="text-gray-700 italic flex-grow">"{testimonial.quote}"</blockquote>
                                     <footer className="mt-4 pt-4 border-t border-gray-200">
                                         <p className="font-semibold text-gray-900">{testimonial.author}</p>
@@ -235,12 +208,9 @@ function Home() {
                     </div>
                 </section>
 
-
-                {/* Section 6: Privacy Tip Showcase */}
-                <section className="py-16 bg-white"> {/* Changed background back to white */}
-                    {/* ... (Privacy Tip content remains the same, but changed background) ... */}
+                <section className="py-16 bg-white">
                       <div className="container mx-auto px-6">
-                        <div className="bg-indigo-50 p-8 rounded-lg shadow-sm flex flex-col md:flex-row items-center md:space-x-8 border border-indigo-100"> {/* Adjusted styling slightly */}
+                        <div className="bg-indigo-50 p-8 rounded-lg shadow-sm flex flex-col md:flex-row items-center md:space-x-8 border border-indigo-100">
                              <div className="flex-shrink-0 mb-6 md:mb-0 text-center md:text-left">
                                  <LightBulbIcon className="h-16 w-16 text-yellow-500 mx-auto md:mx-0" />
                              </div>
@@ -258,9 +228,7 @@ function Home() {
                    </div>
                 </section>
 
-                {/* Section 7: Final Call to Action */}
                 <section className="py-16 md:py-20 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-                    {/* ... (Final CTA content remains the same) ... */}
                      <div className="container mx-auto px-6 text-center">
                          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Elevate Your Digital Defense?</h2>
                          <p className="text-indigo-100 mb-8 text-lg max-w-xl mx-auto">Join PrivGuard today and start managing your privacy like never before.</p>
@@ -275,11 +243,9 @@ function Home() {
 
             </main>
 
-            {/* Footer */}
             <footer className="bg-gray-900 text-gray-400">
                 <div className="container mx-auto px-6 py-12">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                        {/* Brand/About Column */}
                         <div className="md:col-span-1 mb-6 md:mb-0">
                            <Link to="/" className="flex items-center space-x-2 mb-4">
                                 <ShieldCheckIcon className="h-8 w-8 text-indigo-400" />
@@ -288,12 +254,11 @@ function Home() {
                            <p className="text-sm">Your comprehensive solution for managing online privacy and data security.</p>
                         </div>
 
-                       {/* Links Columns - These WILL change based on the `isLoggedIn` const above */}
                          <div>
                              <h5 className="font-semibold text-white uppercase tracking-wider mb-4 text-sm">Product</h5>
                            <ul className="space-y-2 text-sm">
                                 <li><a href="#features" onClick={(e) => smoothScrollTo(e, 'features')} className="hover:text-white">Features</a></li>
-                                {isLoggedIn ? ( // Conditionally show dashboard links
+                                {isLoggedIn ? (
                                     <>
                                       <li><Link to="/dashboard" className="hover:text-white">Dashboard</Link></li>
                                       <li><Link to="/generator" className="hover:text-white">Generator</Link></li>
@@ -323,7 +288,6 @@ function Home() {
                         </div>
                      </div>
 
-                    {/* Bottom Footer */}
                     <div className="mt-10 pt-8 border-t border-gray-700 text-center text-sm">
                        © {new Date().getFullYear()} PrivGuard. All Rights Reserved.
                     </div>

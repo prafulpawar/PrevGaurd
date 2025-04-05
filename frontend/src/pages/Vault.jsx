@@ -1,32 +1,30 @@
 import React, { useState } from 'react';
-import Navbar from '../pages/Navbar'; // Adjust path if necessary
+import Navbar from '../pages/Navbar';
 import { LockClosedIcon, LockOpenIcon, PlusIcon, EyeIcon, EyeSlashIcon, TrashIcon } from '@heroicons/react/24/outline';
 
-// --- बहुत असुरक्षित - केवल डेमो के लिए ---
-const VAULT_PASSWORD = "123"; // <<-- इस पासवर्ड को कभी भी वास्तविक ऐप में ऐसे हार्डकोड न करें!
-// ------------------------------------
+
+const VAULT_PASSWORD = "123";
+
 
 function Vault() {
     const [isLocked, setIsLocked] = useState(true);
     const [passwordInput, setPasswordInput] = useState('');
     const [error, setError] = useState('');
 
-    // Vault items state (Data lost on reload in this example)
     const [vaultItems, setVaultItems] = useState([
         { id: 1, title: 'Example Wifi Pass', content: 'MySecretWifi123', showContent: false },
         { id: 2, title: 'Secret Note', content: 'Remember the plan for Tuesday.', showContent: false },
     ]);
 
-    // State for adding new items
     const [newTitle, setNewTitle] = useState('');
     const [newContent, setNewContent] = useState('');
 
     const handleUnlock = (e) => {
-        e.preventDefault(); // Prevent form submission reload
+        e.preventDefault();
         if (passwordInput === VAULT_PASSWORD) {
             setIsLocked(false);
             setError('');
-            setPasswordInput(''); // Clear input after successful unlock
+            setPasswordInput('');
         } else {
             setError('Incorrect password. Please try again.');
         }
@@ -34,7 +32,6 @@ function Vault() {
 
     const handleLock = () => {
         setIsLocked(true);
-        // Optionally clear all 'showContent' flags when locking
         setVaultItems(items => items.map(item => ({ ...item, showContent: false })));
     };
 
@@ -45,13 +42,13 @@ function Vault() {
             return;
         }
         const newItem = {
-            id: Date.now(), // Simple unique ID for demo
+            id: Date.now(),
             title: newTitle,
             content: newContent,
-            showContent: false, // Initially hidden
+            showContent: false,
         };
         setVaultItems([...vaultItems, newItem]);
-        setNewTitle(''); // Clear form
+        setNewTitle('');
         setNewContent('');
     };
 
@@ -69,7 +66,7 @@ function Vault() {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <Navbar /> {/* Include Navbar */}
+            <Navbar />
             <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <header className="mb-8 text-center">
                     <h1 className="text-3xl font-bold leading-tight text-gray-900 flex items-center justify-center">
@@ -81,7 +78,6 @@ function Vault() {
                 </header>
 
                 {isLocked ? (
-                    // --- Locked View ---
                     <div className="bg-white shadow-lg rounded-lg p-8 max-w-md mx-auto text-center border border-yellow-300">
                         <LockClosedIcon className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
                         <h2 className="text-xl font-semibold mb-4">Vault Locked</h2>
@@ -106,9 +102,7 @@ function Vault() {
                         </form>
                     </div>
                 ) : (
-                    // --- Unlocked View ---
                     <div className="space-y-8">
-                        {/* Lock Button */}
                         <div className="text-right">
                              <button
                                 onClick={handleLock}
@@ -119,7 +113,6 @@ function Vault() {
                              </button>
                          </div>
 
-                        {/* Add New Item Form */}
                         <div className="bg-white shadow rounded-lg p-6">
                             <h2 className="text-lg font-medium text-gray-900 mb-4">Add New Item</h2>
                             <form onSubmit={handleAddItem} className="space-y-4">
@@ -159,7 +152,6 @@ function Vault() {
                             </form>
                         </div>
 
-                        {/* Vault Items List */}
                         <div className="bg-white shadow rounded-lg overflow-hidden">
                              <h2 className="text-lg font-medium text-gray-900 p-4 sm:px-6 border-b border-gray-200">Vault Contents</h2>
                              {vaultItems.length > 0 ? (

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import Navbar from '../pages/Navbar'; // Adjust path if necessary
+import Navbar from '../pages/Navbar';
 import { BellAlertIcon, CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
-import InputField from '../components/forms/InputField'; // Assuming reusable component
+import InputField from '../components/forms/InputField';
 
-// Mock Breach Result Types
+
 const RESULT_TYPE = { NONE: 0, LOADING: 1, FOUND: 2, NOT_FOUND: 3, ERROR: 4 };
 
 function BreachMonitor() {
     const [email, setEmail] = useState('');
     const [resultType, setResultType] = useState(RESULT_TYPE.NONE);
-    const [breachData, setBreachData] = useState(null); // To store details if breaches are found
+    const [breachData, setBreachData] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleCheckBreach = async (e) => {
@@ -19,13 +19,11 @@ function BreachMonitor() {
         setErrorMessage('');
 
         try {
-            // --- TODO: Replace with actual API call (POST /api/breach/check) ---
              console.log(`Checking email: ${email}`);
-             await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+             await new Promise(resolve => setTimeout(resolve, 1500));
 
-             // --- Mock Response Logic ---
             if (email.includes('breached')) {
-                 setBreachData([ // Example data structure from HaveIBeenPwned
+                 setBreachData([
                      { Name: "Adobe", BreachDate: "2013-10-04", DataClasses: ["Email addresses", "Password hints", "Passwords", "Usernames"], IsVerified: true },
                      { Name: "ExampleLeak", BreachDate: "2020-01-15", DataClasses: ["Email addresses", "Usernames"], IsVerified: false }
                  ]);
@@ -35,7 +33,6 @@ function BreachMonitor() {
              } else {
                  setResultType(RESULT_TYPE.NOT_FOUND);
              }
-             // --- End Mock Response Logic ---
 
         } catch (error) {
              console.error("Breach check failed:", error);
@@ -123,7 +120,6 @@ function BreachMonitor() {
                       <p className="mt-1 text-xs text-gray-500">Powered by HaveIBeenPwned API.</p>
                 </header>
 
-                 {/* Input Form */}
                 <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 mb-8">
                      <form onSubmit={handleCheckBreach} className="flex flex-col sm:flex-row sm:items-end sm:space-x-3 space-y-3 sm:space-y-0">
                           <InputField
@@ -134,8 +130,8 @@ function BreachMonitor() {
                               onChange={(e) => setEmail(e.target.value)}
                              required
                               placeholder="enter@your.email"
-                              containerClassName="flex-grow" // Example prop if InputField supports it
-                              className="w-full" // Ensure input takes full width within flex item
+                              containerClassName="flex-grow"
+                              className="w-full"
                          />
                          <button
                               type="submit"
@@ -147,22 +143,12 @@ function BreachMonitor() {
                     </form>
                  </div>
 
-                 {/* Results Area */}
                  {resultType !== RESULT_TYPE.NONE && (
                      <div className="mt-6">
                         {renderResult()}
                     </div>
                  )}
 
-
-                 {/* Optional: History/Alerts Section */}
-                  {/* <div className="mt-12">
-                      <h2 className="text-xl font-semibold text-gray-800 mb-4">Past Alerts/Checks</h2>
-                       <div className="bg-white shadow rounded-lg p-6">
-                          <p className="text-gray-500 text-sm">Breach history feature coming soon.</p>
-                           {/* TODO: Fetch and display user's breachAlerts[] */}
-                       {/* </div>
-                  </div> */}
              </main>
         </div>
     );

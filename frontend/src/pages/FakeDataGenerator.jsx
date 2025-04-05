@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../pages/Navbar'; // Adjust path if necessary
+import Navbar from '../pages/Navbar';
 import { SparklesIcon, ClipboardDocumentIcon, DocumentPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import InputField from '../components/forms/InputField'; // Assuming reusable component
+import InputField from '../components/forms/InputField';
 
-// Placeholder for Faker.js generation - Implement actual logic
 const generateFakeData = (options) => ({
   name: options.name ? `Fake Name ${Math.random().toString(36).substring(7)}` : '',
   email: options.email ? `fake_${Math.random().toString(36).substring(7)}@example.com` : '',
   phone: options.phone ? `+1-555-${Math.random().toString().slice(2, 5)}-${Math.random().toString().slice(2, 6)}` : '',
-  pan: options.pan ? `FAKEPAN${Math.random().toString().slice(2, 7)}X` : '', // MOCK
-  aadhar: options.aadhar ? `FAKE-AADHAR-${Math.random().toString().slice(2, 14)}` : '', // MOCK
+  pan: options.pan ? `FAKEPAN${Math.random().toString().slice(2, 7)}X` : '',
+  aadhar: options.aadhar ? `FAKE-AADHAR-${Math.random().toString().slice(2, 14)}` : '',
   address: options.address ? '123 Fake St, Mocksville, FL 12345' : '',
 });
 
-// Mock presets
 const mockPresets = [
     { id: 'p1', presetName: 'Basic Signup', options: { name: true, email: true, phone: false } },
     { id: 'p2', presetName: 'Full Profile (Mock)', options: { name: true, email: true, phone: true, pan: true, aadhar: true, address: true } },
@@ -27,9 +25,8 @@ function FakeDataGenerator() {
     const [presets, setPresets] = useState([]);
     const [presetName, setPresetName] = useState('');
 
-    // TODO: Fetch presets from API (GET /api/fake-data)
      useEffect(() => {
-        setPresets(mockPresets); // Load mock data
+        setPresets(mockPresets);
      }, []);
 
     const handleOptionChange = (e) => {
@@ -43,7 +40,7 @@ function FakeDataGenerator() {
 
     const handleCopyToClipboard = (text) => {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Copied to clipboard!'); // TODO: Replace with a toast notification
+            alert('Copied to clipboard!');
         }, (err) => {
             console.error('Could not copy text: ', err);
         });
@@ -54,22 +51,18 @@ function FakeDataGenerator() {
             alert("Please enter a name for the preset.");
             return;
         }
-        // TODO: Call API to save preset (POST /api/fake-data)
-         const newPreset = { id: `p${Date.now()}`, presetName: presetName.trim(), options: { ...options } }; // Mock ID
+         const newPreset = { id: `p${Date.now()}`, presetName: presetName.trim(), options: { ...options } };
          setPresets(prev => [...prev, newPreset]);
-        console.log('Saving Preset:', newPreset);
-         setPresetName(''); // Clear input
+         setPresetName('');
      };
 
      const handleDeletePreset = (id) => {
-         // TODO: Call API to delete preset (DELETE /api/fake-data/:id)
         setPresets(prev => prev.filter(p => p.id !== id));
-         console.log('Deleting Preset ID:', id);
      };
 
     const handleLoadPreset = (presetOptions) => {
          setOptions(presetOptions);
-         setGeneratedData(generateFakeData(presetOptions)); // Optionally generate on load
+         setGeneratedData(generateFakeData(presetOptions));
      };
 
 
@@ -84,9 +77,8 @@ function FakeDataGenerator() {
 
                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                   {/* Generation Options */}
                     <div className="lg:col-span-1">
-                         <div className="bg-white shadow rounded-lg p-6 sticky top-24"> {/* Sticky options column */}
+                         <div className="bg-white shadow rounded-lg p-6 sticky top-24">
                             <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Generation Options</h3>
                              <div className="space-y-4">
                                 {Object.keys(options).map(key => (
@@ -103,7 +95,6 @@ function FakeDataGenerator() {
                                          </div>
                                         <div className="ml-3 text-sm">
                                              <label htmlFor={key} className="font-medium text-gray-700 capitalize">{key}</label>
-                                            {/* Add descriptions if needed */}
                                          </div>
                                     </div>
                                 ))}
@@ -118,9 +109,7 @@ function FakeDataGenerator() {
                          </div>
                     </div>
 
-                     {/* Results & Presets */}
                      <div className="lg:col-span-2">
-                       {/* Generated Data Display */}
                          <div className="bg-white shadow rounded-lg p-6 mb-8">
                             <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Generated Data</h3>
                            {Object.keys(generatedData).length === 0 ? (
@@ -128,7 +117,7 @@ function FakeDataGenerator() {
                            ) : (
                              <dl className="space-y-4">
                                   {Object.entries(generatedData).map(([key, value]) => (
-                                     value && ( // Only show if data was generated for this key
+                                     value && (
                                           <div key={key} className="sm:flex items-center justify-between">
                                              <dt className="text-sm font-medium text-gray-500 capitalize w-1/4">{key}</dt>
                                              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:w-3/4 flex items-center">
@@ -144,10 +133,8 @@ function FakeDataGenerator() {
                              )}
                          </div>
 
-                         {/* Presets Section */}
                           <div className="bg-white shadow rounded-lg p-6">
                                <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Presets</h3>
-                               {/* Save Preset Form */}
                                 <div className="mb-6 pb-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-end sm:space-x-3 space-y-3 sm:space-y-0">
                                      <InputField
                                         label="New Preset Name"
@@ -155,7 +142,7 @@ function FakeDataGenerator() {
                                          value={presetName}
                                          onChange={(e) => setPresetName(e.target.value)}
                                          placeholder="e.g., 'Forum Signup'"
-                                         containerClassName="flex-grow" // Tailwind class for InputField container if needed
+                                         containerClassName="flex-grow"
                                     />
                                     <button
                                         onClick={handleSavePreset}

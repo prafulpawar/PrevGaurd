@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../pages/Navbar'; // Adjust path if necessary
-// Adjust path if necessary
-// यहाँ ScaleIcon जोड़ा गया है
+import Navbar from '../pages/Navbar';
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, PhoneIcon, MapPinIcon, ScaleIcon } from '@heroicons/react/24/outline';
 
-// Mock data structure - Replace with API data
+
 const mockApps = [
     { id: 1, appName: 'Example Social Media', emailUsed: 'user@example.com', phoneUsed: true, locationAccess: true, notes: 'Standard signup' },
     { id: 2, appName: 'Online Store XYZ', emailUsed: 'user@example.com', phoneUsed: false, locationAccess: false, notes: 'Guest checkout only' },
@@ -14,20 +12,15 @@ const mockApps = [
 function SharedDataDashboard() {
     const [sharedApps, setSharedApps] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [riskScore, setRiskScore] = useState(75); // Example score
+    const [riskScore, setRiskScore] = useState(75);
 
-    // TODO: Fetch shared data from API (GET /api/data) on component mount
     useEffect(() => {
-        // Simulating API call
         setTimeout(() => {
             setSharedApps(mockApps);
-            // TODO: Calculate actual risk score based on fetched data
-            // setRiskScore(calculateRisk(mockApps));
             setIsLoading(false);
         }, 1000);
     }, []);
 
-    // TODO: Add handlers for Add, Edit, Delete operations (POST, PUT, DELETE /api/data)
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -38,20 +31,15 @@ function SharedDataDashboard() {
                      <p className="mt-2 text-sm text-gray-600">Track applications where you've shared personal information.</p>
                 </header>
 
-                {/* Risk Score & Add Button Area */}
                 <div className="mb-6 md:flex md:items-center md:justify-between">
-                   {/* Example Risk Score Visual - Enhance this */}
                    <div className="mb-4 md:mb-0 p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow flex items-center space-x-3">
-                         {/* अब यह काम करेगा क्योंकि ScaleIcon इम्पोर्टेड है */}
                          <ScaleIcon className="h-8 w-8"/>
                          <div>
                             <span className="block text-sm font-medium uppercase tracking-wider">Data Risk Score</span>
-                             {/* TODO: Add logic for score level (Low, Medium, High) */}
                             <span className="block text-3xl font-bold">{isLoading ? '...' : riskScore}%</span>
                          </div>
                    </div>
                     <button
-                        // onClick={handleAddAppClick} // TODO: Implement modal/form opening
                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
@@ -60,7 +48,6 @@ function SharedDataDashboard() {
                 </div>
 
 
-                {/* Apps List/Grid */}
                  <div className="bg-white shadow overflow-hidden rounded-lg">
                    {isLoading ? (
                         <p className="text-center p-10 text-gray-500">Loading tracked apps...</p>
@@ -94,7 +81,6 @@ function SharedDataDashboard() {
                                                  {app.locationAccess ? 'Location shared' : 'Location not shared'}
                                             </p>
                                          </div>
-                                         {/* Add notes display if needed */}
                                      </div>
                                  </li>
                              ))}
@@ -104,7 +90,6 @@ function SharedDataDashboard() {
                     )}
                   </div>
 
-                {/* TODO: Add Modal component for Add/Edit App Form */}
 
             </main>
         </div>
