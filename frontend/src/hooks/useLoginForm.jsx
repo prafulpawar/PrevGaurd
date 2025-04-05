@@ -4,10 +4,10 @@ const useLoginForm = (initialState) => {
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
-    const { name, value } = e.target; // Fix: Correctly access `name` and `value`
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value, // Fix: Update state using the correct `name`
+      [name]: value,
     }));
   };
 
