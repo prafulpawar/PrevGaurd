@@ -84,7 +84,7 @@ function Home() {
                              <a
                                 href="#features"
                                 onClick={(e) => smoothScrollTo(e, 'features')}
-                                className="w-full sm:w-auto text-white font-medium py-3 px-8 rounded-lg hover:bg-white hover:bg-opacity-20 transition duration-300 ease-in-out text-lg border border-white border-opacity-50"
+                                className="w-full sm:w-auto text-zinc-900 font-medium py-3 px-8 rounded-lg hover:bg-white hover:bg-opacity-20 transition duration-300 ease-in-out text-lg border border-white border-opacity-50"
                             >
                                 Learn More
                             </a>
