@@ -1,60 +1,137 @@
 // OtpVerification.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Import useRef
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheckIcon } from '@heroicons/react/24/outline';
-import { useSelector, useDispatch } from 'react-redux'; // Import hooks
+import { ShieldCheckIcon, ClockIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'; // Import icons
+import { useSelector, useDispatch } from 'react-redux';
 import InputField from '../components/forms/InputField';
 import Button from '../components/forms/Button';
 import {
     verifyOtp,
-    resendOtp, // Import resend action
+    resendOtp,
+    checkOtpStatus, // <-- Import check status action
     selectAuthUser,
-    selectAuthLoading,
+    selectAuthLoading, // General loading
     selectOtpError,
     selectOtpMessage,
     selectIsVerified,
-    clearOtpError, // Import action to clear errors
-} from '../redux/slice/authSlice'; // Adjust path as needed
+    clearOtpError,
+    // --- Import new selectors ---
+    selectOtpRequestId,
+    selectOtpDeliveryStatus,
+    selectIsCheckingOtpStatus,
+    // --- End new selectors ---
+} from '../redux/slice/authSlice';
+
+// Constants for polling
+const POLLING_INTERVAL = 5000; // Check every 5 seconds
+const MAX_POLLING_ATTEMPTS = 12; // Stop after 1 minute (12 * 5s)
 
 function OtpVerification() {
     const [otpValue, setOtpValue] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const pollingIntervalRef = useRef(null); // Ref to store interval ID
+    const pollingAttemptsRef = useRef(0); // Ref to count attempts
 
-    // Selectors for state
+    // Selectors
     const user = useSelector(selectAuthUser);
-    const isLoading = useSelector(selectAuthLoading);
+    const isVerified = useSelector(selectIsVerified);
+    const isLoading = useSelector(selectAuthLoading); // Loading for verify/resend
     const otpError = useSelector(selectOtpError);
     const otpMessage = useSelector(selectOtpMessage);
-    const isVerified = useSelector(selectIsVerified);
 
-    // Get email from user object, provide fallback
-    const displayEmail = user?.email || 'your email address'; // Use optional chaining
+    // --- Select new state ---
+    const otpRequestId = useSelector(selectOtpRequestId);
+    const otpDeliveryStatus = useSelector(selectOtpDeliveryStatus); // 'idle', 'pending_send', 'checking', 'sent', 'failed', etc.
+    const isCheckingOtpStatus = useSelector(selectIsCheckingOtpStatus); // Loading for status check
+    // --- End select new state ---
 
-     // Clear OTP error state when component mounts or unmounts
+    const displayEmail = user?.email || 'your email address';
+
+    // Clear errors on mount/unmount
     useEffect(() => {
-        dispatch(clearOtpError()); // Clear on mount
+        dispatch(clearOtpError());
         return () => {
-            dispatch(clearOtpError()); // Clear on unmount
+            dispatch(clearOtpError());
+            // Clear interval on unmount
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+            }
         };
     }, [dispatch]);
 
+    // Effect for polling OTP status
+    useEffect(() => {
+        // Conditions to start polling:
+        // 1. We have a requestId.
+        // 2. The status is 'pending_send' (initial state after registration) or maybe 'checking'
+        // 3. Verification hasn't already succeeded.
+        const shouldPoll = otpRequestId &&
+                           (otpDeliveryStatus === 'pending_send' || otpDeliveryStatus === 'checking') &&
+                           !isVerified;
 
-    // Effect to navigate when verification is successful
+        if (shouldPoll) {
+            // Clear previous interval if any (e.g., after resend)
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+            }
+            pollingAttemptsRef.current = 0; // Reset attempts counter
+
+            const poll = () => {
+                if (pollingAttemptsRef.current >= MAX_POLLING_ATTEMPTS) {
+                    console.warn("Max polling attempts reached for OTP status.");
+                    clearInterval(pollingIntervalRef.current);
+                    pollingIntervalRef.current = null;
+                    // Optionally set an error/status indicating timeout
+                    // dispatch(setOtpDeliveryStatus('timeout')); // Need to add 'timeout' handling in slice if desired
+                    dispatch(clearOtpError()) // Clear previous error before setting new one
+                    dispatch(verifyOtp.rejected('Failed to get OTP status in time. Please try resending.')); // Use reject mechanism of another thunk or a specific action
+                    return;
+                }
+
+                console.log(`Polling attempt: ${pollingAttemptsRef.current + 1}`);
+                dispatch(checkOtpStatus(otpRequestId)); // Dispatch the check
+                pollingAttemptsRef.current += 1;
+            };
+
+            // Start immediately then set interval
+            poll();
+            pollingIntervalRef.current = setInterval(poll, POLLING_INTERVAL);
+
+        } else {
+             // Conditions not met, ensure polling is stopped
+             if (pollingIntervalRef.current) {
+                 console.log("Stopping OTP status polling.");
+                 clearInterval(pollingIntervalRef.current);
+                 pollingIntervalRef.current = null;
+             }
+        }
+
+        // Cleanup function for this effect instance
+        return () => {
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+            }
+        };
+        // Dependencies: Start/stop polling when these change
+    }, [otpRequestId, otpDeliveryStatus, isVerified, dispatch]);
+
+
+    // Effect to navigate on successful verification
     useEffect(() => {
         if (isVerified) {
             console.log("Verification successful, navigating...");
-             // You might want to clear OTP state here before navigating
-             // dispatch(clearOtpStateAction()); // Create this if needed
-            navigate('/login'); // Navigate to login or dashboard after verification
+            if (pollingIntervalRef.current) { // Stop polling if verify succeeds
+                clearInterval(pollingIntervalRef.current);
+                pollingIntervalRef.current = null;
+            }
+            navigate('/login'); // Or wherever appropriate
         }
     }, [isVerified, navigate]);
 
     const handleOtpChange = (e) => {
-        // Allow only numbers and limit length
         const value = e.target.value.replace(/[^0-9]/g, '');
         setOtpValue(value.slice(0, 6));
-        // Clear error when user types
         if (otpError || otpMessage) {
             dispatch(clearOtpError());
         }
@@ -62,44 +139,73 @@ function OtpVerification() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!user || !user.email) {
-            // Handle case where user email is not available (e.g., direct navigation)
-            dispatch(clearOtpError()); // Clear previous message/error
-            // You might want to set an error directly or redirect
-             console.error("User email not found in state for OTP verification.");
-             // setLocalError("Could not verify OTP. Please try registering again."); // Example local error
-             navigate('/register'); // Redirect to register perhaps
+        if (!user || !user.email || otpDeliveryStatus !== 'sent') { // Only allow submit if OTP is confirmed sent
+            console.error("Cannot verify OTP. Email missing or OTP not confirmed sent.");
+            // Maybe set a local error? Or rely on the button being disabled.
             return;
         }
-        if (otpValue.length !== 6) {
-             // Set a local validation error maybe
-             console.error("OTP must be 6 digits.");
-             // setLocalValidationError("OTP must be 6 digits.");
-            return;
-        }
+        if (otpValue.length !== 6) return;
 
         try {
             await dispatch(verifyOtp({ email: user.email, otp: otpValue })).unwrap();
-            // Navigation is handled by the useEffect watching isVerified
         } catch (error) {
             console.error("OTP Verification failed:", error);
-            // Error is already in Redux state (otpError)
         }
     };
 
-     const handleResendOtp = async () => {
-        if (!user || !user.email) {
-             console.error("User email not found in state for resending OTP.");
-             navigate('/register'); // Redirect
-             return;
-        }
-        dispatch(clearOtpError()); // Clear previous message/error
+    const handleResendOtp = async () => {
+        if (!user || !user.email) return;
+        // Clear previous status/errors before resend attempt
+        dispatch(clearOtpError());
+        // Stop current polling before resending
+         if (pollingIntervalRef.current) {
+             clearInterval(pollingIntervalRef.current);
+             pollingIntervalRef.current = null;
+         }
         try {
-             await dispatch(resendOtp(user.email)).unwrap();
-             // Success message is handled by the Redux state (otpMessage)
+            await dispatch(resendOtp(user.email)).unwrap();
+            // Polling will restart via useEffect if resend is successful and provides an ID/sets status
         } catch (error) {
-             console.error("Resend OTP failed:", error);
-             // Error is handled by the Redux state (otpError)
+            console.error("Resend OTP failed:", error);
+        }
+    };
+
+    // Determine if OTP input and Verify button should be enabled
+    const canVerify = otpDeliveryStatus === 'sent' && !isLoading;
+
+    // Display Status Information
+    const renderStatusInfo = () => {
+        switch (otpDeliveryStatus) {
+            case 'pending_send':
+            case 'checking':
+                return (
+                    <div className="flex items-center text-sm text-yellow-600 justify-center mb-4">
+                        <ClockIcon className="h-5 w-5 mr-2 animate-spin" />
+                        {isCheckingOtpStatus ? 'Checking status...' : 'Waiting for OTP to be sent...'}
+                    </div>
+                );
+            case 'sent':
+                return (
+                    <div className="flex items-center text-sm text-green-600 justify-center mb-4">
+                        <CheckCircleIcon className="h-5 w-5 mr-2" />
+                        OTP Sent! Please check your email ({displayEmail}).
+                    </div>
+                );
+             case 'failed':
+             case 'expired':
+             case 'not_found':
+                 // Error is already displayed via otpError selector below this section
+                 return null; // Don't show duplicate info
+            case 'verified': // Should have navigated away, but just in case
+                 return (
+                    <div className="flex items-center text-sm text-green-600 justify-center mb-4">
+                        <CheckCircleIcon className="h-5 w-5 mr-2" />
+                        Account Verified!
+                    </div>
+                 );
+            case 'idle': // Before registration completes or if no requestId
+            default:
+                return null; // No status to show initially
         }
     };
 
@@ -112,26 +218,37 @@ function OtpVerification() {
                     <ShieldCheckIcon className="h-10 w-auto text-indigo-600" />
                     <span className="ml-2 text-2xl font-bold text-gray-900">PrivGuard</span>
                 </Link>
-                <h2 className="text-center text-3xl font-extrabold text-gray-900">
+                 <h2 className="text-center text-3xl font-extrabold text-gray-900">
                     Verify Your Account
                 </h2>
-                <p className="mt-2 text-center text-sm text-gray-600">
-                    Enter the 6-digit code sent to
-                    <br />
-                    {/* Display the email from Redux state */}
-                    <span className="font-medium text-gray-800">{displayEmail}</span>
-                </p>
+                {/* Show status before asking for code */}
+                {!isVerified && renderStatusInfo()}
+                 {/* Conditional message - only show if status isn't clearly indicating sent/failed */}
+                {(otpDeliveryStatus !== 'sent' && otpDeliveryStatus !== 'failed' && otpDeliveryStatus !== 'expired' && otpDeliveryStatus !== 'not_found' && !isVerified) && (
+                     <p className="mt-2 text-center text-sm text-gray-600">
+                         We are sending a 6-digit code to
+                         <br />
+                         <span className="font-medium text-gray-800">{displayEmail}</span>
+                     </p>
+                 )}
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
-                     {/* Display OTP specific errors or messages */}
+                    {/* Display OTP specific errors or resend messages */}
                     {otpError && (
                         <div className="rounded-md bg-red-50 p-4 mb-4">
-                            <p className="text-sm font-medium text-red-800">{otpError}</p>
+                             <div className="flex">
+                                 <div className="flex-shrink-0">
+                                    <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                                 </div>
+                                 <div className="ml-3">
+                                    <p className="text-sm font-medium text-red-800">{otpError}</p>
+                                 </div>
+                             </div>
                         </div>
                     )}
-                    {otpMessage && !otpError && ( // Only show message if no error
+                    {otpMessage && !otpError && (
                          <div className="rounded-md bg-blue-50 p-4 mb-4">
                             <p className="text-sm font-medium text-blue-800">{otpMessage}</p>
                         </div>
@@ -140,23 +257,26 @@ function OtpVerification() {
                     <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                         <InputField
                             label="Verification Code"
-                            type="text" // Use text to allow easier input masking/validation if needed
-                            inputMode="numeric" // Hint for mobile keyboards
+                            type="text"
+                            inputMode="numeric"
                             name="otp"
                             value={otpValue}
                             onChange={handleOtpChange}
                             required
                             placeholder="Enter 6-digit code"
                             maxLength={6}
-                            disabled={isLoading} // Disable input while loading
-                            autoComplete="one-time-code" // Help password managers/browsers
+                            // Disable until OTP is confirmed sent
+                            disabled={!canVerify || isLoading || isCheckingOtpStatus}
+                            autoComplete="one-time-code"
                         />
 
                         <div>
                             <Button
                                 type="submit"
-                                isLoading={isLoading}
-                                disabled={isLoading || otpValue.length !== 6} // Disable if loading or OTP length is wrong
+                                // Loading state should cover Verify action
+                                isLoading={isLoading && !isCheckingOtpStatus}
+                                // Disable until OTP sent and not loading
+                                disabled={!canVerify || otpValue.length !== 6 || isLoading || isCheckingOtpStatus}
                                 fullWidth
                             >
                                 {isLoading ? 'Verifying...' : 'Verify Account'}
@@ -169,12 +289,13 @@ function OtpVerification() {
                         <Button
                             variant="link"
                             onClick={handleResendOtp}
-                            disabled={isLoading} // Disable while any loading is happening
+                            // Disable while any action is loading (verify, resend, status check)
+                            disabled={isLoading || isCheckingOtpStatus}
                             className="mt-1"
                             fullWidth={false}
                         >
                              {/* Indicate loading specific to resend if needed */}
-                             {isLoading && otpMessage === 'Resending OTP...' ? 'Sending...' : 'Resend OTP'}
+                             {(isLoading && otpMessage === 'Resending OTP...') ? 'Sending...' : 'Resend OTP'}
                         </Button>
                     </div>
                 </div>
