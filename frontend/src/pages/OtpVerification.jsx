@@ -22,7 +22,7 @@ function OtpVerification() {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [canResend, setCanResend] = useState(false); // Start as false until cooldown expires or initially
 
-  
+   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
