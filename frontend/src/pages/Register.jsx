@@ -54,7 +54,7 @@ const Register = () => {
 
         
         dispatch(registerUser(registrationData));
-        // navigate('/otp-verification')
+         navigate('/otp-verification')
     };
 
     
