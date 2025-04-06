@@ -166,8 +166,7 @@ function OtpVerification() {
               placeholder="Enter 6-digit code"
               maxLength={6} // Enforce length
               disabled={isLoading || isResending}
-              // Optional: Add autoFocus
-              // autoFocus
+             
             />
 
             <div>
@@ -196,13 +195,7 @@ function OtpVerification() {
             </Button>
           </div>
 
-            {/* Optional: Link back to Login/Register */}
-            {/* <p className="mt-4 text-center text-sm text-gray-600">
-               Go back to{' '}
-              <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Sign in
-              </Link>
-            </p> */}
+           
 
         </div>
       </div>
