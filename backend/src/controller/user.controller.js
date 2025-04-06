@@ -13,6 +13,9 @@ const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 60 * 24 * 7;
 
 module.exports.registerUser = async (req, res) => {
     try {
+        console.log('hello req.file:', req.file);
+        console.log('hello req.body:', req.body); // req.body को भी लॉग करें
+
         const { username, email, password } = req.body;
 
         if (!username || !email || !password) {
@@ -20,23 +23,19 @@ module.exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-
         const isExists = await userModel.findOne({ $or: [{ email }, { username }] }).lean();
         if (isExists) {
             logger.info(`Registration attempt for existing user: ${email} or ${username}`);
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
 
-        const otp = '1234'
-        // otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+        const otp = '1234';
         logger.info(`Generated OTP ${otp} for ${email}`);
 
         const hashPassword = await bcrypt.hash(password, 10);
 
-        // TTL
         const otpData = JSON.stringify({ otp, username, hashPassword });
         await redis.set(`otp:${email}`, otpData, 'EX', 300);
-
 
         const channel = await createChannel();
         if (channel) {
@@ -44,19 +43,22 @@ module.exports.registerUser = async (req, res) => {
             logger.info(`Email task queued for ${email}`);
         } else {
             logger.error("Failed to get RabbitMQ channel for emailQueue");
-
         }
 
-
-        return res.status(200).json({
-            email,
+        // प्रतिक्रिया भेजने से पहले अतिरिक्त लॉगिंग
+        console.log('Sending successful response');
+        res.status(200).json({
+            // email,
             message: "OTP sent successfully. Please verify."
         });
 
     } catch (error) {
-        console.log(error)
+        console.error('Error in registerUser:', error); // त्रुटि को अधिक विस्तार से लॉग करें
         logger.error("Error in user registration:", { error: error.message, stack: error.stack });
-        return res.status(500).json({ message: "Error during user registration" });
+
+        // त्रुटि प्रतिक्रिया भेजने से पहले अतिरिक्त लॉगिंग
+        console.log('Sending error response');
+        res.status(500).json({ message: "Error during user registration", error: error.message });
     }
 };
 

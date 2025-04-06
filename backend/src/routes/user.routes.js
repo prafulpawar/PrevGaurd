@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const {registerUser,verfifyOtp,getOtpStatus,getUserInfo,logoutUser,loginUser}  = require('../controller/user.controller');
 const rateLimiter = require('../middlewares/rateLimiter')
-const { verifyAuth }  = require('../middlewares/isAuth');
+const { verifyAuth }  = require('../middlewares/isAuth');const multer = require('multer');
+const upload = multer(); // using memoryStorage by default
 
-router.post('/auth/signup',rateLimiter,registerUser);
-router.post('/verifyOtp',rateLimiter,verfifyOtp);
-router.get("/otp-status", getOtpStatus);
+// router.post('/auth/signup',rateLimiter,registerUser);
+router.post('/auth/signup', rateLimiter,upload.single('profileImage'), registerUser);
+
+router.post('/auth/verifyOtp',rateLimiter,verfifyOtp);
+router.get("/auth/otp-status", getOtpStatus);
 router.post('/auth/login',loginUser)
 
 router.get('/auth/me',verifyAuth ,getUserInfo);

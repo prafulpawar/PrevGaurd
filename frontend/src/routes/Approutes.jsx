@@ -3,9 +3,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// --- पेज कंपोनेंट्स इम्पोर्ट करें ---
 
-// प्रमाणीकरण और पब्लिक पेज
 import Register from '../pages/Register'; // Adjust path if needed
 import Login from '../pages/Login';     // Adjust path if needed
 import Home from '../pages/Home';       // Adjust path if needed
