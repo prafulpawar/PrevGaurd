@@ -1,32 +1,23 @@
-// src/pages/OtpVerification.jsx (or wherever your pages live)
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { ShieldCheckIcon, EnvelopeIcon } from '@heroicons/react/24/outline'; // Icons
-import useOtpForm from '../hooks/useOtpForm'; // Adjust path if needed
-import InputField from '../components/forms/InputField'; // Adjust path
-import Button from '../components/forms/Button'; // Adjust path
+import React, { useState } from 'react'; 
+import { Link } from 'react-router-dom';
+import { ShieldCheckIcon } from '@heroicons/react/24/outline'; 
 
-const RESEND_COOLDOWN_SECONDS = 60; // Cooldown time in seconds
+import InputField from '../components/forms/InputField'; 
+import Button from '../components/forms/Button';
+
 
 function OtpVerification() {
-  const { formData, handleChange, resetForm } = useOtpForm({ otp: '' });
-  const navigate = useNavigate();
-  const location = useLocation();
+ 
+  const [otpValue, setOtpValue] = useState('');
 
-  // Attempt to get email from navigation state (passed from Register page)
-  const email = location.state?.email;
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState(false);
-  const [error, setError] = useState(null);
-  const [resendCooldown, setResendCooldown] = useState(0);
-  const [canResend, setCanResend] = useState(false); // Start as false until cooldown expires or initially
+ 
+  const displayEmail = 'your email address';
 
-   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Logo and Brand */}
+        
         <Link to="/" className="flex justify-center items-center mb-6">
           <ShieldCheckIcon className="h-10 w-auto text-indigo-600" />
           <span className="ml-2 text-2xl font-bold text-gray-900">PrivGuard</span>
@@ -37,39 +28,34 @@ function OtpVerification() {
         <p className="mt-2 text-center text-sm text-gray-600">
           Enter the 6-digit code sent to
           <br />
-          <span className="font-medium text-gray-800">{email || 'your email address'}</span>
+      
+          <span className="font-medium text-gray-800">{displayEmail}</span>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-            {/* Display General Error Message */}
-            {error && (
-              <div className="rounded-md bg-red-50 p-4 mb-4">
-                <p className="text-sm font-medium text-red-800">{error}</p>
-              </div>
-            )}
+     
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()} noValidate>
+         
 
             <InputField
               label="Verification Code"
-              type="text" // Use text to allow pasting, could use "tel"
-              inputMode="numeric" // Hint for numeric keyboard on mobile
+              type="text"
+              inputMode="numeric"
               name="otp"
-              value={formData.otp}
-              onChange={handleChange}
+              value={otpValue} 
+              onChange={(e) => setOtpValue(e.target.value)} 
               required
               placeholder="Enter 6-digit code"
-              maxLength={6} // Enforce length
-              disabled={isLoading || isResending}
+              maxLength={6}
              
             />
 
             <div>
               <Button
                 type="submit"
-                isLoading={isLoading}
-                disabled={isLoading || isResending || !formData.otp || formData.otp.length < 6}
+               
               >
                 Verify Account
               </Button>
@@ -80,18 +66,16 @@ function OtpVerification() {
             <p className="text-sm text-gray-600">Didn't receive the code?</p>
             <Button
               variant="link"
-              onClick={handleResendOtp}
-              disabled={!canResend || isLoading || isResending || !email}
+           
+              onClick={() => console.log('Resend OTP clicked (UI only)')} 
+             
               className="mt-1"
-              fullWidth={false} // Don't make link full width
+              fullWidth={false} 
             >
-              {isResending ? 'Sending...' :
-               canResend ? 'Resend OTP' :
-               `Resend OTP in ${resendCooldown}s`}
+             
+              Resend OTP
             </Button>
           </div>
-
-           
 
         </div>
       </div>
