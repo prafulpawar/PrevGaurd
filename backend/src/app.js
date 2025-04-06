@@ -12,8 +12,10 @@ const cors = require('cors')
 // appAPI.set('trust proxy', true);
 
 appAPI.use(cors({
-    origin: 'http://localhost:5173', // केवल अपने फ्रंटएंड डोमेन को अनुमति दें
+    origin: 'http://localhost:5173',
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // Add needed headers.
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] // Add needed methods.
 }));
 appAPI.use(express.json());
 appAPI.use(express.urlencoded({extended:true}));

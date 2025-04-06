@@ -14,7 +14,7 @@ const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 60 * 24 * 7;
 module.exports.registerUser = async (req, res) => {
     try {
         console.log('hello req.file:', req.file);
-        console.log('hello req.body:', req.body); // req.body को भी लॉग करें
+        console.log('hello req.body:', req.body);
 
         const { username, email, password } = req.body;
 
@@ -45,7 +45,7 @@ module.exports.registerUser = async (req, res) => {
             logger.error("Failed to get RabbitMQ channel for emailQueue");
         }
 
-        // प्रतिक्रिया भेजने से पहले अतिरिक्त लॉगिंग
+      
         console.log('Sending successful response');
         res.status(200).json({
             // email,
@@ -53,10 +53,9 @@ module.exports.registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error in registerUser:', error); // त्रुटि को अधिक विस्तार से लॉग करें
+        console.error('Error in registerUser:', error); 
         logger.error("Error in user registration:", { error: error.message, stack: error.stack });
 
-        // त्रुटि प्रतिक्रिया भेजने से पहले अतिरिक्त लॉगिंग
         console.log('Sending error response');
         res.status(500).json({ message: "Error during user registration", error: error.message });
     }

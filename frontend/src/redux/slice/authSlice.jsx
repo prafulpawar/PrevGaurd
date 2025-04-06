@@ -4,9 +4,6 @@ import api from '../../services/api';
 export const registerUser = createAsyncThunk(
     '/api/auth/signup',
     async (formData, { rejectWithValue }) => {
-    //   for (let pair of formData.entries()) {
-    //     console.log(`${pair[0]}:`, pair[1]);
-    // }
         try {
             const response = await api.post('/api/auth/signup', formData, {
                 headers: {
@@ -18,7 +15,7 @@ export const registerUser = createAsyncThunk(
             return response.data;
         } catch (error) {
             console.error("API Error:", error);
-            // यहाँ त्रुटि संदेश को सही तरीके से निकालें
+            
             if (error.response && error.response.data && error.response.data.message) {
                 return rejectWithValue(error.response.data.message);
             } else if (error.message) {
