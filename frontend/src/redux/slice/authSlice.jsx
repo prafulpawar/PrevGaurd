@@ -61,7 +61,7 @@ const authSlice = createSlice({
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload; // अब यह एक स्ट्रिंग होगा
+                state.error = action.payload; 
             });
     },
 });
