@@ -5,11 +5,21 @@ import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import InputField from "../components/forms/InputField";
 import ImageUpload from "../components/forms/ImageUpload";
 import Button from '../components/forms/Button';
-
-
+import { updateFormData ,initialFomData } from '../redux/slice/authSlice';
+import {useDispatch , useSelector} from 'react-redux'
 const Register = () => {
+    const dispatch = useDispatch();
+    const formData = useSelector(initialFomData)
+    console.log(formData)
+    const isLoading = {}
     
-  
+    const handleChange =(e)=>{
+       dispatch(updateFormData({name:e.target.name},{value:e.target.value}))
+    }
+
+    const handleImageChange = (e) =>{
+         dispatch(updateFormData({name:Image,value:file}))
+    }
    
   
     return (
@@ -36,7 +46,7 @@ const Register = () => {
                 type="text"
                 name="username"
                 value={formData.username}
-                onChange={}
+                onChange={handleChange}
                 required
                 placeholder="Choose a username"
                 disabled={isLoading}
@@ -48,7 +58,7 @@ const Register = () => {
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={}
+                onChange={handleChange}
                 required
                 placeholder="you@example.com"
                 disabled={isLoading}
@@ -60,7 +70,7 @@ const Register = () => {
                 type="password"
                 name="password"
                 value={formData.password}
-                onChange={}
+                onChange={handleChange}
                 required
                 placeholder="Create a password (min 8 chars)"
                 minLength="8"
@@ -73,7 +83,7 @@ const Register = () => {
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={}
+                onChange={handleChange}
                 required
                 placeholder="Re-enter your password"
                 disabled={isLoading}
@@ -84,7 +94,7 @@ const Register = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Profile Picture (Optional)
                 </label>
-                <ImageUpload name="image" onChange={} />
+                <ImageUpload name="image" onChange={handleImageChange} />
                 {validationErrors?.profileImage && (
                   <p className="text-xs text-red-600 mt-1">{validationErrors.profileImage}</p>
                 )}
