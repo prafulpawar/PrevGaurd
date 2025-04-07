@@ -1,6 +1,7 @@
 import {createAsyncThunk , createSlice}  from '@reduxjs/toolkit'
 
 const initialState = {
+     
       formData:{
            username:'',
            email:"",
@@ -16,7 +17,8 @@ const authSlice = createSlice({
        initialState,
        
        reducers:{
-             updateFormData:(state,payload)=>{
+
+             updateFormData:(state,action)=>{
                 
              }
        },
@@ -29,5 +31,8 @@ const authSlice = createSlice({
 
 // actions
 export const {updateFormData} = authSlice.actions
+
+// state 
+export const setFormData = (state) => state.auth.formData
 
 export default authSlice.reducer

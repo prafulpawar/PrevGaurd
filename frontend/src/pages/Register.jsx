@@ -1,17 +1,16 @@
-// src/pages/Register.js (UI Only - Cleaned)
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import InputField from "../components/forms/InputField";
 import ImageUpload from "../components/forms/ImageUpload";
 import Button from '../components/forms/Button';
-import {updateFormData} from '../redux/slice/authSlice'
+import {updateFormData , setFormData} from '../redux/slice/authSlice'
 
 const Register = () => {
      
-     
-  
-   
+   const handleChnage = (e)=>{
+    
+   }
   
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
