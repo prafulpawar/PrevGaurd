@@ -4,12 +4,13 @@ console.log(nodemailers.nodemailers)
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user:process.env.EMAIL_USER,
-      pass:process.env.EMAIL_PASS,
+      user:"prafuldukhi@gmail.com",
+      pass:"yiukxdxaeoodzppf"
     },
   });
   
   const sendMail = async (to, subject, text) => {
+    console.log(to, ' ',subject,' ',text)
     try {
       const info = await transporter.sendMail({
         from: nodemailers.EMAIL_USER,

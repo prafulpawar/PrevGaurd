@@ -82,7 +82,7 @@ async function consumeOtpQueue() {
                      logger.error(`[OTP Worker] Error creating user ${email} in DB:`, { error: dbError.message, stack: dbError.stack, requestId });
                     
                      await redis.set(`status:${requestId}`, JSON.stringify({ status: "error", message: "Failed to register user due to a database error." }), "EX", 300);
-                     // DB एरर गंभीर हो सकता है, शायद मैसेज को requeue न करें? अभी ack करते हैं।
+                   
                      return channel.ack(msg);
                 }
 

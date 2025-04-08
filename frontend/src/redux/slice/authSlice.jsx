@@ -4,6 +4,9 @@ import api from '../../services/api';
 const initialState = {
   Iserror: null,
   isLoading: false,
+  email:"",
+ 
+
   formData: {
     username: '',
     email: '',
@@ -19,7 +22,7 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await api.post('/api/auth/signup', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
       console.log(response)
@@ -31,6 +34,9 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+
+
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -41,6 +47,9 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.Iserror = null;
     },
+    updateOtp:(state,action)=>{
+       state.otp=action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -50,6 +59,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.email = state.formData.email;
         state.formData = {
           username: '',
           email: '',
@@ -61,7 +71,11 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
         state.Iserror = action.payload;
-      });
+      })
+
+    
+
+
   },
 });
 
@@ -70,5 +84,5 @@ export const { updateFormData, clearError } = authSlice.actions;
 export const setFormData = (state) => state.auth.formData;
 export const Ierror = (state) => state.auth.Iserror;
 export const isLoading = (state) => state.auth.isLoading;
-
+export const getemail = (state) => state.auth.email;
 export default authSlice.reducer;

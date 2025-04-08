@@ -25,6 +25,7 @@ const Register = () => {
   const handleChange = (e) => {
     dispatch(updateFormData({ field: e.target.name, value: e.target.value }));
     dispatch(clearError());
+    
   };
 
   const handleImageChange = (e) => {
@@ -43,6 +44,7 @@ const Register = () => {
       formToSend.append('image', formData.image);
     }
     dispatch(registerUser(formToSend));
+    navigate('/otp-verification')
   };
 
   return (

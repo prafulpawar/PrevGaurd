@@ -9,7 +9,7 @@ const rebbitMQ = require('./services/rabbitMQ')
 const appAPI = express();
 const cors = require('cors')
 
-appAPI.use(cors())
+ appAPI.use(cors())
 // appAPI.set('trust proxy', true);
 
 
