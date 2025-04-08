@@ -17,7 +17,7 @@ const authSlice = createSlice({
        initialState,
        
        reducers:{
-
+            
              updateFormData:(state,action)=>{
                 
              }
