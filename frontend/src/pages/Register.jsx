@@ -10,6 +10,7 @@ import {useDispatch , useSelector } from 'react-redux'
 const Register = () => {
      const validationErrors ={}
      const error = useSelector(Ierror)
+     const isLoadingValue = useSelector(isLoading)
      const handleChange = (e)=>{
          updateFormData({ field:e.target.name, value:e.target.value })
     }
@@ -98,7 +99,7 @@ const Register = () => {
   
               <div>
 
-                <Button type="submit" isLoading={isLoading}  fullWidth>
+                <Button type="submit" isLoading={isLoadingValue}  fullWidth>
                   Register
                 </Button>
 

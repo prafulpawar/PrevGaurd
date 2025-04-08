@@ -4,19 +4,9 @@ import React from 'react'; // Basic React import
 import { Link } from 'react-router-dom'; // Keep Link for navigation structure
 import { ShieldCheckIcon, ClockIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'; // Icons for UI
 import InputField from '../components/forms/InputField'; // Reusable Input component
-// import Button from '../components/forms/Button'; // Reusable Button component
-
-// --- All Logic Removed ---
-// - No useState, useEffect, useRef
-// - No Redux hooks (useDispatch, useSelector)
-// - No Redux imports (actions, selectors, constants)
-// - No event handler logic (just placeholders or preventDefault)
-// - No side effects (API calls, polling)
-// - No navigation logic (useNavigate)
 
 function OtpVerification() {
-    // --- Static Placeholder Values for UI Demonstration ---
-    // You can change these values to preview different UI states
+  
     const staticDisplayEmail = 'user@example.com';
     const staticOtpValue = ''; // Example: '' or '1234'
     const staticOtpError = null; // Example: null or 'Invalid OTP code. Please try again.'
