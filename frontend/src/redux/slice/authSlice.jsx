@@ -22,8 +22,10 @@ export const registerUser = createAsyncThunk(
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log(response)
       return response.data;
     } catch (error) {
+      console.log(error)
       return rejectWithValue(error.response?.data?.message || 'Signup failed');
     }
   }
