@@ -9,7 +9,11 @@ import {updateFormData , setFormData} from '../redux/slice/authSlice'
 const Register = () => {
      
    const handleChnage = (e)=>{
-    
+       
+   }
+
+   const handleImageChange = (e) =>{
+
    }
   
     return (
@@ -36,7 +40,7 @@ const Register = () => {
                 type="text"
                 name="username"
                 value={formData.username}
-                onChange={}
+                onChange={handleChnage}
                 required
                 placeholder="Choose a username"
                 disabled={isLoading}
@@ -48,7 +52,7 @@ const Register = () => {
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={}
+                onChange={handleChnage}
                 required
                 placeholder="you@example.com"
                 disabled={isLoading}
@@ -60,7 +64,7 @@ const Register = () => {
                 type="password"
                 name="password"
                 value={formData.password}
-                onChange={}
+                onChange={handleChnage}
                 required
                 placeholder="Create a password (min 8 chars)"
                 minLength="8"
@@ -73,7 +77,7 @@ const Register = () => {
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
-                onChange={}
+                onChange={handleChnage}
                 required
                 placeholder="Re-enter your password"
                 disabled={isLoading}
@@ -84,7 +88,7 @@ const Register = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Profile Picture (Optional)
                 </label>
-                <ImageUpload name="image" onChange={} />
+                <ImageUpload name="image" onChange={handleImageChange} />
                 {validationErrors?.profileImage && (
                   <p className="text-xs text-red-600 mt-1">{validationErrors.profileImage}</p>
                 )}
