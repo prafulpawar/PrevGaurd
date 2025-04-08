@@ -1,47 +1,86 @@
 // src/pages/OtpVerification.js (UI Only)
-import React from 'react'; // Removed useState, useEffect, useRef
+
+import React from 'react'; // Basic React import
 import { Link } from 'react-router-dom'; // Keep Link for navigation structure
-import { ShieldCheckIcon, ClockIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import InputField from '../components/forms/InputField';
-import Button from '../components/forms/Button';
-// Removed: useNavigate, useDispatch, useSelector
-// Removed: Redux imports (verifyOtp, resendOtp, checkOtpStatus, selectors, clearOtpError)
-// Removed: Constants (POLLING_INTERVAL, MAX_POLLING_ATTEMPTS)
+import { ShieldCheckIcon, ClockIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'; // Icons for UI
+import InputField from '../components/forms/InputField'; // Reusable Input component
+// import Button from '../components/forms/Button'; // Reusable Button component
+
+// --- All Logic Removed ---
+// - No useState, useEffect, useRef
+// - No Redux hooks (useDispatch, useSelector)
+// - No Redux imports (actions, selectors, constants)
+// - No event handler logic (just placeholders or preventDefault)
+// - No side effects (API calls, polling)
+// - No navigation logic (useNavigate)
 
 function OtpVerification() {
-    // Removed: otpValue state
-    // Removed: dispatch, navigate
-    // Removed: pollingIntervalRef, pollingAttemptsRef
-    // Removed: All Redux selectors (user, isVerified, isLoading, errors, messages, status etc.)
-    // Removed: All useEffect hooks
-    // Removed: handleOtpChange, handleSubmit, handleResendOtp, renderStatusInfo functions
-
-    // Static placeholder values for display
+    // --- Static Placeholder Values for UI Demonstration ---
+    // You can change these values to preview different UI states
     const staticDisplayEmail = 'user@example.com';
-    const staticOtpValue = ''; // Or '12' for partial input example
-    const staticOtpError = null; // Or 'Static: Invalid OTP'
-    const staticOtpMessage = null; // Or 'Static: OTP Resent'
-    const staticIsLoading = false;
-    const staticIsCheckingOtpStatus = false; // Static polling indicator example
-    const staticIsVerified = false;
-    const staticCanVerify = true; // Example: Assume OTP can be verified in this static view
-    const staticOtpDeliveryStatus = 'sent'; // Example status: 'sent', 'pending_send', 'failed', etc.
+    const staticOtpValue = ''; // Example: '' or '1234'
+    const staticOtpError = null; // Example: null or 'Invalid OTP code. Please try again.'
+    const staticOtpMessage = null; // Example: null or 'A new OTP has been sent.'
+    const staticIsLoading = false; // Example: true (shows button loading state), false
+    const staticIsCheckingOtpStatus = false; // Example: true (disables inputs during hypothetical polling)
+    const staticIsVerified = false; // Example: true (could hide form, show success message), false
+    const staticCanVerify = true; // Example: true (enables verify button), false
+    const staticCanResend = true; // Example: true (enables resend button), false
+    const staticOtpDeliveryStatus = 'sent'; // Example status: 'sent', 'pending_send', 'failed'
 
-    // Simplified Static Status Info (example)
+    // --- Simplified Static Status Info Renderer ---
     const renderStaticStatusInfo = () => {
-        // You can manually set which status to display for UI preview
-        const status = staticOtpDeliveryStatus;
+        // Manually set which status to display for UI preview
+        const status = staticOtpDeliveryStatus; // Use the placeholder
 
-        if (status === 'sent') {
-             return ( <div className="flex items-center text-sm text-green-600 justify-center mb-4"> <CheckCircleIcon className="h-5 w-5 mr-2" /> OTP Sent! Please check {staticDisplayEmail}. </div> );
+        if (status === 'sent' && !staticIsVerified) {
+             return (
+                 <div className="flex items-center text-sm text-green-600 justify-center my-4 text-center px-4">
+                     <CheckCircleIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                     <span>
+                         Enter the 4-digit code sent to{' '}
+                         <span className="font-medium text-gray-800">{staticDisplayEmail}</span>.
+                     </span>
+                 </div>
+             );
         }
-        if (status === 'pending_send') {
-             return ( <div className="flex items-center text-sm text-yellow-600 justify-center mb-4"> <ClockIcon className="h-5 w-5 mr-2 animate-spin" /> Waiting for OTP to be sent... </div> );
+        if (status === 'pending_send' && !staticIsVerified) {
+             return (
+                 <div className="flex items-center text-sm text-yellow-600 justify-center my-4 text-center px-4">
+                     <ClockIcon className="h-5 w-5 mr-2 animate-spin flex-shrink-0" />
+                     <span>Waiting for OTP to be sent...</span>
+                 </div>
+             );
         }
-        // Add other static status examples if needed
-        return null;
+         if (status === 'failed' && !staticIsVerified) {
+              return (
+                  <div className="flex items-center text-sm text-red-600 justify-center my-4 text-center px-4">
+                      <XCircleIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span>Failed to send OTP. Please try resending.</span>
+                  </div>
+              );
+         }
+         if (staticIsVerified) {
+            return (
+                 <div className="flex items-center text-sm text-green-600 justify-center my-4 text-center px-4">
+                     <CheckCircleIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                     <span>Account Verified Successfully!</span>
+                     {/* Optionally add a link/button to proceed */}
+                 </div>
+            );
+         }
+        // Default message if no specific status matches or verification is done
+        if (!staticIsVerified) {
+             return (
+                  <p className="mt-2 text-center text-sm text-gray-600">
+                         Please enter the verification code.
+                     </p>
+             );
+        }
+        return null; // Return null if verified and no specific message needed
     };
 
+    // --- Component Render ---
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             {/* Header */}
@@ -50,72 +89,103 @@ function OtpVerification() {
                     <ShieldCheckIcon className="h-10 w-auto text-indigo-600" />
                     <span className="ml-2 text-2xl font-bold text-gray-900">PrivGuard</span>
                 </Link>
-                 <h2 className="text-center text-3xl font-extrabold text-gray-900">
+                 <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-2">
                     Verify Your Account
                 </h2>
                  {/* Display static status or description */}
                  {renderStaticStatusInfo()}
-                 {staticOtpDeliveryStatus !== 'sent' && !staticIsVerified && (
-                     <p className="mt-2 text-center text-sm text-gray-600">
-                         Enter the 4-digit code sent to
-                         <br />
-                         <span className="font-medium text-gray-800">{staticDisplayEmail}</span>
-                     </p>
-                 )}
             </div>
 
+            {/* Form Area */}
+            {!staticIsVerified && ( // Only show the form if not verified
+                 <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
+                    <div className="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
+                        {/* Display Static Error Example */}
+                        {staticOtpError && (
+                            <div className="rounded-md bg-red-50 p-4 mb-4">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">
+                                        <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                                    </div>
+                                    <div className="ml-3">
+                                        <p className="text-sm font-medium text-red-800">{staticOtpError}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow-lg rounded-lg sm:px-10">
-                    {/* Display Static Error Example */}
-                    {staticOtpError && ( <div className="rounded-md bg-red-50 p-4 mb-4"> <div className="flex"> <div className="flex-shrink-0"> <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" /> </div> <div className="ml-3"> <p className="text-sm font-medium text-red-800">{staticOtpError}</p> </div> </div> </div> )}
-                     {/* Display Static Message Example */}
-                    {staticOtpMessage && !staticOtpError && ( <div className="rounded-md bg-blue-50 p-4 mb-4"> <p className="text-sm font-medium text-blue-800">{staticOtpMessage}</p> </div> )}
+                         {/* Display Static Message Example (e.g., for OTP resent) */}
+                        {staticOtpMessage && !staticOtpError && (
+                             <div className="rounded-md bg-blue-50 p-4 mb-4">
+                                 <div className="flex">
+                                     {/* Optional: Add an icon like InformationCircleIcon */}
+                                     <div className="ml-3">
+                                         <p className="text-sm font-medium text-blue-800">{staticOtpMessage}</p>
+                                     </div>
+                                 </div>
+                             </div>
+                        )}
 
-                     {/* Removed onSubmit logic */}
-                    <form className="space-y-6" onSubmit={(e) => e.preventDefault()} noValidate>
-                        <InputField
-                            label="Verification Code"
-                            type="text"
-                            inputMode="numeric"
-                            name="otp"
-                            value={staticOtpValue} // Use static value
-                            onChange={() => {}} // No-op function
-                            required
-                            placeholder="Enter 4-digit code"
-                            maxLength={4} // Keep 4-digit length
-                            disabled={!staticCanVerify || staticIsLoading || staticIsCheckingOtpStatus} // Use static values
-                            autoComplete="one-time-code"
-                        />
+                         {/* Form with no logic */}
+                        <form className="space-y-6" onSubmit={(e) => e.preventDefault()} noValidate>
+                            <InputField
+                                label="Verification Code"
+                                type="text"
+                                inputMode="numeric" // Hint for mobile keyboards
+                                name="otp" // Still useful for semantics/testing
+                                value={staticOtpValue} // Use static value
+                                onChange={() => {}} // No-op function: Does nothing
+                                required // HTML5 validation hint
+                                placeholder="Enter 4-digit code"
+                                maxLength={4} // Enforce length visually
+                                // Disable based on static flags
+                                disabled={!staticCanVerify || staticIsLoading || staticIsCheckingOtpStatus}
+                                autoComplete="one-time-code" // Helps password managers/browsers
+                            />
 
-                        <div>
-                            {/* Removed isLoading prop and dynamic disabled */}
+                            <div>
+                                <Button
+                                    type="submit"
+                                    // Disable based on static flags and input length
+                                    disabled={!staticCanVerify || staticOtpValue.length !== 4 || staticIsLoading || staticIsCheckingOtpStatus}
+                                    isLoading={staticIsLoading} // Pass static loading state to Button
+                                    fullWidth
+                                >
+                                    Verify Account
+                                </Button>
+                            </div>
+                        </form>
+
+                        {/* Resend button section */}
+                         <div className="mt-6 text-center">
+                            <p className="text-sm text-gray-600">Didn't receive the code?</p>
                             <Button
-                                type="submit"
-                                disabled={!staticCanVerify || staticOtpValue.length !== 4 || staticIsLoading || staticIsCheckingOtpStatus} // Use static values
-                                fullWidth
+                                variant="link"
+                                onClick={() => {}} // No-op function: Does nothing
+                                // Disable based on static flags
+                                disabled={!staticCanResend || staticIsLoading || staticIsCheckingOtpStatus}
+                                isLoading={staticIsLoading && !staticCanVerify } // Show loading maybe only if main action isn't also loading? Or just use staticIsLoading
+                                className="mt-1"
+                                fullWidth={false} // Link buttons typically aren't full width
                             >
-                                Verify Account
+                                Resend OTP
                             </Button>
                         </div>
-                    </form>
 
-                    {/* Resend button section */}
-                     <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">Didn't receive the code?</p>
-                        <Button
-                            variant="link"
-                            onClick={() => {}} // No-op function
-                            disabled={staticIsLoading || staticIsCheckingOtpStatus} // Use static values
-                            className="mt-1"
-                            fullWidth={false}
-                        >
-                            Resend OTP
-                        </Button>
                     </div>
-
                 </div>
-            </div>
+            )}
+            {/* You could add a section here to show if staticIsVerified is true */}
+            {staticIsVerified && (
+                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md text-center">
+                     {/* Optional: Add a button/link to navigate away after verification */}
+                     <Link to="/dashboard"> {/* Example destination */}
+                        <Button variant="primary">
+                            Proceed to Dashboard
+                        </Button>
+                     </Link>
+                </div>
+            )}
         </div>
     );
 }

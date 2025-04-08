@@ -4,13 +4,15 @@ import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import InputField from "../components/forms/InputField";
 import ImageUpload from "../components/forms/ImageUpload";
 import Button from '../components/forms/Button';
-import {updateFormData , setFormData} from '../redux/slice/authSlice'
+import {updateFormData , setFormData,Ierror,isLoading} from '../redux/slice/authSlice'
+import {useDispatch , useSelector } from 'react-redux'
 
 const Register = () => {
-     
-   const handleChnage = (e)=>{
-       
-   }
+     const validationErrors ={}
+     const error = useSelector(Ierror)
+     const handleChange = (e)=>{
+         updateFormData({ field:e.target.name, value:e.target.value })
+    }
 
    const handleImageChange = (e) =>{
 
@@ -39,8 +41,8 @@ const Register = () => {
                 label="Username"
                 type="text"
                 name="username"
-                value={formData.username}
-                onChange={handleChnage}
+                value={setFormData.username}
+                onChange={handleChange}
                 required
                 placeholder="Choose a username"
                 disabled={isLoading}
@@ -51,8 +53,8 @@ const Register = () => {
                 label="Email address"
                 type="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChnage}
+                value={setFormData.email}
+                onChange={handleChange}
                 required
                 placeholder="you@example.com"
                 disabled={isLoading}
@@ -63,8 +65,8 @@ const Register = () => {
                 label="Password"
                 type="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChnage}
+                value={setFormData.password}
+                onChange={handleChange}
                 required
                 placeholder="Create a password (min 8 chars)"
                 minLength="8"
@@ -76,8 +78,8 @@ const Register = () => {
                 label="Confirm Password"
                 type="password"
                 name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChnage}
+                value={setFormData.confirmPassword}
+                onChange={handleChange}
                 required
                 placeholder="Re-enter your password"
                 disabled={isLoading}
@@ -95,10 +97,13 @@ const Register = () => {
               </div>
   
               <div>
-                <Button type="submit" isLoading={isLoading} disabled={isLoading} fullWidth>
+
+                <Button type="submit" isLoading={isLoading}  fullWidth>
                   Register
                 </Button>
+
               </div>
+
             </form>
   
             <p className="mt-6 text-center text-sm text-gray-600">
