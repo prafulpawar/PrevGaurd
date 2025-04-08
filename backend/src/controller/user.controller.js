@@ -61,24 +61,76 @@ module.exports.registerUser = async (req, res) => {
     }
 };
 
+// module.exports.verfifyOtp = async (req, res, next) => {
+//     try {
+
+//         const { email, otp } = req.body;
+//         if (!otp || !email) {
+//             logger.warn("OTP verification attempt with missing fields", { body: req.body });
+//             return res.status(400).json({ message: "OTP and email are required" });
+//         }
+
+//         const requestId = crypto.randomUUID();
+//         logger.info(`Initiating OTP verification for ${email} with RequestID: ${requestId}`);
+
+
+//         const channel = await otpcreateChannel();
+//         if (channel) {
+//             channel.sendToQueue(
+//                 "otpVerificationQueue",
+//                 Buffer.from(JSON.stringify({ email, otp, requestId }))
+//             );
+//             logger.info(`OTP verification task queued for ${email}, RequestID: ${requestId}`);
+//         } else {
+//             logger.error("Failed to get RabbitMQ channel for otpVerificationQueue");
+//             return res.status(500).json({ message: "Could not initiate OTP verification process" });
+//         }
+
+
+
+//         return res.status(202).json({
+//             message: "OTP verification request received. Check status using the requestId.",
+//             requestId: requestId
+//         });
+
+//     } catch (error) {
+//         logger.error("Error initiating OTP verification:", { error: error.message, stack: error.stack });
+//         return res.status(500).json({ message: "Error during OTP verification process" });
+//     }
+// };
+
 module.exports.verfifyOtp = async (req, res, next) => {
     try {
-
         const { email, otp } = req.body;
         if (!otp || !email) {
             logger.warn("OTP verification attempt with missing fields", { body: req.body });
             return res.status(400).json({ message: "OTP and email are required" });
         }
 
+     
+        const storedOtpDataJson = await redis.get(`otp:${email}`);
+        if (!storedOtpDataJson) {
+             logger.warn(`No OTP data found in Redis for ${email}`);
+            
+             return res.status(400).json({ message: "OTP expired or invalid request. Please register again." });
+        }
+
+        const storedOtpData = JSON.parse(storedOtpDataJson);
+        if (storedOtpData.otp !== otp) {
+             logger.warn(`Invalid OTP received for ${email}. Expected: ${storedOtpData.otp}, Received: ${otp}`);
+             // Return error immediately - DO NOT QUEUE
+             return res.status(400).json({ message: "Invalid OTP entered." });
+        }
+       
         const requestId = crypto.randomUUID();
         logger.info(`Initiating OTP verification for ${email} with RequestID: ${requestId}`);
 
-
         const channel = await otpcreateChannel();
         if (channel) {
+            
             channel.sendToQueue(
                 "otpVerificationQueue",
-                Buffer.from(JSON.stringify({ email, otp, requestId }))
+                Buffer.from(JSON.stringify({ email, /* otp, */ requestId })) 
             );
             logger.info(`OTP verification task queued for ${email}, RequestID: ${requestId}`);
         } else {
@@ -86,8 +138,7 @@ module.exports.verfifyOtp = async (req, res, next) => {
             return res.status(500).json({ message: "Could not initiate OTP verification process" });
         }
 
-
-
+     
         return res.status(202).json({
             message: "OTP verification request received. Check status using the requestId.",
             requestId: requestId
@@ -98,8 +149,6 @@ module.exports.verfifyOtp = async (req, res, next) => {
         return res.status(500).json({ message: "Error during OTP verification process" });
     }
 };
-
-
 module.exports.getOtpStatus = async (req, res) => {
     const { requestId } = req.query;
 
