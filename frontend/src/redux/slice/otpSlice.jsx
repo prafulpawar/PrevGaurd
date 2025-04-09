@@ -40,6 +40,7 @@ export const checkOtpStatus = createAsyncThunk(
         if (!requestId) return rejectWithValue('Missing Request ID.');
         try {
             const response = await api.get(`/api/auth/otp-status?requestId=${requestId}`);
+            console.log(response)
             return response.data;
         } catch (error) {
             const msg = error.response?.data?.message || 'Failed to check status.';

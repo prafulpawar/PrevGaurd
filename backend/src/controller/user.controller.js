@@ -1,4 +1,4 @@
-const userModel = require("../models/user.model");
+
 const otpGenerator = require('otp-generator')
 const redis = require('../utils/redis');
 const bcrypt = require('bcrypt')
@@ -6,6 +6,7 @@ const createChannel = require('../services/emailQueue');
 const otpcreateChannel = require('../services/otpQueue');
 const crypto = require("crypto");
 const logger = require('../utils/logger');
+const userModel = require('../models/user.model');
 
 const ACCESS_TOKEN_EXPIRY_SECONDS = 300;
 const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 60 * 24 * 7;
@@ -61,43 +62,6 @@ module.exports.registerUser = async (req, res) => {
     }
 };
 
-// module.exports.verfifyOtp = async (req, res, next) => {
-//     try {
-
-//         const { email, otp } = req.body;
-//         if (!otp || !email) {
-//             logger.warn("OTP verification attempt with missing fields", { body: req.body });
-//             return res.status(400).json({ message: "OTP and email are required" });
-//         }
-
-//         const requestId = crypto.randomUUID();
-//         logger.info(`Initiating OTP verification for ${email} with RequestID: ${requestId}`);
-
-
-//         const channel = await otpcreateChannel();
-//         if (channel) {
-//             channel.sendToQueue(
-//                 "otpVerificationQueue",
-//                 Buffer.from(JSON.stringify({ email, otp, requestId }))
-//             );
-//             logger.info(`OTP verification task queued for ${email}, RequestID: ${requestId}`);
-//         } else {
-//             logger.error("Failed to get RabbitMQ channel for otpVerificationQueue");
-//             return res.status(500).json({ message: "Could not initiate OTP verification process" });
-//         }
-
-
-
-//         return res.status(202).json({
-//             message: "OTP verification request received. Check status using the requestId.",
-//             requestId: requestId
-//         });
-
-//     } catch (error) {
-//         logger.error("Error initiating OTP verification:", { error: error.message, stack: error.stack });
-//         return res.status(500).json({ message: "Error during OTP verification process" });
-//     }
-// };
 
 module.exports.verfifyOtp = async (req, res, next) => {
     try {
@@ -130,7 +94,7 @@ module.exports.verfifyOtp = async (req, res, next) => {
             
             channel.sendToQueue(
                 "otpVerificationQueue",
-                Buffer.from(JSON.stringify({ email, /* otp, */ requestId })) 
+                Buffer.from(JSON.stringify({ email,  otp,  requestId })) 
             );
             logger.info(`OTP verification task queued for ${email}, RequestID: ${requestId}`);
         } else {
@@ -140,7 +104,7 @@ module.exports.verfifyOtp = async (req, res, next) => {
 
      
         return res.status(202).json({
-            message: "OTP verification request received. Check status using the requestId.",
+            message: "Verifying OTP .",
             requestId: requestId
         });
 
@@ -160,12 +124,13 @@ module.exports.getOtpStatus = async (req, res) => {
     try {
         logger.debug(`Polling status for RequestID: ${requestId}`);
 
-        const statusData = await redis.get(`status:${requestId}`); // Key में prefix जोड़ें
-
+        const statusData = await redis.get(`status:${requestId}`); 
+         console.log(statusData)
         if (!statusData) {
 
             logger.debug(`No status found yet for RequestID: ${requestId}`);
-            return res.status(202).json({ // 202 Accepted या 404 Not Found भी इस्तेमाल कर सकते हैं
+            return res.status(202).json({ 
+                statusData,
                 status: "pending",
                 message: "OTP verification is still in progress or request ID is invalid/expired."
             });
@@ -189,7 +154,7 @@ module.exports.getOtpStatus = async (req, res) => {
 module.exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(req.body);
+      
          
         if (!email || !password) {
             return res.status(400).json({
@@ -197,7 +162,7 @@ module.exports.loginUser = async (req, res) => {
             });
         }
      
-          
+          console.log(email)
        
          const user = await userModel.findOne({ email });
         

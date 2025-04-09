@@ -25,15 +25,16 @@ import {
 } from '../redux/slice/otpSlice';
 
 
-const STATUS_CHECK_DELAY = 10000;
-
+const STATUS_CHECK_DELAY = 5000;
+const MAX_POLLING_ATTEMPTS = 12;
 function OtpVerification() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const statusCheckTimeoutRef = useRef(null);
+    const pollingAttemptsRef = useRef(0);
 
     const displayEmail = useSelector(getemail);
-    console.log(displayEmail)
+   
     const rawOtpValue = useSelector(selectOtpValue);
     const otpError = useSelector(selectOtpError);
     const otpMessage = useSelector(selectOtpMessage);
