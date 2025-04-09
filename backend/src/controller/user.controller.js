@@ -190,33 +190,36 @@ module.exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         console.log(req.body);
-
+         
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email and password are required.",
             });
         }
-
-
-        const user = await userModel.findOne({ email }).select('+password');
-
+     
+          
+       
+         const user = await userModel.findOne({ email });
+        
+        console.log('hello',user)
+       
         if (!user) {
             return res.status(401).json({
-                message: "Invalid credentials.",
+                message: "Invalid credentials....",
             });
         }
 
 
         const isMatch = await user.comparePassoword(password);
-
+           console.log(isMatch)
         if (!isMatch) {
             return res.status(401).json({
-                message: "Invalid credentials.",
+                message: "Invalid credentials..........",
             });
         }
 
-        const accessToken = user.accessToken();
-        const refreshToken = user.refershToken();
+        const accessToken = await user.accessToken();
+        const refreshToken = await user.refershToken();
         const userIdString = user._id.toString();
 
 
@@ -272,7 +275,7 @@ module.exports.logoutUser = async (req, res) => {
         let decoded;
         try {
 
-            decoded = await userModel.accessToken(accessToken);
+            decoded = await userModel.verifyAccessToken(accessToken);
             if (!decoded || !decoded._id) {
 
                 return res.status(403).json({ message: "Invalid token payload" });

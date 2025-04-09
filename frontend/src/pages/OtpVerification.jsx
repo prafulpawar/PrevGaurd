@@ -7,7 +7,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 
 import InputField from '../components/forms/InputField';
 import Button from '../components/forms/Button';
-import { getemail } from '../redux/slice/authSlice';
+import { getemail } from '../redux/slice/registerSlice';
 
 import {
     verifyOtp,
@@ -33,6 +33,7 @@ function OtpVerification() {
     const statusCheckTimeoutRef = useRef(null);
 
     const displayEmail = useSelector(getemail);
+    console.log(displayEmail)
     const rawOtpValue = useSelector(selectOtpValue);
     const otpError = useSelector(selectOtpError);
     const otpMessage = useSelector(selectOtpMessage);

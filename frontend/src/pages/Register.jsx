@@ -11,7 +11,7 @@ import {
   isLoading,
   registerUser,
   clearError,
-} from '../redux/slice/authSlice';
+} from '../redux/slice/registerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Register = () => {
@@ -36,12 +36,12 @@ const Register = () => {
     e.preventDefault();
 
     const formToSend = new FormData();
-    formToSend.append('username', formData.username);
-    formToSend.append('email', formData.email);
-    formToSend.append('password', formData.password);
-    formToSend.append('confirmPassword', formData.confirmPassword);
-    if (formData.image) {
-      formToSend.append('image', formData.image);
+    formToSend.append('username', formData?.username);
+    formToSend.append('email', formData?.email);
+    formToSend.append('password', formData?.password);
+    formToSend.append('confirmPassword', formData?.confirmPassword);
+    if (formData?.image) {
+      formToSend.append('image', formData?.image);
     }
     dispatch(registerUser(formToSend));
     navigate('/otp-verification')
@@ -72,7 +72,7 @@ const Register = () => {
               label="Username"
               type="text"
               name="username"
-              value={formData.username}
+              value={formData?.username}
               onChange={handleChange}
               required
               placeholder="Choose a username"
@@ -84,7 +84,7 @@ const Register = () => {
               label="Email address"
               type="email"
               name="email"
-              value={formData.email}
+              value={formData?.email}
               onChange={handleChange}
               required
               placeholder="you@example.com"
@@ -96,7 +96,7 @@ const Register = () => {
               label="Password"
               type="password"
               name="password"
-              value={formData.password}
+              value={formData?.password}
               onChange={handleChange}
               required
               placeholder="Create a password (min 8 chars)"
@@ -109,7 +109,7 @@ const Register = () => {
               label="Confirm Password"
               type="password"
               name="confirmPassword"
-              value={formData.confirmPassword}
+              value={formData?.confirmPassword}
               onChange={handleChange}
               required
               placeholder="Re-enter your password"
