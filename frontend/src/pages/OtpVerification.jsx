@@ -91,7 +91,7 @@ function OtpVerification() {
                         setFinalStatus('success');
                         setTimeout(() => navigate('/login'), 500);
 
-                    } else if (statusData.status === 'failed' || statusData.status === 'invalid') { // Handle invalid status here as well
+                    } else if (statusData.status === 'failed' || statusData.status === 'invalid') { 
                         setFinalStatus('failed');
                         dispatch({ type: 'otp/checkStatus/rejected', payload: statusData.message || 'OTP Verification Failed.' });
                         dispatch(resetStatusCheck());

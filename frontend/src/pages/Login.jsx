@@ -19,7 +19,7 @@ function Login() {
     dispatch(loginUser(formData))
     .unwrap()
     .then(()=>{
-      navigate('/dashboard')
+      navigate('/')
     })
     .catch(()=>{});
   };
