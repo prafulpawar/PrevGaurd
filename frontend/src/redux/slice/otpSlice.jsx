@@ -98,7 +98,7 @@ const otpSlice = createSlice({
                 state.isCheckingStatus = false;
                 state.statusError = null;
                 if (action.payload.status !== 'pending') {
-                    // Component handles outcome
+                   
                 } else {
                     state.otpMessage = "Verification in progress...";
                 }

@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, getUserInfo } from '../redux/slice/authSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,10 +37,26 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    dispatch(logoutUser()).then(() => {
-      navigate('/');
-    });
-  };
+    dispatch(logoutUser())
+      .then(unwrapResult) 
+      .then(() => {
+       
+        console.log('Logout successful, navigating...');
+        navigate('/');
+      })
+      .catch((error) => {
+        
+        console.error('Logout API call failed:', error);
+      
+        console.log('Forcing local logout despite API error...');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        
+        navigate('/');
+
+      });
+};
 
   return (
     <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-50">

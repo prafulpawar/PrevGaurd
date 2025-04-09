@@ -1,6 +1,5 @@
-// src/slices/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api'; // Assuming your api instance is correctly configured
+import api from '../../services/api'; 
 
 const initialState = {
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -17,7 +16,7 @@ export const loginUser = createAsyncThunk(
         try {
             const response = await api.post('/api/auth/login', credentials,{
                 headers: {
-                    'Content-Type': 'application/json', // Corrected header
+                    'Content-Type': 'application/json', 
                 },
             }); 
             
@@ -41,7 +40,7 @@ export const logoutUser = createAsyncThunk(
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
-            }); // Use api.get
+            }); 
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');
@@ -61,7 +60,7 @@ export const getUserInfo = createAsyncThunk(
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
-            }); // Use api.get
+            });
             localStorage.setItem('user', JSON.stringify(response.data.data));
             return response.data;
         } catch (error) {

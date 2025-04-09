@@ -1,4 +1,3 @@
-// src/hooks/useLoginForm.js
 import { useState } from 'react';
 
 const useLoginForm = (initialState) => {
