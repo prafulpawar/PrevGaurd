@@ -5,6 +5,8 @@ const express = require('express');
 const connectDB = require('../src/utils/db');
 connectDB()
 const router = require('./routes/user.routes');
+const breachRouter = require('./routes/breachRoute'); // Import your breach routes
+
 const rebbitMQ = require('./services/rabbitMQ')
 const appAPI = express();
 const cors = require('cors')
@@ -31,7 +33,7 @@ appAPI.get('/', (req, res) => {
 
 
 appAPI.use('/api',router);
-
+appAPI.use('/api',breachRouter)
 
 module.exports = appAPI;
 

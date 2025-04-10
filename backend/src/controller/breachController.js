@@ -1,10 +1,21 @@
-module.exports.brechController = async(req,res) =>{
-       try{
-           
-       } 
-       catch(error){
-           return res.status.json({
-               message:"Error In Getting Data"
-           })
-       }
+const BreachModel = require("../models/breachData");
+
+module.exports.brechController = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const breachedData = await BreachModel.findOne({ email }).select('-data -__v ')
+        console.log(breachedData)
+        return res.status(200).json({
+            breachedData,
+            message: "SuccessFully"
+        })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(
+            400
+        ).json({
+            message: "Error In Getting Data"
+        })
+    }
 }
