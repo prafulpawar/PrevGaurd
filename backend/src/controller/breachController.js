@@ -3,7 +3,7 @@ const BreachModel = require("../models/breachData");
 module.exports.brechController = async (req, res) => {
     try {
         const { email } = req.body;
-        const breachedData = await BreachModel.findOne({ email }).select('-data -__v ')
+        const breachedData = await BreachModel.findOne({ email }).select('-date -__v ')
         console.log(breachedData)
         return res.status(200).json({
             breachedData,
