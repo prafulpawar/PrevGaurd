@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
        type: String,
        default: "https://www.vecteezy.com/vector-art/26619142-default-avatar-profile-icon-vector-of-social-media-user-photo-image"
    },
+   
 
 });
 
@@ -54,7 +55,7 @@ userSchema.statics.verifyAccessToken = function (token) {
 
 userSchema.statics.verifyRefreshToken = function (token) {
     try {
-        return jwt.verify(token, process.env.ACCESS_TOKEN);
+        return jwt.verify(token, process.env.REFERSH_TOKEN);
     } catch (error) {
         return null; 
     }

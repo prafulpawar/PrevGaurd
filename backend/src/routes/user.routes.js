@@ -5,7 +5,7 @@ const rateLimiter = require('../middlewares/rateLimiter')
 const { verifyAuth }  = require('../middlewares/isAuth');const multer = require('multer');
 const upload = multer(); // using memoryStorage by default
 
-// router.post('/auth/signup',rateLimiter,registerUser);
+
 router.post('/auth/signup',upload.single('profileImage'), registerUser);
 
 router.post('/auth/verifyOtp',rateLimiter,verfifyOtp);

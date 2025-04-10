@@ -230,12 +230,13 @@ module.exports.loginUser = async (req, res) => {
 module.exports.logoutUser = async (req, res) => {
     try {
         const authHeader = req.header("Authorization");
+        console.log(authHeader)
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({ message: "Unauthorized: Missing or invalid token format" });
         }
 
         const accessToken = authHeader.split(" ")[1];
-
+         console.log(accessToken)
 
         let decoded;
         try {
@@ -246,9 +247,12 @@ module.exports.logoutUser = async (req, res) => {
                 return res.status(403).json({ message: "Invalid token payload" });
             }
         } catch (verificationError) {
-
+               console.log(verificationError)
             console.error("Access Token Verification Error:", verificationError.message);
-            return res.status(403).json({ message: "Invalid or expired token" });
+            return res.status(403).json({ 
+                accessToken,
+                verificationError,
+                message: "Invalid or expired token"});
         }
 
         const userId = decoded._id;
@@ -283,7 +287,7 @@ module.exports.logoutUser = async (req, res) => {
         return res.status(200).json({ message: "Logged out successfully from all sessions." });
 
     } catch (error) {
-
+          console.log(error)
         console.error("Logout Error:", error);
         return res.status(500).json({ message: "An internal server error occurred during logout." });
     }

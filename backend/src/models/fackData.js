@@ -17,7 +17,13 @@ const fackSchema = new mongoose.Schema({
        },
        address:{
          type:String
-       }
+       },
+       savedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', 
+        required: true, 
+        index: true 
+    }
 })
 
 const fackModel = mongoose.model('fackData',fackSchema);

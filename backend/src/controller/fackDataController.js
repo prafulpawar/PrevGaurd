@@ -100,11 +100,59 @@ module.exports.deleteFackData = async (req, res) => {
 
 module.exports.saveFackData = async (req, res) => {
     try {
+          const {name,email,aadhar,phone,pan,address} = req.body;
+          const {_id} = req.user;
+          const savedData =await fackModel.create({
+               name,
+               email,
+               aadhar,
+               phone,
+               pan,
+               address,
+               savedBy:_id
+          })
+
+          return res.status(200).json({
+            savedData,
+            message: "Data Saved SuccessFully"
+        })
 
     }
     catch (error) {
+        console.log(error)
         return res.status(400).json({
             message: "SavingData Is Failed"
         })
     }
+}
+module.exports.deleteFackData = async(req,res) =>{
+      try{
+        const { id } = req.params;
+        const {userId} = req.user._id;
+
+           if(!id  ){
+               console.log(postID,' ')
+            return res.status(400).json({
+                message: "Error In  Deleting User "
+            })
+           }
+           if (!userId) {
+          
+           return res.status(401).json({ message: "Unauthorized: User information not found." });
+          }
+          const matchUser = await fackModel.findById
+            // finding users id 
+           const deletedItem =await fackModel.findByIdAndDelete({_id: id,});
+           return res.status(400).json({
+            deletedItem,
+            message: "Item Is Deleted"
+        })
+
+      }
+      catch(error){
+        console.log(error)
+        return res.status(400).json({
+            message: "Error In  Failed"
+        })
+      }
 }

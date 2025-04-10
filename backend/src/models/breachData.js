@@ -4,7 +4,7 @@ const dataBreach = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true // unique index ki jarurat nhi hai
+        unique: true 
     },
     leakedAt: {
         type: String,
@@ -17,7 +17,8 @@ const dataBreach = new mongoose.Schema({
     date: {
         type: Date,
         required: true
-    }
+    },
+   
 });
 
 
