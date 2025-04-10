@@ -65,6 +65,11 @@ function generateFakeUser(options) {
 module.exports.generateFackData = async (req, res) => {
     try {
         const options = req.body;
+        if(options ==null){
+           return res.status(200).json({
+              message:"Null"
+           })
+        }
         const data = generateFakeUser(options);
 
         console.log("Generated data based on options:", data);
