@@ -1,6 +1,6 @@
 module.exports.addsharedData = async(req,res)=>{
     try{
-          
+          const {} = req.body;
     }
     catch(error){
         return res.status(400).json({
