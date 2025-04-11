@@ -31,5 +31,4 @@ if (process.env.NODE_ENV !== 'production') {
      logger.transports.find(t => t.name === 'console').level = 'info';
 }
 
-
 module.exports = logger;

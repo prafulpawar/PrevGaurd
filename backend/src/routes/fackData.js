@@ -5,6 +5,6 @@ const { verifyAuth } = require('../middlewares/isAuth')
 
 router.get('/fack-data',verifyAuth,generateFackData);
 router.post('/fack-data',verifyAuth,saveFackData);
-router.delete('/fack-data/:id',deleteFackData)
+router.delete('/fack-data/:id',verifyAuth,deleteFackData)
 
 module.exports = router;
