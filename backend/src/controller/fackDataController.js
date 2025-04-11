@@ -65,10 +65,10 @@ function generateFakeUser(options) {
 module.exports.generateFackData = async (req, res) => {
     try {
         const options = req.body;
-        if(options ==null){
-           return res.status(200).json({
-              message:"Null"
-           })
+        if (options == null) {
+            return res.status(200).json({
+                message: "Null"
+            })
         }
         const data = generateFakeUser(options);
 
@@ -100,20 +100,19 @@ module.exports.deleteFackData = async (req, res) => {
 
 module.exports.saveFackData = async (req, res) => {
     try {
-          const {name,email,aadhar,phone,pan,address} = req.body;
-          const {user} = req.user;
-          console.log(user)
-        //   const savedData =await fackModel.create({
-        //        name,
-        //        email,
-        //        aadhar,
-        //        phone,
-        //        pan,
-        //        address,
-        //        savedBy:_id
-        //   })
+        const { name, email, aadhar, phone, pan, address } = req.body;
+        const { _id } = req.user;
+        const savedData = await fackModel.create({
+            name,
+            email,
+            aadhar,
+            phone,
+            pan,
+            address,
+            savedBy: _id
+        })
 
-          return res.status(200).json({
+        return res.status(200).json({
             savedData,
             message: "Data Saved SuccessFully"
         })
@@ -126,37 +125,33 @@ module.exports.saveFackData = async (req, res) => {
         })
     }
 }
-module.exports.deleteFackData = async(req,res) =>{
-      try{
+module.exports.deleteFackData = async (req, res) => {
+    try {
 
         const { id } = req.params;
-        const { userId } = req.user;
+        if (!id) {
 
-           
-           if(!id){
-              
             return res.status(400).json({
                 message: "Error In  Deleting User "
             })
-           }
+        }
+        const deletedItem = await fackModel.findByIdAndDelete({ _id: id });
 
-           if (!userId) {
-          
-           return res.status(401).json({ message: "Unauthorized: User information not found." });
-          }
+        if (deletedItem === null) {
+            return res.status(400).json({
+                message: "Invalid Id "
+            })
+        }
 
-          const matchUser = await fackModel.findById()
-            // finding users id 
-           const deletedItem =await fackModel.findByIdAndDelete({_id: id,});
-           return res.status(400).json({
+        return res.status(400).json({
             deletedItem,
             message: "Item Is Deleted"
         })
-      }
-      catch(error){
+    }
+    catch (error) {
         console.log(error)
         return res.status(400).json({
             message: "Error In  Failed"
         })
-      }
+    }
 }

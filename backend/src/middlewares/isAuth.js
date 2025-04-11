@@ -21,7 +21,7 @@ module.exports.verifyAuth = async (req, res, next) => {
         const decoded = await userModel.verifyAccessToken(token);
 
         req.user = decoded; 
-        
+       
         next();
     } catch (error) {
         
