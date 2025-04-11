@@ -17,11 +17,11 @@ const shareDataSchema = new mongoose.Schema({
          type:String
     },
     savedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
-        required: true, 
-             
-        }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', 
+    required: true, 
+    }
+    
 })
 
 const shareModel = ('shareData',shareDataSchema);
