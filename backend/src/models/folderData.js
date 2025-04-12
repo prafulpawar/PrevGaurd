@@ -1,11 +1,14 @@
 const mongoose = require('mongoose')
-
+const itemSchema = require('./ItemModel')
 const folderSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
-    items: [itemSchema]
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'itemSchema' 
+    }]
 });
 
 

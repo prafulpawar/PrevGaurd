@@ -8,7 +8,10 @@ const vaultSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    folders: [folderSchema],
+    folders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'folderSchema' 
+    }],
     attempts: {
         type: Number,
         default: 0
