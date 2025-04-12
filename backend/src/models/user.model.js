@@ -31,7 +31,11 @@ const userSchema = new mongoose.Schema({
        type: String,
        default: "https://www.vecteezy.com/vector-art/26619142-default-avatar-profile-icon-vector-of-social-media-user-photo-image"
    },
-   
+   VaultCreation:{
+      ref:'Vault',
+      type:Boolean,
+      default:false
+   }
 
 });
 
