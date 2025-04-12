@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-
-
 const vaultSchema = new mongoose.Schema({
     userRef: {
         type: mongoose.Schema.Types.ObjectId,
