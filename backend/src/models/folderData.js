@@ -9,5 +9,5 @@ const folderSchema = new mongoose.Schema({
 });
 
 
-const itemModel = mongoose.model('itemSchema',itemSchema);
-module.exports  = itemModel;
+const folderModel = mongoose.model('folderSchema',folderSchema);
+module.exports  = folderModel;
