@@ -1,7 +1,5 @@
-const fackModel = require('../models/fackData')
+const fackModel = require('../models/fackData');
 const { faker } = require('@faker-js/faker');
-
-
 
 function generateFakePAN() {
     const letters = faker.string.alpha({ length: 5, casing: 'upper' });
@@ -65,14 +63,12 @@ function generateFakeUser(options) {
 module.exports.generateFackData = async (req, res) => {
     try {
         const options = req.body;
-        if (options == null) {
-            return res.status(200).json({
-                message: "Null"
-            })
+        if (!options) {
+            return res.status(400).json({
+                message: "Options are required."
+            });
         }
         const data = generateFakeUser(options);
-
-        console.log("Generated data based on options:", data);
 
         return res.status(200).json({
             message: "Data generated successfully based on provided options.",
@@ -87,21 +83,10 @@ module.exports.generateFackData = async (req, res) => {
     }
 };
 
-module.exports.deleteFackData = async (req, res) => {
-    try {
-
-    }
-    catch (error) {
-        return res.status(400).json({
-            message: "Deletion Is Failed"
-        })
-    }
-}
-
 module.exports.saveFackData = async (req, res) => {
     try {
         const { name, email, aadhar, phone, pan, address } = req.body;
-        const { _id } = req.user;
+        const userId = req.user._id;
         const savedData = await fackModel.create({
             name,
             email,
@@ -109,49 +94,46 @@ module.exports.saveFackData = async (req, res) => {
             phone,
             pan,
             address,
-            savedBy: _id
-        })
+            savedBy: userId
+        });
 
         return res.status(200).json({
             savedData,
             message: "Data Saved SuccessFully"
-        })
+        });
 
-    }
-    catch (error) {
-        console.log(error)
-        return res.status(400).json({
+    } catch (error) {
+        console.error("Error saving data:", error);
+        return res.status(500).json({
             message: "SavingData Is Failed"
-        })
+        });
     }
-}
+};
+
 module.exports.deleteFackData = async (req, res) => {
     try {
-
         const { id } = req.params;
         if (!id) {
-
             return res.status(400).json({
-                message: "Error In  Deleting User "
-            })
+                message: "Error In Deleting User: ID is required."
+            });
         }
-        const deletedItem = await fackModel.findByIdAndDelete({ _id: id });
+        const deletedItem = await fackModel.findByIdAndDelete(id);
 
-        if (deletedItem === null) {
-            return res.status(400).json({
-                message: "Invalid Id "
-            })
+        if (!deletedItem) {
+            return res.status(404).json({
+                message: "Invalid Id or Item not found."
+            });
         }
 
-        return res.status(400).json({
+        return res.status(200).json({
             deletedItem,
             message: "Item Is Deleted"
-        })
+        });
+    } catch (error) {
+        console.error("Error deleting data:", error);
+        return res.status(500).json({
+            message: "Error In Deleting Data"
+        });
     }
-    catch (error) {
-        console.log(error)
-        return res.status(400).json({
-            message: "Error In  Failed"
-        })
-    }
-}
+};
