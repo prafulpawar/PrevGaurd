@@ -51,4 +51,6 @@ module.exports.loginVaultController = async(req,res)=>{
          })
 }
 
-module.exports.
+module.exports.addVaultController = async(req,res)=>{
+    
+}
