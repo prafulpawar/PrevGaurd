@@ -3,11 +3,10 @@ module.exports.createVaultController = async(req,res)=>{
          const {password} = req.body;
          if(!password){
               return res.status(400).json({
-                message:"Can Get Password"
+                message:"Can Not Get Password"
               })
          }
-
-
+         // Hashing Of Password
 
     }
     catch(error){
