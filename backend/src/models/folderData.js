@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
 const folderSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -6,16 +7,19 @@ const folderSchema = new mongoose.Schema({
     },
     items: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'itemSchema' 
+        ref: 'Item' // Correct ref name
     }],
-     userRef: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-    },
-    
-});
+    // userRef removed - folder belongs to a Vault, Vault belongs to User
+    // You can get the user via the Vault if needed
 
+    // Reference to the parent vault (optional but can be useful)
+    // vaultRef: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Vault',
+    //     required: true
+    // }
 
-const folderModel = mongoose.model('folderSchema',folderSchema);
-module.exports  = folderModel;
+}, { timestamps: true }); // Add timestamps
+
+const FolderModel = mongoose.model('Folder', folderSchema); // Capitalized name
+module.exports = FolderModel;
