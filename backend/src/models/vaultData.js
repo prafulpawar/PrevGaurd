@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const vaultSchema = new mongoose.Schema({
     password:{
         type:String
