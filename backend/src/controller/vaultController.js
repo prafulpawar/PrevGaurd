@@ -1,7 +1,7 @@
 const bcrypt  = require('bcryptjs');
 const VaultModel = require('../models/vaultData');
 
-module.exports.createVaultController = async(req,res)=>{
+module.exports.registerVaultController = async(req,res)=>{
     try{
          const {password} = req.body;
          const {userId} = req.body._id;
@@ -32,7 +32,7 @@ module.exports.loginVaultController = async(req,res)=>{
          const {password} = req.body;
          //cheking password
          const {userId} = req.user;
-         
+
          // Match User
 
          const match = await VaultModel.findById({_id:userId});
@@ -46,6 +46,9 @@ module.exports.loginVaultController = async(req,res)=>{
          const passwordMatch = await bcrypt.compare(password,match.password);
 
          return res.status(200).json({
+            passwordMatch,
             message:"Sucessfully Login"
          })
 }
+
+module.exports.
