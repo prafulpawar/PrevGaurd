@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const itemSchema = require('./ItemModel')
 const folderSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -8,7 +7,13 @@ const folderSchema = new mongoose.Schema({
     items: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'itemSchema' 
-    }]
+    }],
+     userRef: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+    },
+    
 });
 
 

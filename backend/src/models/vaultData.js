@@ -12,10 +12,6 @@ const vaultSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'folderSchema' 
     }],
-    attempts: {
-        type: Number,
-        default: 0
-    },
     locked: {
         type: Boolean,
         default: false
