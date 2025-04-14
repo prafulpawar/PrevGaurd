@@ -36,7 +36,7 @@ appAPI.get('/', (req, res) => {
 appAPI.use('/api',router);
 appAPI.use('/api',breachRouter)
 appAPI.use('/api',fackData)
-appAPI.use('/api/',breachData)
+appAPI.use('/api',breachData)
 module.exports = appAPI;
 
 
