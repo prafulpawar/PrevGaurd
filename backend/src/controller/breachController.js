@@ -2,12 +2,12 @@ const axios = require('axios');
 
 module.exports.brechController = async (req, res) => {
     try {
-        const { emailData } = req.body;
+        const { emailData } = req.query.email;
 
        
         const response = await axios.get(`https://api.xposedornot.com/v1/check-email/${emailData}`);
         const BreachData = response.data;
-
+         console.log(emailData)
     
         return res.status(200).json({
             BreachData,

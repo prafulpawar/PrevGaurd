@@ -17,6 +17,7 @@ export const fetchBreachData = createAsyncThunk(
         if (!email) {
             return rejectWithValue('Email is required');
         }
+       
         try {
             // Make GET request with email as a query parameter
             const response = await api.get('/api/breach/check', {
