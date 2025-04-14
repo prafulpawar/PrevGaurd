@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import Navbar from '../pages/Navbar';
 import { BellAlertIcon, CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import InputField from '../components/forms/InputField';
-
+import { useSelector , useDispatch } from 'react-redux';
 
 function BreachMonitor() {
-    const [email, setEmail] = useState('');
-   
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
      
