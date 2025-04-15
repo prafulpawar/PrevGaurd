@@ -1,4 +1,3 @@
-
 const otpGenerator = require('otp-generator')
 const redis = require('../utils/redis');
 const bcrypt = require('bcrypt')
