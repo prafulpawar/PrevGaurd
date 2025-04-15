@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Navbar from '../pages/Navbar'; // Adjust path if needed
+import Navbar from '../pages/Navbar';
 import { BellAlertIcon, CheckCircleIcon, XCircleIcon, InformationCircleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
-import InputField from '../components/forms/InputField'; // Adjust path if needed
+import InputField from '../components/forms/InputField'; 
 
-// Import actions and selectors from your slice
+
 import {
     fetchBreachData,
     selectBreachIsLoading,

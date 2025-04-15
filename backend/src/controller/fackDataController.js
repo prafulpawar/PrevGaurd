@@ -23,7 +23,7 @@ function generateFakeUser(options) {
         email = false,
         phone = false,
         pan = false,
-        addhar = false,
+        aadhar = false, // Corrected key
         address = false
     } = options;
 
@@ -49,8 +49,8 @@ function generateFakeUser(options) {
         generatedData.pan = generateFakePAN();
     }
 
-    if (addhar) {
-        generatedData.aadhaar = generateFakeAadhaar();
+    if (aadhar) { // Corrected key
+        generatedData.aadhar = generateFakeAadhaar(); // Corrected key
     }
 
     if (address) {
@@ -63,6 +63,7 @@ function generateFakeUser(options) {
 module.exports.generateFackData = async (req, res) => {
     try {
         const options = req.body;
+        console.log("Hello")
         if (!options) {
             return res.status(400).json({
                 message: "Options are required."
@@ -85,12 +86,12 @@ module.exports.generateFackData = async (req, res) => {
 
 module.exports.saveFackData = async (req, res) => {
     try {
-        const { name, email, aadhar, phone, pan, address } = req.body;
+        const { name, email, aadhar, phone, pan, address } = req.body; 
         const userId = req.user._id;
         const savedData = await fackModel.create({
             name,
             email,
-            aadhar,
+            aadhar, 
             phone,
             pan,
             address,
@@ -134,6 +135,23 @@ module.exports.deleteFackData = async (req, res) => {
         console.error("Error deleting data:", error);
         return res.status(500).json({
             message: "Error In Deleting Data"
+        });
+    }
+};
+
+
+module.exports.getSavedFackData = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const savedData = await fackModel.find({ savedBy: userId }); // Fetch data saved by the current user
+        return res.status(200).json({
+            savedData,
+            message: "Saved data fetched successfully"
+        });
+    } catch (error) {
+        console.error("Error fetching saved data:", error);
+        return res.status(500).json({
+            message: "Failed to fetch saved data"
         });
     }
 };
