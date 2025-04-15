@@ -86,7 +86,7 @@ export const selectBreachEmail = (state) => state.breach.emailData;
 export const selectBreachData = (state) => state.breach.data;
 export const selectBreachIsLoading = (state) => state.breach.isLoading;
 export const selectBreachError = (state) => state.breach.error;
-export const selectEntireBreachState = (state) => state.breach; // Selector for the whole slice state
+export const selectEntireBreachState = (state) => state.breach; 
 
-// Export the reducer function for the store configuration
+
 export default breachSlice.reducer;

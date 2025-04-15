@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api'; 
+import api from '../../services/api';
 
 const initialState = {
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -12,14 +12,13 @@ const initialState = {
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async (credentials, { rejectWithValue }) => {
-
         try {
             const response = await api.post('/api/auth/login', credentials,{
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                 },
-            }); 
-            
+            });
+
             localStorage.setItem('accessToken', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -33,20 +32,55 @@ export const loginUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
-    async (_, { getState, rejectWithValue }) => {
+    async (_, { getState, dispatch, rejectWithValue }) => {
         try {
-            const { accessToken } = getState().auth;
-            const response = await api.get('/api/auth/logout', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }); 
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('user');
-            return response.data;
+            const { accessToken, refreshToken } = getState().auth;
+
+            const logoutAttempt = async (token) => {
+                try {
+                    const response = await api.get('/api/auth/logout', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+                    localStorage.removeItem('user');
+                    return response.data;
+                } catch (error) {
+                    if (error.response?.status === 401 || error.response?.status === 403) {
+                        if (refreshToken) {
+                            try {
+                                const refreshResponse = await api.post('/api/auth/refresh', { refreshToken });
+                                const newAccessToken = refreshResponse.data.accessToken;
+                                const newRefreshToken = refreshResponse.data.refreshToken;
+                                localStorage.setItem('accessToken', newAccessToken);
+                                localStorage.setItem('refreshToken', newRefreshToken);
+                                dispatch(updateTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken }));
+                                // Retry logout with the new access token
+                                return await logoutAttempt(newAccessToken);
+                            } catch (refreshError) {
+                                console.error("Refresh token failed:", refreshError);
+                                localStorage.removeItem('accessToken');
+                                localStorage.removeItem('refreshToken');
+                                localStorage.removeItem('user');
+                                throw new Error('Logout failed: Refresh token invalid.');
+                            }
+                        } else {
+                            localStorage.removeItem('accessToken');
+                            localStorage.removeItem('refreshToken');
+                            localStorage.removeItem('user');
+                            throw new Error('Logout failed: No refresh token available.');
+                        }
+                    }
+                    throw error; // Re-throw other errors
+                }
+            };
+
+            return await logoutAttempt(accessToken);
+
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Logout failed.');
+            return rejectWithValue(error.message || 'Logout failed.');
         }
     }
 );
@@ -72,7 +106,12 @@ export const getUserInfo = createAsyncThunk(
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        updateTokens: (state, action) => {
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(loginUser.pending, (state) => {
@@ -119,4 +158,5 @@ const authSlice = createSlice({
     },
 });
 
+export const { updateTokens } = authSlice.actions;
 export default authSlice.reducer;

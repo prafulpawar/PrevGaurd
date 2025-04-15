@@ -315,3 +315,55 @@ module.exports.getUserInfo = async (req, res) => {
         });
     }
 }
+
+module.exports.refreshAccessToken = async (req, res) => {
+    const { refreshToken } = req.body; // Or get from cookies
+
+    if (!refreshToken) {
+        return res.status(401).json({ message: "Refresh token is required." });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFERSH_TOKEN);
+        if (!decoded || !decoded._id) {
+            return res.status(403).json({ message: "Invalid refresh token." });
+        }
+
+        const userId = decoded._id;
+        const userIdString = userId.toString();
+        const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
+        const refreshTokenKeyInRedis = `refreshtoken:${refreshToken}`;
+
+        const isTokenValid = await redis.sismember(userRefreshTokensKey, refreshToken);
+        const userIdFromRedis = await redis.get(refreshTokenKeyInRedis);
+
+        if (!isTokenValid || userIdFromRedis !== userIdString) {
+            return res.status(401).json({ message: "Invalid or used refresh token." });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found for this refresh token." });
+        }
+
+        const newAccessToken = await user.accessToken();
+        const newRefreshToken = await user.refershToken();
+
+        // Update refresh token in Redis
+        const pipeline = redis.pipeline();
+        pipeline.del(refreshTokenKeyInRedis);
+        pipeline.srem(userRefreshTokensKey, refreshToken);
+
+        const newRefreshTokenKeyInRedis = `refreshtoken:${newRefreshToken}`;
+        pipeline.set(newRefreshTokenKeyInRedis, userIdString, 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
+        pipeline.sadd(userRefreshTokensKey, newRefreshToken);
+        pipeline.expire(userRefreshTokensKey, REFRESH_TOKEN_EXPIRY_SECONDS + 300);
+        await pipeline.exec();
+
+        return res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+
+    } catch (error) {
+        console.error("Refresh Token Error:", error);
+        return res.status(403).json({ message: "Invalid refresh token." });
+    }
+};
