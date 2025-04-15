@@ -10,13 +10,11 @@ import {
     selectBreachIsLoading,
     selectBreachError,
     selectBreachData,
-    // You might not need updateEmailValue directly here if fetch handles it
-    // updateEmailValue,
-    // selectBreachEmail // Use if you want input controlled by Redux state
-} from '../redux/slice/breachSlice'; // Adjust path to your slice file
+    
+} from '../redux/slice/breachSlice'; 
 
 function BreachMonitor() {
-    // Local state for the input field
+
     const [email, setEmail] = useState('');
 
     // Redux hooks
@@ -24,24 +22,20 @@ function BreachMonitor() {
     const isLoading = useSelector(selectBreachIsLoading);
     const error = useSelector(selectBreachError);
     const data = useSelector(selectBreachData);
-    // Optional: get email from redux if you want input controlled by it
-    // const storedEmail = useSelector(selectBreachEmail);
+   
 
-    // Handle form submission
+   
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!email || isLoading) return; // Prevent submission if no email or already loading
+        if (!email || isLoading) return; 
 
-        // Dispatch the async thunk with the email from local state
+      
         dispatch(fetchBreachData(email));
-
-        // Optional: If you ALSO want to store the submitted email using updateEmailValue
-        // dispatch(updateEmailValue(email)); // But fetchBreachData already resets state
 
         console.log("Form submitted, dispatching fetchBreachData for:", email);
     };
 
-    // Helper function to render results (customize based on your actual data structure)
+ 
     const renderResult = () => {
         if (isLoading) {
             return (
@@ -68,12 +62,10 @@ function BreachMonitor() {
             );
         }
 
-        // Check if data is not null/undefined AFTER loading/error checks
+     
         if (data !== null && data !== undefined) {
-            // --- SUCCESS CASE ---
-            // Customize this part based on how your API returns data
-            // Example 1: API returns an array of breaches, or empty array/null if none
-            if (Array.isArray(data) && data.length > 0) {
+          
+            if (data.BreachData && data.BreachData.breaches && Array.isArray(data.BreachData.breaches) && data.BreachData.breaches.length > 0) {
                 return (
                     <div className="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4">
                         <div className="flex items-center">
@@ -84,9 +76,10 @@ function BreachMonitor() {
                                 <h3 className="text-md font-medium text-yellow-800">Breaches Found!</h3>
                                 <p className="text-sm text-yellow-700 mt-1">This email address was found in the following known data breaches:</p>
                                 <ul className="list-disc pl-5 mt-2 text-sm text-yellow-700">
-                                    {/* Map over your breach data - Adjust 'breach.Name' based on your API response */}
-                                    {data.map((breach, index) => (
-                                        <li key={index}>{breach.Name || `Breach ${index + 1}`}</li>
+                                    {data.BreachData.breaches.map((breachList, index) => (
+                                        <li key={index}>
+                                            {breachList.join(', ')}
+                                        </li>
                                     ))}
                                 </ul>
                                 <p className="text-xs text-yellow-600 mt-2">It's recommended to change your password for affected services.</p>
@@ -95,7 +88,7 @@ function BreachMonitor() {
                     </div>
                 );
             } else {
-                // Example 2: API returns null, empty array, or specific object indicating no breaches
+               
                 return (
                     <div className="mt-6 bg-green-50 border-l-4 border-green-400 p-4">
                         <div className="flex items-center">
@@ -112,8 +105,8 @@ function BreachMonitor() {
             }
         }
 
-        // Initial state or after reset (no data, no error, not loading)
-        return null; // Or render a placeholder message like "Enter an email to check."
+      
+        return null;
     };
 
 
@@ -125,7 +118,7 @@ function BreachMonitor() {
                     <BellAlertIcon className="mx-auto h-12 w-12 text-indigo-600" />
                     <h1 className="mt-2 text-3xl font-bold leading-tight text-gray-900">Breach Monitoring</h1>
                     <p className="mt-2 text-base text-gray-600">Check if your email address has been compromised in known data breaches.</p>
-                    <p className="mt-1 text-xs text-gray-500">Powered by PrevGaurd.</p> {/* Ensure PrevGaurd is correct */}
+                    <p className="mt-1 text-xs text-gray-500">Powered by PrevGaurd.</p> 
                 </header>
 
                 <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 mb-8">
@@ -134,17 +127,17 @@ function BreachMonitor() {
                             label="Email Address to Check"
                             type="email"
                             name="email"
-                            value={email} // Controlled by local state
-                            onChange={(e) => setEmail(e.target.value)} // Update local state
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
                             required
                             placeholder="enter@your.email"
                             containerClassName="flex-grow"
                             className="w-full"
-                            disabled={isLoading} // Disable input while loading
+                            disabled={isLoading}
                         />
                         <button
                             type="submit"
-                            disabled={isLoading || !email} // Disable button if loading or email is empty
+                            disabled={isLoading || !email} 
                             className={`inline-flex items-center justify-center px-5 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white whitespace-nowrap ${
                                 (isLoading || !email)
                                     ? 'bg-indigo-300 cursor-not-allowed'
@@ -163,7 +156,7 @@ function BreachMonitor() {
                     </form>
                 </div>
 
-                {/* Render loading, error, or results */}
+              
                 {renderResult()}
 
             </main>
