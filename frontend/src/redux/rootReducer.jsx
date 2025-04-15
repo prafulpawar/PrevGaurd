@@ -5,12 +5,14 @@ import otpReducer from './slice/otpSlice'
 import  registerUser  from './slice/registerSlice';
 import  breachEmail from './slice/breachSlice'
 import  fakeDataReducer from './slice/fakeDataSlice'
+import   sharedDataReducer from './slice/sharedDataSlice';
 const rootReducer = combineReducers({
   auth: authReducer,
   otp:otpReducer,
   register:registerUser,
   breach:breachEmail,
   fakeData: fakeDataReducer,
+  sharedData: sharedDataReducer,
  
 //   user: userReducer,
 });
