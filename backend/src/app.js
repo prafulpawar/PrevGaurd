@@ -8,6 +8,7 @@ const router = require('./routes/user.routes');
 const breachRouter = require('./routes/breachRoute'); 
 const fackData = require('./routes/fackData')
 const breachData = require('./routes/breachRoute')
+const shareData = require('./routes/sharedRoute')
 const rebbitMQ = require('./services/rabbitMQ')
 const appAPI = express();
 const cors = require('cors')
@@ -37,6 +38,7 @@ appAPI.use('/api',router);
 appAPI.use('/api',breachRouter)
 appAPI.use('/api',fackData)
 appAPI.use('/api',breachData)
+appAPI.use('/api',shareData)
 module.exports = appAPI;
 
 
