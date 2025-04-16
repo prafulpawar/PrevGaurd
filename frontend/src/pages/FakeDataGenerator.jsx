@@ -2,7 +2,14 @@ import React from 'react';
 import Navbar from '../pages/Navbar';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 
+
+
+
 function FakeDataGenerator() {
+
+
+
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
@@ -13,6 +20,7 @@ function FakeDataGenerator() {
           <div className="w-1/2 bg-white p-6 rounded shadow mr-4">
             <h2 className="text-lg font-semibold mb-4">Select Fields to Generate</h2>
 
+
             {['name', 'email', 'phone', 'pan', 'aadhar', 'address'].map((field) => (
               <div key={field} className="flex items-center space-x-3 mb-2">
                 <input id={field} type="checkbox" />
@@ -20,11 +28,25 @@ function FakeDataGenerator() {
               </div>
             ))}
 
+
+
+
+
+
+
+
+
+
             <button className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded flex items-center">
               <SparklesIcon className="h-5 w-5 mr-2" />
               Generate Data
             </button>
           </div>
+
+
+
+
+
 
           <div className="w-1/2 bg-white p-6 rounded shadow">
             <h2 className="text-lg font-semibold mb-4">Generated Output</h2>
