@@ -85,5 +85,6 @@ const fackDataSlice = createSlice({
 export const { updateFackData, resetFackData } = fackDataSlice.actions;
 
 export const selectInitialData = (state) => state.fack.data;
-export const selectSucessData = (state) => state.fack.success
+export const selectSucessData = (state) => state.fack.success;
+export const selectResponseData = (state) => state.fack.response;
 export default  fackDataSlice.reducer;
