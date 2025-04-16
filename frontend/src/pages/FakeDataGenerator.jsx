@@ -2,11 +2,13 @@ import React from 'react';
 import Navbar from '../pages/Navbar';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import { useSelector ,  useDispatch} from 'react-redux';
-import { updateFackData ,sendFackData } from '../redux/slice/fakeDataSlice';
+import { updateFackData ,sendFackData, selectResponseData } from '../redux/slice/fakeDataSlice';
 import { selectInitialData } from '../redux/slice/fakeDataSlice';
 function FakeDataGenerator() {
 
        const fackData = useSelector(selectInitialData);
+       const responseData = useSelector(selectResponseData)
+       console.log(responseData)
         const dispatch = useDispatch();
       
      const handleChange = (field, checked) =>{
@@ -15,6 +17,7 @@ function FakeDataGenerator() {
 
      const handleGenerate = () => {
       dispatch(sendFackData(fackData))
+
     };
 
   return (
