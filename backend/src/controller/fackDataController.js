@@ -142,7 +142,7 @@ module.exports.deleteFackData = async (req, res) => {
 module.exports.getSavedFackData = async (req, res) => {
     try {
         const userId = req.user._id;
-        const savedData = await fackModel.find({ savedBy: userId }); // Fetch data saved by the current user
+        const savedData = await fackModel.find({ savedBy: userId }); 
         return res.status(200).json({
             savedData,
             message: "Saved data fetched successfully"
