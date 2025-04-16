@@ -32,6 +32,8 @@ function FakeDataGenerator() {
 
         <div className="bg-white p-6 rounded shadow mb-6">
           <h2 className="text-lg font-semibold mb-4">Select Fields to Generate</h2>
+
+
           {['name', 'email', 'phone', 'pan', 'aadhar', 'address'].map((field) => (
             <div key={field} className="flex items-center space-x-3 mb-2">
               <input
@@ -43,6 +45,8 @@ function FakeDataGenerator() {
               <label htmlFor={field} className="capitalize">{field}</label>
             </div>
           ))}
+
+
           <button
             onClick={handleGenerateData}
             className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded flex items-center"
@@ -66,6 +70,7 @@ function FakeDataGenerator() {
             </div>
           )}
         </div>
+        
       </main>
     </div>
   );
