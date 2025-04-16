@@ -1,74 +1,98 @@
-import {createAsyncThunk , createSlice} from '@reduxjs/toolkit'
-import api from '../../services/api'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import api from '../../services/api';
 
 const initialState = {
-      data:{
-        name : false,
-        email : false,
-        phone : false,
-        pan : false,
-        addhar : false, 
-        address : false
-      },
-      status:'idle',
-      error:null
-}
+  data: {
+    name: false,
+    email: false,
+    phone: false,
+    pan: false,
+    aadhar: false,
+    address: false,
+  },
+  dataReceived: {
+    name: '',
+    email: '',
+    phone: '',
+    pan: '',
+    aadhar: '',
+    address: '',
+  },
+  status: 'idle',
+  error: null,
+};
 
 export const generateData = createAsyncThunk(
-    '/api/generateData',
-    async(data,{getState ,rejectWithValue}) =>{
-         try{
-            const accessToken = getState().auth?.user?.accessToken;
+  'fake/generateData',
+  async (data, { getState, rejectWithValue }) => {
+    try {
+      const accessToken = getState().auth?.user?.accessToken;
+      const response = await api.post('/api/fack-data-generate', data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-            console.log(accessToken)
-             const response = await api.post('/api/fack-data-generate', data, {
-                headers: {
-                   
-                    Authorization: `Bearer ${accessToken}`
-                },
-              });
-              
-               console.log(response)
-             return response.data;
-         }
-         catch(error){
-             console.log(error)
-             return rejectWithValue(error.response?.data?.message || 'Cant Post Data')
-         }
-})
+      console.log('API Response:', response);
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(error.response?.data?.message || 'Cant Post Data');
+    }
+  }
+);
 
-const fackDataSlice = createSlice({
-       name:'fackData',
-       initialState,
-       reducers:{
-            // actions
-            toggleField:(state,action)=>{
-                  
-                 const field = action.payload;
-                 state.data[field] = !state.data[field]
-            }
-       },
-       extraReducers:(builder) =>{
-           builder.addCase(generateData.pending ,(state)=>{
-                   state.status = 'loading',
-                   state.error  = null;
-           })
+const fakeDataSlice = createSlice({
+  name: 'fake',
+  initialState,
+  reducers: {
+    toggleField: (state, action) => {
+      const field = action.payload;
+      state.data[field] = !state.data[field];
+    },
+    resettoggleField: (state) => {
+      state.data = {
+        name: false,
+        email: false,
+        phone: false,
+        pan: false,
+        aadhar: false,
+        address: false,
+      };
+      state.dataReceived = {
+        name: '',
+        email: '',
+        phone: '',
+        pan: '',
+        aadhar: '',
+        address: '',
+      };
+      state.status = 'idle';
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(generateData.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(generateData.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.dataReceived = action.payload;
+      })
+      .addCase(generateData.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      });
+  },
+});
 
-           .addCase(generateData.fulfilled ,(state , action)=>{
-                   state.status = 'loading',
-                   state.data  = action.payload;
-           })
-           .addCase(generateData.rejected , (state,action)=>{
-                   state.status = 'failed',
-                   state.error = action.payload
-           })           
-       }
+export const { toggleField, resettoggleField } = fakeDataSlice.actions;
 
-})
+export const SelectMainData = (state) => state.fake.data;
+export const SelectGeneratedData = (state) => state.fake.dataReceived;
+export const SelectStatusData = (state) => state.fake.status;
+export const SelectErrorData = (state) => state.fake.error;
 
-export const {toggleField} = fackDataSlice.actions;
-export const SelectMainData = (state) => state.breach.data
-export const SelectStatusData = (state) => state.breach.status
-export const SelectErrorData = (state) =>state.breach.error
-
-export default fackDataSlice.reducer;
+export default fakeDataSlice.reducer;
