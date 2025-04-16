@@ -1,15 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../services/api";
 
-// Async thunk for sending data
+// Async thunk
 export const sendFackData = createAsyncThunk(
-  '/api/sendData',
-  async (data, { rejectWithValue, getState }) => { 
+  'fackData/send',
+  async (data, { rejectWithValue, getState }) => {
     try {
-      const { auth: { accessToken } } = getState(); 
+      const { auth: { accessToken } } = getState();
       const response = await api.post('/api/fack-data-generate', data, {
         headers: {
-          Authorization: `Bearer ${accessToken}`, 
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       return response.data;
@@ -21,62 +21,41 @@ export const sendFackData = createAsyncThunk(
 
 const initialState = {
   data: {
-    name: '',
-    email: '',
-    phone: '',
-    pan: '',
-    aadhar: '',
-    address: ''
+    name: false,
+    email: false,
+    phone: false,
+    pan: false,
+    aadhar: false,
+    address: false,
   },
-  saveData: {
-    savedAs: '',
-    name: '',
-    email: '',
-    phone: '',
-    pan: '',
-    aadhar: '',
-    address: ''
-  },
-  error: false,
+  response: {},
   loading: false,
-  success: false
+  success: false,
+  error: false,
+  message: ''
 };
 
-// Slice for managing fack data
 const fackDataSlice = createSlice({
   name: 'fackData',
   initialState,
   reducers: {
     updateFackData: (state, action) => {
-      state.data = action.payload;
-    },
-    saveFackData: (state, action) => {
-      state.saveData = action.payload;
+      state.data = { ...state.data, ...action.payload };
     },
     resetFackData: (state) => {
-      state.data = {      
-        name: '',
-        email: '',
-        phone: '',
-        pan: '',
-        aadhar: '',
-        address: ''
+      state.data = {
+        name: false,
+        email: false,
+        phone: false,
+        pan: false,
+        aadhar: false,
+        address: false,
       };
-      state.saveData = {
-        savedAs: '',
-        name: '',
-        email: '',
-        phone: '',
-        pan: '',
-        aadhar: '',
-        address: ''
-      };
-      state.error = false;    
+      state.response = {};
       state.loading = false;
       state.success = false;
-    },
-    showFackData: (state, action) => {
-      state.data = action.payload;
+      state.error = false;
+      state.message = '';
     }
   },
   extraReducers: (builder) => {
@@ -89,18 +68,15 @@ const fackDataSlice = createSlice({
       .addCase(sendFackData.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.error = false;
-        state.data = action.payload;
+        state.response = action.payload;
       })
       .addCase(sendFackData.rejected, (state, action) => {
         state.loading = false;
-        state.success = false;
         state.error = true;
-        state.message = action.payload; // Added message state.
+        state.message = action.payload;
       });
-  },
+  }
 });
 
-// Export actions and reducer
-export const { updateFackData, saveFackData, resetFackData, showFackData } = fackDataSlice.actions;
+export const { updateFackData, resetFackData } = fackDataSlice.actions;
 export const fackDataReducer = fackDataSlice.reducer;

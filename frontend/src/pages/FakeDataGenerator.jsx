@@ -1,14 +1,14 @@
 import React from 'react';
 import Navbar from '../pages/Navbar';
 import { SparklesIcon } from '@heroicons/react/24/outline';
-
-
-
+import { useSelector ,  useDispatch} from 'react-redux';
+import { updateFackData } from '../redux/slice/fakeDataSlice';
 
 function FakeDataGenerator() {
-
-
-
+      
+     const handleChange = () =>{
+          useDispatch(updateFackData())
+     }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -23,8 +23,14 @@ function FakeDataGenerator() {
 
             {['name', 'email', 'phone', 'pan', 'aadhar', 'address'].map((field) => (
               <div key={field} className="flex items-center space-x-3 mb-2">
-                <input id={field} type="checkbox" />
-                <label htmlFor={field} className="capitalize">{field}</label>
+                <input id={field} type="checkbox"
+                   
+                  onChange={()=>handleChange}
+                
+                />
+                <label htmlFor={field} className="capitalize">{field}
+
+                </label>
               </div>
             ))}
 
