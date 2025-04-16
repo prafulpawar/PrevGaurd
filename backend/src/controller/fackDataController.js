@@ -85,9 +85,10 @@ module.exports.generateFackData = async (req, res) => {
 
 module.exports.saveFackData = async (req, res) => {
     try {
-        const { name, email, aadhar, phone, pan, address } = req.body; 
+        const { name, email, aadhar, phone, pan, address ,savedAs } = req.body; 
         const userId = req.user._id;
         const savedData = await fackModel.create({
+            savedAs,
             name,
             email,
             aadhar, 

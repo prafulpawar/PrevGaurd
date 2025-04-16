@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const fackSchema = new mongoose.Schema({
+      savedAs:{
+        type:String
+       },
        name:{
           type:String,
        },
@@ -23,7 +26,7 @@ const fackSchema = new mongoose.Schema({
         ref: 'User', 
         required: true, 
         index: true 
-    }
+       }
 })
 
 const fackModel = mongoose.model('fackData',fackSchema);

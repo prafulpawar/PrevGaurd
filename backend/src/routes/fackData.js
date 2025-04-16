@@ -5,6 +5,9 @@ const { verifyAuth } = require('../middlewares/isAuth')
 
 router.post('/fack-data-generate',verifyAuth,generateFackData);
 router.post('/fack-data',verifyAuth,saveFackData);
+
+
+
 router.delete('/fack-data/:id',verifyAuth,deleteFackData)
 router.get('/fack-data/saved', verifyAuth, getSavedFackData);
 router.get('/fack-data-allpost',verifyAuth,getAllSavedFackData)
