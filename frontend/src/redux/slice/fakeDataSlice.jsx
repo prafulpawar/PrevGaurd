@@ -20,3 +20,9 @@ export const sendFackData = createAsyncThunk(
           }
      }
 )
+
+const initialState = {
+       data:{
+           
+       }
+}
