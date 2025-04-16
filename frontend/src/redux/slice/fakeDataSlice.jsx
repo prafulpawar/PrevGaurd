@@ -12,6 +12,7 @@ export const sendFackData = createAsyncThunk(
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log(response)
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to send data.');
@@ -58,6 +59,9 @@ const fackDataSlice = createSlice({
       state.message = '';
     }
   },
+
+
+
   extraReducers: (builder) => {
     builder
       .addCase(sendFackData.pending, (state) => {
@@ -79,4 +83,7 @@ const fackDataSlice = createSlice({
 });
 
 export const { updateFackData, resetFackData } = fackDataSlice.actions;
-export const fackDataReducer = fackDataSlice.reducer;
+
+export const selectInitialData = (state) => state.fack.data;
+export const selectSucessData = (state) => state.fack.success
+export default  fackDataSlice.reducer;

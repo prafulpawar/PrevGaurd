@@ -2,13 +2,20 @@ import React from 'react';
 import Navbar from '../pages/Navbar';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import { useSelector ,  useDispatch} from 'react-redux';
-import { updateFackData } from '../redux/slice/fakeDataSlice';
-
+import { updateFackData ,sendFackData } from '../redux/slice/fakeDataSlice';
+import { selectInitialData } from '../redux/slice/fakeDataSlice';
 function FakeDataGenerator() {
+
+       const fackData = useSelector(selectInitialData);
+        const dispatch = useDispatch();
       
-     const handleChange = () =>{
-          useDispatch(updateFackData())
+     const handleChange = (field, checked) =>{
+          dispatch(updateFackData({[field]:checked}))
      }
+
+     const handleGenerate = () => {
+      dispatch(sendFackData(fackData))
+    };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -23,9 +30,11 @@ function FakeDataGenerator() {
 
             {['name', 'email', 'phone', 'pan', 'aadhar', 'address'].map((field) => (
               <div key={field} className="flex items-center space-x-3 mb-2">
-                <input id={field} type="checkbox"
-                   
-                  onChange={()=>handleChange}
+                <input 
+                  id={field} 
+                  type="checkbox"
+                  checked={fackData[field]} 
+                  onChange={(e)=>handleChange(field,e.target.checked)}
                 
                 />
                 <label htmlFor={field} className="capitalize">{field}
@@ -34,16 +43,10 @@ function FakeDataGenerator() {
               </div>
             ))}
 
+            <button
+                onClick={handleGenerate}
+              className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded flex items-center">
 
-
-
-
-
-
-
-
-
-            <button className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded flex items-center">
               <SparklesIcon className="h-5 w-5 mr-2" />
               Generate Data
             </button>
