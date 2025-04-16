@@ -4,6 +4,7 @@ const userModel = require('../models/user.model');
 module.exports.verifyAuth = async (req, res, next) => {
     try {
         const authHeader = req.header("Authorization");
+        console.log(authHeader)
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({ message: "Unauthorized" });
         }
@@ -24,7 +25,7 @@ module.exports.verifyAuth = async (req, res, next) => {
        
         next();
     } catch (error) {
-        
+         console.log(err)
          console.error("Auth Middleware Error:", error.message);
          return res.status(401).json({ message: "Unauthorized: Invalid Token" });
     }

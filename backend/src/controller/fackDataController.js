@@ -23,7 +23,7 @@ function generateFakeUser(options) {
         email = false,
         phone = false,
         pan = false,
-        aadhar = false, // Corrected key
+        aadhar = false, 
         address = false
     } = options;
 
@@ -63,14 +63,13 @@ function generateFakeUser(options) {
 module.exports.generateFackData = async (req, res) => {
     try {
         const options = req.body;
-        console.log("Hello")
+        console.log(options)
         if (!options) {
             return res.status(400).json({
                 message: "Options are required."
             });
         }
         const data = generateFakeUser(options);
-
         return res.status(200).json({
             message: "Data generated successfully based on provided options.",
             data: data
@@ -155,3 +154,18 @@ module.exports.getSavedFackData = async (req, res) => {
         });
     }
 };
+
+module.exports.getAllSavedFackData = async(req,res)=>{
+    try {
+        const userId = req.user._id; 
+        const data = await fackModel.find({ savedBy: userId }).select('-savedBy -__v'); 
+
+        return res.status(200).json({
+            data,
+            message:"Successfully Fetched Saved Fake Data"
+        });
+    } catch (error) {
+        console.error("Error fetching saved fake data:", error);
+        return res.status(500).json({ message: "Failed to fetch saved fake data" });
+    }
+}

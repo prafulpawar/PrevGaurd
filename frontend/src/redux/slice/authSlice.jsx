@@ -98,6 +98,7 @@ export const getUserInfo = createAsyncThunk(
             localStorage.setItem('user', JSON.stringify(response.data.data));
             return response.data;
         } catch (error) {
+            console.log(error)
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch user info.');
         }
     }

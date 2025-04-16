@@ -4,14 +4,14 @@ import otpReducer from './slice/otpSlice'
 // import userReducer from './userSlice'; // मान लें कि आपके पास userSlice भी है
 import  registerUser  from './slice/registerSlice';
 import  breachEmail from './slice/breachSlice'
-import  fakeDataReducer from './slice/fakeDataSlice'
+import  fackData from './slice/fakeDataSlice'
 
 const rootReducer = combineReducers({
   auth: authReducer,
   otp:otpReducer,
   register:registerUser,
   breach:breachEmail,
-  fakeData: fakeDataReducer,
+  fake: fackData,
 
  
 //   user: userReducer,
