@@ -84,4 +84,5 @@ export const setFormData = (state) => state.register.formData;
 export const Ierror = (state) => state.register.Iserror;
 export const isLoading = (state) => state.register.isLoading;
 export const getemail = (state) => state.register.email;
+
 export default registerSlice.reducer;
