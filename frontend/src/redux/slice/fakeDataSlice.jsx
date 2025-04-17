@@ -56,6 +56,32 @@ export const saveFakeData = createAsyncThunk(
     }
 );
 
+export const getallSavedFackData = createAsyncThunk(
+    'fackData',
+    async(_,{rejectWithValue})=>{
+         try{
+              const state = getState();
+              const accessToken = state.auth?.accessToken;
+
+              if (!accessToken) {
+                return rejectWithValue('Authentication token not found.',{
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+                });
+            }
+
+            const response = await api.post('/api/fack-data-allpost')
+            return response.data
+         }
+         catch(error){
+          const message = error.response?.data?.message || error.message || 'Failed To Save Data!!';
+             return rejectWithValue(message)
+         }
+    }
+)
+
+
 const initialState = {
     data: {
         name: false,
@@ -65,6 +91,7 @@ const initialState = {
         aadhar: false,
         address: false,
     },
+    allSavedFackData:[],
     response: {},
     loading: false,
     success: false,

@@ -84,10 +84,11 @@ module.exports.generateFackData = async (req, res) => {
 
 module.exports.saveFackData = async (req, res) => {
     try {
-        const { name, email, aadhar, phone, pan, address ,savedBy ,savedAs } = req.body; 
+        const { name, email, aadhar, phone, pan, address ,savedBy  } = req.body; 
        
-        console.log(req.body)
+       
         const userId = req.user._id;
+       
         const savedData = await fackModel.create({
             savedAs:userId,
             name,
@@ -97,7 +98,6 @@ module.exports.saveFackData = async (req, res) => {
             pan,
             address,
             savedBy,
-        
         });
 
         return res.status(200).json({
@@ -141,22 +141,6 @@ module.exports.deleteFackData = async (req, res) => {
     }
 };
 
-
-module.exports.getSavedFackData = async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const savedData = await fackModel.find({ savedBy: userId }); 
-        return res.status(200).json({
-            savedData,
-            message: "Saved data fetched successfully"
-        });
-    } catch (error) {
-        console.error("Error fetching saved data:", error);
-        return res.status(500).json({
-            message: "Failed to fetch saved data"
-        });
-    }
-};
 
 module.exports.getAllSavedFackData = async(req,res)=>{
     try {
