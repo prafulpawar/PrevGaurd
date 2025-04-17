@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
   otp:otpReducer,
   register:registerUser,
   breach:breachEmail,
-  fack:fackDataReducer
+  fakeData: fackDataReducer,
 
  
 });

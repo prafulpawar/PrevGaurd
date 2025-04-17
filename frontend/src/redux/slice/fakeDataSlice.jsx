@@ -1,132 +1,142 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../services/api";
 
+export const sendFakeData = createAsyncThunk(
+    'fakeData/send',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const state = getState();
+            const accessToken = state.auth?.accessToken;
 
-// Async thunk
-export const sendFackData = createAsyncThunk(
-  'fackData/send',
-  async (data, { rejectWithValue, getState }) => {
-    try {
-      const { auth: { accessToken } } = getState();
-      const response = await api.post('/api/fack-data-generate', data, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      return response.data.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to send data.');
+            if (!accessToken) {
+                return rejectWithValue('Authentication token not found.');
+            }
+
+            const response = await api.post('/api/fack-data-generate', data, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            return response.data?.data;
+        } catch (error) {
+            const message = error.response?.data?.message || error.message || 'Failed to generate data.';
+            return rejectWithValue(message);
+        }
     }
-  }
 );
 
+export const saveFakeData = createAsyncThunk(
+    'fakeData/save',
+    async (payload, { rejectWithValue, getState }) => {
+        try {
+            const state = getState();
+            const accessToken = state.auth?.accessToken;
 
-export const saveFackData = createAsyncThunk(
-    'fackData/save',
-    async( response,{rejectWithValue})=>{
-        try{
-          const { auth: { accessToken } } = getState();
-            const responseData = await api.post('/api/fack-data',response,{
-                headers:{
-                  Authorization: `Bearer ${accessToken}`,
+            if (!accessToken) {
+                return rejectWithValue('Authentication token not found.');
+            }
+
+            const dataToSend = {
+                ...payload.generatedData,
+                savedBy: payload.savedBy
+            };
+
+            const response = await api.post('/api/fack-data', dataToSend, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
                 }
-            })
-            console.log(resetFackData)
-            return responseData.data
-        }
-        catch(error){
-             return rejectWithValue(error.response?.data?.message || 'Failed To Send Data!!')
+            });
+
+            return response.data?.message || "Data saved successfully!";
+        } catch (error) {
+            const message = error.response?.data?.message || error.message || 'Failed To Save Data!!';
+            return rejectWithValue(message);
         }
     }
-)
+);
 
 const initialState = {
-  data: {
-    name: false,
-    email: false,
-    phone: false,
-    pan: false,
-    aadhar: false,
-    address: false,
-  },
-  response: {},
-  loading: false,
-  success: false,
-  error: false,
-  message: ''
-};
-
-const fackDataSlice = createSlice({
-  name: 'fackData',
-  initialState,
-  reducers: {
-    updateFackData: (state, action) => {
-      state.data = { ...state.data, ...action.payload };
-    },
-    resetFackData: (state) => {
-      state.data = {
+    data: {
         name: false,
         email: false,
         phone: false,
         pan: false,
         aadhar: false,
         address: false,
-      };
-      state.response = {};
-      state.loading = false;
-      state.success = false;
-      state.error = false;
-      state.message = '';
     },
-    updatePersistData :(state,action)=>{
-       state.response = {
-         ...state.response,
-         savedBy:action.payload
-       }
+    response: {},
+    loading: false,
+    success: false,
+    error: false,
+    message: ''
+};
+
+const fakeDataSlice = createSlice({
+    name: 'fakeData',
+    initialState,
+    reducers: {
+        updateFakeData: (state, action) => {
+            state.data = { ...state.data, ...action.payload };
+        },
+        resetFakeData: (state) => {
+            state.data = initialState.data;
+            state.response = initialState.response;
+            state.loading = initialState.loading;
+            state.success = initialState.success;
+            state.error = initialState.error;
+            state.message = initialState.message;
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(sendFakeData.pending, (state) => {
+                state.loading = true;
+                state.success = false;
+                state.error = false;
+                state.message = '';
+                state.response = {};
+            })
+            .addCase(sendFakeData.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.response = action.payload;
+                state.message = "Data generated.";
+            })
+            .addCase(sendFakeData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+                state.success = false;
+                state.message = action.payload;
+                state.response = {};
+            })
+            .addCase(saveFakeData.pending, (state) => {
+                state.loading = true;
+                state.success = false;
+                state.error = false;
+                state.message = '';
+            })
+            .addCase(saveFakeData.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.message = action.payload;
+            })
+            .addCase(saveFakeData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+                state.success = false;
+                state.message = action.payload;
+            });
     }
-  },
-
-
-
-  extraReducers: (builder) => {
-    builder
-      .addCase(sendFackData.pending, (state) => {
-        state.loading = true;
-        state.success = false;
-        state.error = false;
-      })
-      .addCase(sendFackData.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.response = action.payload;
-      })
-      .addCase(sendFackData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = true;
-        state.message = action.payload;
-      })
-
-      .addCase(saveFackData.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(saveFackData.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.message = "Saved successfully!";
-      })
-      .addCase(saveFackData.rejected, (state, action) => {
-        state.loading = false;
-        state.error = true;
-        state.message = action.payload;
-      })
-      
-  }
 });
 
-export const { updateFackData, resetFackData ,updatePersistData } = fackDataSlice.actions;
+export const { updateFakeData, resetFakeData } = fakeDataSlice.actions;
 
-export const selectInitialData = (state) => state.fack.data;
-export const selectSucessData = (state) => state.fack.success;
-export const selectResponseData = (state) => state.fack.response;
-export const selectPersistData = (state) => state.fack.persist;
-export default  fackDataSlice.reducer;
+export const selectInitialData = (state) => state.fakeData.data;
+export const selectSuccessData = (state) => state.fakeData.success;
+export const selectResponseData = (state) => state.fakeData.response;
+export const selectLoading = (state) => state.fakeData.loading;
+export const selectMessage = (state) => state.fakeData.message;
+export const selectError = (state) => state.fakeData.error;
+
+export default fakeDataSlice.reducer;

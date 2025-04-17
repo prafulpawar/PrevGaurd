@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fackSchema = new mongoose.Schema({
-      savedAs:{
+      savedBy:{
         type:String
        },
        name:{
@@ -21,7 +21,7 @@ const fackSchema = new mongoose.Schema({
        address:{
          type:String
        },
-       savedBy: {
+       savedAs: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
         required: true, 
