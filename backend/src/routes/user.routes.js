@@ -10,6 +10,9 @@ router.post('/auth/signup',upload.single('profileImage'), registerUser);
 
 router.post('/auth/verifyOtp',rateLimiter,verfifyOtp);
 router.get("/auth/otp-status", getOtpStatus);
+
+
+
 router.post('/auth/login',loginUser)
 
 router.get('/auth/me',verifyAuth ,getUserInfo);

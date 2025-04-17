@@ -63,7 +63,6 @@ function generateFakeUser(options) {
 module.exports.generateFackData = async (req, res) => {
     try {
         const options = req.body;
-        console.log(options)
         if (!options) {
             return res.status(400).json({
                 message: "Options are required."
@@ -86,6 +85,7 @@ module.exports.generateFackData = async (req, res) => {
 module.exports.saveFackData = async (req, res) => {
     try {
         const { name, email, aadhar, phone, pan, address ,savedAs } = req.body; 
+        console.log(req.body)
         const userId = req.user._id;
         const savedData = await fackModel.create({
             savedAs,
