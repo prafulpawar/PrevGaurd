@@ -18,7 +18,6 @@ import {
 
 function FakeDataGenerator() {
     const [inputValue, setInputValue] = useState('');
-
     const fakeDataConfig = useSelector(selectInitialData);
     const responseData = useSelector(selectResponseData);
     const isLoading = useSelector(selectLoading);
@@ -214,9 +213,6 @@ function FakeDataGenerator() {
                             );
                         })
                     }
-
-
-
                 </div>
             </main>
         </div>
