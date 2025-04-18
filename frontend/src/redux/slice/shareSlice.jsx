@@ -34,6 +34,7 @@ export const getAllShareData = createAsyncThunk(
 const shareSlice  = createSlice({
       name:"Slice",
       initialState,
+      
       reducers:(state)=>{
          
       },
@@ -51,8 +52,9 @@ const shareSlice  = createSlice({
                    state.savedData = action.payload;
            })
            .addCase(getAllShareData.rejected,(state)=>{
-                   state.error   = false,
-                   state.success = true,
+                   state.error   = true,
+                   state.success = false,
+                   state.loading = false;
            })
       }
      
