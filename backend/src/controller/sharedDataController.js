@@ -33,7 +33,7 @@ module.exports.addsharedData = async (req, res) => {
 
 module.exports.getsharedData = async (req, res) => {
     try {
-        const { _id } = req.query;
+        const { _id } = req.body;
         const data = await shareModel.find({ _id });
         res.status(200).json({
             data,

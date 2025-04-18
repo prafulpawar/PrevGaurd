@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../pages/Navbar'; 
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, PhoneIcon, MapPinIcon, ScaleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllShareData, selectError, selectLoading, selectSucess } from '../redux/slice/shareSlice';
 
 function SharedDataDashboard() {
   const [riskScore, setRiskScore] = useState(75);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
+   const dispatch      = useDispatch();
+  const showselectError   = useSelector(selectError);
+  const showselectSucess  = useSelector(selectSucess);
+  const showselectLoading = useSelector(selectLoading) 
+  console.log(showselectError, ' ',showselectSucess, ' ',showselectLoading)
+
+
   useEffect(() => {
-    console.log("Shared data fetching logic has been removed.");
+      dispatch(getAllShareData())
   }, []);
 
   // Add Modal Functions
@@ -32,6 +41,7 @@ function SharedDataDashboard() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
+
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold leading-tight text-gray-900">Shared Data Dashboard</h1>
@@ -163,7 +173,12 @@ function SharedDataDashboard() {
             </div>
           </div>
         )}
+
+
+
       </main>
+
+
     </div>
   );
 }

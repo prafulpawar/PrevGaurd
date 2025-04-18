@@ -229,13 +229,13 @@ const fakeDataSlice = createSlice({
 
 export const { updateFakeData, resetFakeData , updateDeleteValue } = fakeDataSlice.actions;
 
-export const selectInitialData = (state) => state.fakeData.data;
-export const selectSuccessData = (state) => state.fakeData.success;
+export const selectInitialData  = (state) => state.fakeData.data;
+export const selectSuccessData  = (state) => state.fakeData.success;
 export const selectResponseData = (state) => state.fakeData.response;
-export const selectLoading = (state) => state.fakeData.loading;
-export const selectMessage = (state) => state.fakeData.message;
-export const selectError = (state) => state.fakeData.error;
-export const selectAllFackData = (state)=> state.fakeData.allSavedFackData;
-export const selectDeleteData = (state) => state.fakeData.deleteData
+export const selectLoading      = (state) => state.fakeData.loading;
+export const selectMessage      = (state) => state.fakeData.message;
+export const selectError        = (state) => state.fakeData.error;
+export const selectAllFackData  = (state) => state.fakeData.allSavedFackData;
+export const selectDeleteData   = (state) => state.fakeData.deleteData
 
 export default fakeDataSlice.reducer;

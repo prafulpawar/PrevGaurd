@@ -5,7 +5,7 @@ import api from "../../services/api";
 const initialState = {
       savedData : [],
       error:false,
-      success:true,
+      success:false,
       loading:false,
 }
 
@@ -22,7 +22,7 @@ export const getAllShareData = createAsyncThunk(
                           Authorization: `Bearer ${accessToken}`
                       }
                 })
-                return response.data
+                return response.data.data
             } 
             catch(error){
                  const message = error?.response?.message?.data || 'Getting Error In Data'
@@ -60,9 +60,10 @@ const shareSlice  = createSlice({
      
 })
 
-export const selectError   = (state) => state.shareSlice.error;
-export const selectSucess  = (state) => state.shareSlice.success;
-export const selectLoading = (state) => state.shareSlice.loading;
+
+export const selectError   = (state) => state.shareData.error;
+export const selectSucess  = (state) => state.shareData.success;
+export const selectLoading = (state) => state.shareData.loading;
 
 
 export default shareSlice.reducer;
