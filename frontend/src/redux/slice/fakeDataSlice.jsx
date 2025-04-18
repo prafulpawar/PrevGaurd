@@ -88,7 +88,20 @@ export const deleteSavedData = createAsyncThunk(
      'fackData/delete',
      async(deleteData , {rejectWithValue})=>{
           try{
-               
+              const state = getState();
+              const accessToken = state.auth?.accessToken;
+
+              if(!accessToken){
+                return rejectWithValue('Authentication token not found.');
+              }
+
+              const response =await api.delete(`/api/fack-data/${deleteData}`,{
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              })
+
+              return response.data
           }
           catch(error){
               const message = error.response?.data?.message || error.message || 'Failed To Delete Data!!'
@@ -189,7 +202,23 @@ const fakeDataSlice = createSlice({
                      state.error   = true;
                      state.success = false;
                      state.message = action.payload;
-          })
+           })
+           .addCase(deleteSavedData.pending , (state)=>{
+                state.loading = false;
+                state.success = false;
+                state.error   = false;
+                state.message = ''; 
+           })
+           .addCase(deleteSavedData.fulfilled, (state,action)=>{
+                  state.loading = false;
+                  state.success = true;
+                  state.deleteData = action.payload;
+
+           })
+           .addCase(deleteSavedData.rejected,(state,action)=>{
+
+           })
+
 
 
     }
