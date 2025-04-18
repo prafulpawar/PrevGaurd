@@ -24,7 +24,7 @@ module.exports.addsharedData = async (req, res) => {
         return res.status(200).json({
             savedUser,
             message: "User Register SucessFully"
-        });
+        }); 
     } catch (error) {
         console.error("Error in adding data:", error);
         return res.status(500).json({

@@ -112,8 +112,6 @@ export const deleteSavedData = createAsyncThunk(
      }
 )
 
-
-
 const initialState = {
     data: {
         name: false,
