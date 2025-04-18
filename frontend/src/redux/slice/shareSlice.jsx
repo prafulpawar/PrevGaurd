@@ -34,7 +34,7 @@ export const getAllShareData = createAsyncThunk(
 const shareSlice  = createSlice({
       name:"Slice",
       initialState,
-      
+
       reducers:(state)=>{
          
       },
@@ -59,3 +59,4 @@ const shareSlice  = createSlice({
       }
      
 })
+
