@@ -73,7 +73,7 @@ function FakeDataGenerator() {
 
     useEffect(() => {
         dispatch(getallSavedFackData());
-    }, [deleteValue]);
+    }, [deleteValue,selectAllFackData]);
 
 
 
