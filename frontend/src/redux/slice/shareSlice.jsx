@@ -6,7 +6,7 @@ const initialState = {
       savedData : [],
       error:false,
       success:false,
-      loading:false,
+      loading:true,
 }
 
 export const getAllShareData = createAsyncThunk(
