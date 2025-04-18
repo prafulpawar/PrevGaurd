@@ -5,25 +5,20 @@ const itemSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // Store IV and Auth Tag separately for AES-GCM
+   
     iv: {
-        type: String, // Store as hex
+        type: String,
         required: true
     },
     encryptedContent: {
-        type: String, // Store encrypted data as hex
+        type: String,
         required: true
     },
     authTag: {
-        type: String, // Store auth tag as hex
+        type: String, 
         required: true
     },
-    // Reference to the parent folder (optional but can be useful)
-    // folderRef: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Folder',
-    //     required: true
-    // }
+   
     createdAt: {
         type: Date,
         default: Date.now
