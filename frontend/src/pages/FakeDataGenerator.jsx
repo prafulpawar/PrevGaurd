@@ -207,7 +207,7 @@ function FakeDataGenerator() {
                                     <button
                                         className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-sm mt-2"
                                         onClick={() => {
-                                            console.log(`Deleting item saved by: ${item.savedBy || 'N/A'}`, item);
+                                            console.log(`Deleting item saved by: ${item.savedAs || 'N/A'}`);
                                         }}
                                     >
                                         Delete
