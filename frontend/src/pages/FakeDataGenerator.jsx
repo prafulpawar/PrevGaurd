@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../pages/Navbar';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +11,9 @@ import {
     selectInitialData,
     selectLoading,
     selectMessage,
-    selectError
+    selectError,
+    getallSavedFackData,
+    selectAllFackData
 } from '../redux/slice/fakeDataSlice';
 
 function FakeDataGenerator() {
@@ -22,8 +24,9 @@ function FakeDataGenerator() {
     const isLoading = useSelector(selectLoading);
     const message = useSelector(selectMessage);
     const hasError = useSelector(selectError);
-
+    const selectAllData = useSelector(selectAllFackData)
     const dispatch = useDispatch();
+   
 
     const handleChange = (field, checked) => {
         if (isLoading) return;
@@ -33,6 +36,7 @@ function FakeDataGenerator() {
     const handleGenerate = () => {
         if (isLoading) return;
         dispatch(sendFakeData(fakeDataConfig));
+        
     };
 
     const handleChangePersist = (e) => {
@@ -58,6 +62,13 @@ function FakeDataGenerator() {
 
         setInputValue('');
     };
+
+    useEffect(() => {
+      console.log("Component mounted"); 
+      dispatch(getallSavedFackData());
+    }, []);
+
+    
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -143,14 +154,30 @@ function FakeDataGenerator() {
                 </div>
 
                 <div className="mt-8 bg-white p-6 rounded shadow">
-                    <h2 className="text-lg font-semibold mb-4">Saved Data (Example)</h2>
-                    <ul className="space-y-2">
-                        <li>
-                            <p><span className="font-semibold">Name:</span> Jane Doe</p>
-                            <p><span className="font-semibold">Email:</span> jane@example.com</p>
-                            <p><span className="font-semibold">Saved By:</span> Admin</p>
-                        </li>
-                    </ul>
+
+                <h2  className="text-lg font-semibold mb-4">Saved Data (Example)</h2>
+                  {
+                    selectAllData?.data?.map((item,index)=>{
+
+                       return(
+                     
+                       <>
+                          
+                       <ul className="space-y-2 mb-2">
+                           <li  >
+                               <p><span className="font-semibold">Name:</span> Jane Doe</p>
+                               <p><span className="font-semibold">Email:</span> jane@example.com</p>
+                               <p><span className="font-semibold">Saved By:</span> Admin</p>
+                           </li>
+                       </ul>
+                       </>
+                       
+                       ) 
+                    })
+                  }
+
+
+
                 </div>
             </main>
         </div>

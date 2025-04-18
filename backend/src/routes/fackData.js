@@ -9,3 +9,4 @@ router.post('/fack-data',verifyAuth,saveFackData);
 router.delete('/fack-data/:id',verifyAuth,deleteFackData)
 router.get('/fack-data-allpost',verifyAuth,getAllSavedFackData)
 module.exports = router;
+

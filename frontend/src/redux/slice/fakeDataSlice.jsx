@@ -57,29 +57,34 @@ export const saveFakeData = createAsyncThunk(
 );
 
 export const getallSavedFackData = createAsyncThunk(
-    'fackData',
-    async(_,{rejectWithValue})=>{
-         try{
-              const state = getState();
-              const accessToken = state.auth?.accessToken;
+  'fackData',
+  async (_, { rejectWithValue, getState }) => {  
+   
+    try {
+      console.log("Thunk running"); // ✅ Kya ye print ho raha?
+      const state = getState();
+      const accessToken = state.auth?.accessToken;
+      console.log(accessToken)
+      if (!accessToken) {
+        return rejectWithValue('Authentication token not found.');
+      }
 
-              if (!accessToken) {
-                return rejectWithValue('Authentication token not found.',{
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                }
-                });
-            }
-
-            const response = await api.post('/api/fack-data-allpost')
-            return response.data
-         }
-         catch(error){
-          const message = error.response?.data?.message || error.message || 'Failed To Save Data!!';
-             return rejectWithValue(message)
-         }
+      const response = await api.get('/api/fack-data-allpost', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+       console.log('hello',response)
+      return response.data;
+    } catch (error) {
+      console.log(error)
+      const message =
+        error.response?.data?.message || error.message || 'Failed To Get Saved Data!';
+      return rejectWithValue(message);
     }
-)
+  }
+);
+
 
 
 const initialState = {
@@ -153,7 +158,27 @@ const fakeDataSlice = createSlice({
                 state.error = true;
                 state.success = false;
                 state.message = action.payload;
-            });
+            })
+            .addCase(getallSavedFackData.pending,(state)=>{
+                 state.loading = false;
+                 state.success = false;
+                 state.error   = false;
+                 state.message = ''; 
+            })
+            .addCase(getallSavedFackData.fulfilled,(state,action)=>{
+                  state.loading = false;
+                  state.success = true;
+                  state.allSavedFackData = action.payload;
+                  state.message = ''; 
+            })
+            .addCase(getallSavedFackData.rejected,(state,action)=>{
+                     state.loading = false; 
+                     state.error   = true;
+                     state.success = false;
+                     state.message = action.payload;
+          })
+
+
     }
 });
 
@@ -165,5 +190,6 @@ export const selectResponseData = (state) => state.fakeData.response;
 export const selectLoading = (state) => state.fakeData.loading;
 export const selectMessage = (state) => state.fakeData.message;
 export const selectError = (state) => state.fakeData.error;
+export const selectAllFackData = (state)=> state.fakeData.allSavedFackData;
 
 export default fakeDataSlice.reducer;
