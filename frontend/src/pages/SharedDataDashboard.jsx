@@ -1,6 +1,5 @@
-// SharedDataDashboard.js
 import React, { useState, useEffect } from 'react';
-import Navbar from '../pages/Navbar'; // Adjust the import path if necessary
+import Navbar from '../pages/Navbar'; 
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, PhoneIcon, MapPinIcon, ScaleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 
 function SharedDataDashboard() {

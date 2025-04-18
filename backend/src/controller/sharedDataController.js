@@ -7,8 +7,6 @@ module.exports.addsharedData = async (req, res) => {
                 message: "Data Is Required"
             });
         }
-
-        console.log(req.user)
         const { app, email, phone, location, notes } = req.body;
         const userId = req.user._id;
 
