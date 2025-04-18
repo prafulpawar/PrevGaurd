@@ -216,11 +216,11 @@ const fakeDataSlice = createSlice({
 
            })
            .addCase(deleteSavedData.rejected,(state,action)=>{
-
+                   state.loading = false; 
+                   state.error   = true;
+                   state.success = false;
+                   state.message = action.payload;
            })
-
-
-
     }
 });
 
@@ -233,5 +233,6 @@ export const selectLoading = (state) => state.fakeData.loading;
 export const selectMessage = (state) => state.fakeData.message;
 export const selectError = (state) => state.fakeData.error;
 export const selectAllFackData = (state)=> state.fakeData.allSavedFackData;
+export const selectDeleteData = (state) => state.fakeData.deleteData
 
 export default fakeDataSlice.reducer;
