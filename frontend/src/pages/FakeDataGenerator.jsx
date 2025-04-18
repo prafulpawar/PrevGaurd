@@ -26,7 +26,7 @@ function FakeDataGenerator() {
     const hasError = useSelector(selectError);
     const selectAllData = useSelector(selectAllFackData)
     const dispatch = useDispatch();
-   
+
 
     const handleChange = (field, checked) => {
         if (isLoading) return;
@@ -36,7 +36,7 @@ function FakeDataGenerator() {
     const handleGenerate = () => {
         if (isLoading) return;
         dispatch(sendFakeData(fakeDataConfig));
-        
+
     };
 
     const handleChangePersist = (e) => {
@@ -64,11 +64,10 @@ function FakeDataGenerator() {
     };
 
     useEffect(() => {
-      console.log("Component mounted"); 
-      dispatch(getallSavedFackData());
+        dispatch(getallSavedFackData());
     }, []);
 
-    
+
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -155,26 +154,68 @@ function FakeDataGenerator() {
 
                 <div className="mt-8 bg-white p-6 rounded shadow">
 
-                <h2  className="text-lg font-semibold mb-4">Saved Data (Example)</h2>
-                  {
-                    selectAllData?.data?.map((item,index)=>{
+                    <h2 className="text-lg font-semibold mb-4">Saved Data </h2>
 
-                       return(
-                     
-                       <>
-                          
-                       <ul className="space-y-2 mb-2">
-                           <li  >
-                               <p><span className="font-semibold">Name:</span> Jane Doe</p>
-                               <p><span className="font-semibold">Email:</span> jane@example.com</p>
-                               <p><span className="font-semibold">Saved By:</span> Admin</p>
-                           </li>
-                       </ul>
-                       </>
-                       
-                       ) 
-                    })
-                  }
+
+
+                    {
+                        selectAllData?.data && Array.isArray(selectAllData.data) &&
+                        selectAllData.data.map((item, index) => {
+                            return (
+                                <div
+                                    key={item.id || index}
+                                    className="border border-gray-300 rounded-md p-4 mb-4 shadow-sm w-full"
+                                >
+                                    <ul className="space-y-2 mb-4">
+                                        {item.savedBy && (
+                                            <li>
+                                                <p><span className="font-semibold">Saved For :</span> {item.savedBy}</p>
+                                            </li>
+                                        )}
+                                        {item.name && (
+                                            <li>
+                                                <p><span className="font-semibold">Name :</span> {item.name}</p>
+                                            </li>
+                                        )}
+                                        {item.email && (
+                                            <li>
+                                                <p><span className="font-semibold">Email :</span> {item.email}</p>
+                                            </li>
+                                        )}
+                                        {item.phone && (
+                                            <li>
+                                                <p><span className="font-semibold">Phone :</span> {item.phone}</p>
+                                            </li>
+                                        )}
+                                        {item.pan && (
+                                            <li>
+                                                <p><span className="font-semibold">Pan :</span> {item.pan}</p>
+                                            </li>
+                                        )}
+                                        {item.aadhar && (
+                                            <li>
+                                                <p><span className="font-semibold">Aadhar :</span> {item.aadhar}</p>
+                                            </li>
+                                        )}
+                                        {item.address && (
+                                            <li>
+                                                <p><span className="font-semibold">Address :</span> {item.address}</p>
+                                            </li>
+                                        )}
+                                    </ul>
+
+                                    <button
+                                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-sm mt-2"
+                                        onClick={() => {
+                                            console.log(`Deleting item saved by: ${item.savedBy || 'N/A'}`, item);
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            );
+                        })
+                    }
 
 
 

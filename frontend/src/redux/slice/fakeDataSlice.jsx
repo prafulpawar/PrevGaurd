@@ -61,10 +61,9 @@ export const getallSavedFackData = createAsyncThunk(
   async (_, { rejectWithValue, getState }) => {  
    
     try {
-      console.log("Thunk running"); // ✅ Kya ye print ho raha?
       const state = getState();
       const accessToken = state.auth?.accessToken;
-      console.log(accessToken)
+    
       if (!accessToken) {
         return rejectWithValue('Authentication token not found.');
       }
@@ -74,7 +73,7 @@ export const getallSavedFackData = createAsyncThunk(
           Authorization: `Bearer ${accessToken}`,
         },
       });
-       console.log('hello',response)
+     
       return response.data;
     } catch (error) {
       console.log(error)
