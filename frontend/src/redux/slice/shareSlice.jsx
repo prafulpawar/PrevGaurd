@@ -60,3 +60,5 @@ const shareSlice  = createSlice({
      
 })
 
+
+export default shareSlice.reducer;
