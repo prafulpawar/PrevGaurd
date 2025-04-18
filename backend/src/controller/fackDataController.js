@@ -147,7 +147,6 @@ module.exports.getAllSavedFackData = async(req,res)=>{
         const userId = req.user._id; 
       
         const data = await fackModel.find({ savedAs: userId }).select(' -__v'); 
-        console.log(data)
         return res.status(200).json({
             data,
             message:"Successfully Fetched Saved Fake Data"

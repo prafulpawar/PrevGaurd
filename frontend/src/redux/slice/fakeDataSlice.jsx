@@ -84,6 +84,19 @@ export const getallSavedFackData = createAsyncThunk(
   }
 );
 
+export const deleteSavedData = createAsyncThunk(
+     'fackData/delete',
+     async(deleteData , {rejectWithValue})=>{
+          try{
+               
+          }
+          catch(error){
+              const message = error.response?.data?.message || error.message || 'Failed To Delete Data!!'
+             return  rejectWithValue(message)
+          }
+     }
+)
+
 
 
 const initialState = {
@@ -100,7 +113,8 @@ const initialState = {
     loading: false,
     success: false,
     error: false,
-    message: ''
+    message: '',
+    deleteData:''
 };
 
 const fakeDataSlice = createSlice({

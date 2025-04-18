@@ -156,8 +156,6 @@ function FakeDataGenerator() {
 
                     <h2 className="text-lg font-semibold mb-4">Saved Data </h2>
 
-
-
                     {
                         selectAllData?.data && Array.isArray(selectAllData.data) &&
                         selectAllData.data.map((item, index) => {
