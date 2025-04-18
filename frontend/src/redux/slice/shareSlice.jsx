@@ -1,18 +1,33 @@
 import { createAsyncThunk , createSlice } from "@reduxjs/toolkit";
+import api from "../../services/api";
 
 
 const initialState = {
-      
+      savedData : [],
+      error:false,
+      success:true,
+      loading:false,
 }
 
 export const getAllShareData = createAsyncThunk(
       'shareData',
       async(_, {rejectWithValue , getState})=>{
             try{
-                
+
+                const state = getState();
+                const accessToken = state.auth?.accessToken;
+
+                const response = await api.post('/api/dash/data',{
+                      headers:{
+                          Authorization: `Bearer ${accessToken}`
+                      }
+                })
+                return response.data
             } 
             catch(error){
                  const message = error?.response?.message?.data || 'Getting Error In Data'
+                 return rejectWithValue(message)
             }
       }
 )
+
