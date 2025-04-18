@@ -1,9 +1,10 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import authReducer from './slice/authSlice';
-import otpReducer from './slice/otpSlice'
-import  registerUser  from './slice/registerSlice';
-import  breachEmail from './slice/breachSlice'
-import   fackDataReducer  from './slice/fakeDataSlice'
+import { combineReducers } from  '@reduxjs/toolkit';
+import   authReducer       from  './slice/authSlice';
+import   otpReducer        from  './slice/otpSlice'
+import   registerUser      from  './slice/registerSlice';
+import   breachEmail       from  './slice/breachSlice'
+import   fackDataReducer   from  './slice/fakeDataSlice'
+import   shareSlice        from  './slice/shareSlice'
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -11,8 +12,8 @@ const rootReducer = combineReducers({
   register:registerUser,
   breach:breachEmail,
   fakeData: fackDataReducer,
-
- 
+  shareData:shareSlice,
+   
 });
 
 export default rootReducer;

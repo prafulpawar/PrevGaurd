@@ -60,5 +60,9 @@ const shareSlice  = createSlice({
      
 })
 
+export const selectError   = (state) => state.shareSlice.error;
+export const selectSucess  = (state) => state.shareSlice.success;
+export const selectLoading = (state) => state.shareSlice.loading;
+
 
 export default shareSlice.reducer;
