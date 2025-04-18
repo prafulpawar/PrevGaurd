@@ -13,7 +13,10 @@ import {
     selectMessage,
     selectError,
     getallSavedFackData,
-    selectAllFackData
+    selectAllFackData,
+    updateDeleteValue,
+    selectDeleteData,
+    deleteSavedData
 } from '../redux/slice/fakeDataSlice';
 
 function FakeDataGenerator() {
@@ -24,6 +27,7 @@ function FakeDataGenerator() {
     const message = useSelector(selectMessage);
     const hasError = useSelector(selectError);
     const selectAllData = useSelector(selectAllFackData)
+    const deleteValue = useSelector(selectDeleteData)
     const dispatch = useDispatch();
 
 
@@ -62,9 +66,14 @@ function FakeDataGenerator() {
         setInputValue('');
     };
 
+    const deleteFackData = (value)=>{
+          dispatch(updateDeleteValue(value));
+          dispatch(deleteSavedData(value));
+    }
+
     useEffect(() => {
         dispatch(getallSavedFackData());
-    }, []);
+    }, [deleteValue]);
 
 
 
@@ -202,10 +211,8 @@ function FakeDataGenerator() {
                                     </ul>
 
                                     <button
-                                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-sm mt-2"
-                                        onClick={() => {
-                                            console.log(`Deleting item saved by: ${item.savedAs || 'N/A'}`);
-                                        }}
+                                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-sm mt-2 cursor-pointer"
+                                        onClick={()=>deleteFackData(item._id)}
                                     >
                                         Delete
                                     </button>

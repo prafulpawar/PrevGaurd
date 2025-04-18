@@ -86,7 +86,8 @@ export const getallSavedFackData = createAsyncThunk(
 
 export const deleteSavedData = createAsyncThunk(
      'fackData/delete',
-     async(deleteData , {rejectWithValue})=>{
+    
+     async(deleteData , {rejectWithValue,getState})=>{
           try{
               const state = getState();
               const accessToken = state.auth?.accessToken;
@@ -100,10 +101,11 @@ export const deleteSavedData = createAsyncThunk(
                   Authorization: `Bearer ${accessToken}`,
                 },
               })
-
+              console.log(response)
               return response.data
           }
           catch(error){
+               console.log(error)
               const message = error.response?.data?.message || error.message || 'Failed To Delete Data!!'
              return  rejectWithValue(message)
           }
@@ -127,8 +129,8 @@ const initialState = {
     success: false,
     error: false,
     message: '',
-    deleteData:''
-};
+    deleteData:'',
+}
 
 const fakeDataSlice = createSlice({
     name: 'fakeData',
@@ -145,6 +147,9 @@ const fakeDataSlice = createSlice({
             state.error    =  initialState.error;
             state.message  =  initialState.message;
         },
+        updateDeleteValue :(state,action) =>{
+            state.deleteData = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -224,7 +229,7 @@ const fakeDataSlice = createSlice({
     }
 });
 
-export const { updateFakeData, resetFakeData } = fakeDataSlice.actions;
+export const { updateFakeData, resetFakeData , updateDeleteValue } = fakeDataSlice.actions;
 
 export const selectInitialData = (state) => state.fakeData.data;
 export const selectSuccessData = (state) => state.fakeData.success;

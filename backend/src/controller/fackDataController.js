@@ -116,6 +116,7 @@ module.exports.saveFackData = async (req, res) => {
 module.exports.deleteFackData = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log(id)
         if (!id) {
             return res.status(400).json({
                 message: "Error In Deleting User: ID is required."
