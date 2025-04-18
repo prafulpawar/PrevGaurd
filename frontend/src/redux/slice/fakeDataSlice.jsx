@@ -138,12 +138,12 @@ const fakeDataSlice = createSlice({
             state.data = { ...state.data, ...action.payload };
         },
         resetFakeData: (state) => {
-            state.data = initialState.data;
-            state.response = initialState.response;
-            state.loading = initialState.loading;
-            state.success = initialState.success;
-            state.error = initialState.error;
-            state.message = initialState.message;
+            state.data     =  initialState.data;
+            state.response =  initialState.response;
+            state.loading  =  initialState.loading;
+            state.success  =  initialState.success;
+            state.error    =  initialState.error;
+            state.message  =  initialState.message;
         },
     },
     extraReducers: (builder) => {
