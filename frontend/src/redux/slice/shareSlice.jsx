@@ -31,3 +31,29 @@ export const getAllShareData = createAsyncThunk(
       }
 )
 
+const shareSlice  = createSlice({
+      name:"Slice",
+      initialState,
+      reducers:(state)=>{
+         
+      },
+
+      extraReducers:(builder)=>{
+           builder.addCase(getAllShareData.pending,(state)=>{
+                   state.error   = true,
+                   state.success = false,
+                   state.loading = false
+           })
+           .addCase(getAllShareData.fulfilled,(state,action)=>{
+                   state.error     = false,
+                   state.success   = true,
+                   state.loading   = false,
+                   state.savedData = action.payload;
+           })
+           .addCase(getAllShareData.rejected,(state)=>{
+                   state.error   = false,
+                   state.success = true,
+           })
+      }
+     
+})
