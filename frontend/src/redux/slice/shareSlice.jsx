@@ -66,6 +66,21 @@ export const deleteAnSahreData = createAsyncThunk(
     }
 );
 
+export const addAnShareData = createAsyncThunk(
+     'shareData/add',
+     async(Data,{rejectWithValue})=>{
+          try{
+               const response = api.get()
+          }
+          catch(error){
+              const message = error?.response?.message?.data || 'Network Error'
+          }
+     }
+)
+
+
+
+
 
 const shareSlice = createSlice({
     name: "shareData", 
