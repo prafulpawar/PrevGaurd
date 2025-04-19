@@ -1,4 +1,5 @@
 const shareModel = require("../models/shareData");
+const mongoose = require('mongoose');
 
 module.exports.addsharedData = async (req, res) => {
     try {
@@ -34,7 +35,6 @@ module.exports.addsharedData = async (req, res) => {
 module.exports.getsharedData = async (req, res) => {
     try {
         const {_id} = req.user
-        console.log(_id)
         const data = await shareModel.find({ savedBy:_id }).select('-__v');
 
         res.status(200).json({
@@ -88,6 +88,17 @@ module.exports.updatesharedData = async (req, res) => {
 module.exports.deleteSharedData = async (req, res) => {
     try {
         const { id } = req.params;
+
+
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+          
+            console.error("Invalid ID format received:", id);
+            return res.status(400).json({
+                message: "Invalid ID format provided."
+            });
+        }
+        console.log(id)
+        console.log(req.params)
         const deletedSharedData = await shareModel.findByIdAndDelete(id);
 
         if (!deletedSharedData) {
