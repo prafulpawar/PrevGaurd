@@ -78,7 +78,8 @@ export const addAnShareData = createAsyncThunk(
                           Authorization:`Bearer ${accessToken}`
                     }
                })
-               return response.savedUser;
+               console.log(response.data.savedUser)
+               return { Data: response.data.savedUser , message:response.data.message}
           }
           catch(error){
               const message = error?.response?.message?.data || 'Network Error'
@@ -86,10 +87,6 @@ export const addAnShareData = createAsyncThunk(
           }
      }
 )
-
-
-
-
 
 const shareSlice = createSlice({
     name: "shareData", 
@@ -157,14 +154,13 @@ const shareSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 console.log(action.payload)
-                state.message = action.payload;
+                state.message = action.payload.message;
             })
             .addCase(addAnShareData.rejected,(state,action)=>{
                 state.loading = false;
                 state.error = true;
                 state.success = false; 
-               
-                state.message = action.payload || 'Failed to delete item';
+                state.message = action.payload.message || 'Failed to delete item';
             })
     }
 });
