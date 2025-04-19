@@ -146,7 +146,7 @@ module.exports.deleteFackData = async (req, res) => {
 module.exports.getAllSavedFackData = async(req,res)=>{
     try {
         const userId = req.user._id; 
-      
+         
         const data = await fackModel.find({ savedAs: userId }).select(' -__v'); 
         return res.status(200).json({
             data,

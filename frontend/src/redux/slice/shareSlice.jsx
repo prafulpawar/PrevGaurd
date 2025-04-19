@@ -13,10 +13,9 @@ const initialState = {
 export const getAllShareData = createAsyncThunk(
       'shareData',
       async(_, {rejectWithValue , getState})=>{
-            try{
-
                 const state = getState();
                 const accessToken = state.auth?.accessToken;
+            try{
                 const response = await api.get('/api/dash/data',{
                       headers:{
                           Authorization: `Bearer ${accessToken}`
@@ -42,7 +41,7 @@ const shareSlice  = createSlice({
 
       extraReducers:(builder)=>{
            builder.addCase(getAllShareData.pending,(state,action)=>{
-                   state.error   = true,
+                   state.error   = false,
                    state.success = false,
                    state.loading = false,
                    state.message = action.payload
