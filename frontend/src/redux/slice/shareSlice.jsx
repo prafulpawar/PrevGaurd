@@ -7,6 +7,7 @@ const initialState = {
       error:false,
       success:false,
       loading:true,
+      message:'',
 }
 
 export const getAllShareData = createAsyncThunk(
@@ -16,16 +17,16 @@ export const getAllShareData = createAsyncThunk(
 
                 const state = getState();
                 const accessToken = state.auth?.accessToken;
-
-                const response = await api.post('/api/dash/data',{
+                const response = await api.get('/api/dash/data',{
                       headers:{
                           Authorization: `Bearer ${accessToken}`
                       }
                 })
-                return response.data.data
+                return response.data
             } 
             catch(error){
-                 const message = error?.response?.message?.data || 'Getting Error In Data'
+                  console.log(error)
+                 const message = error?.response?.message?.data || 'Network Error '
                  return rejectWithValue(message)
             }
       }
@@ -40,10 +41,11 @@ const shareSlice  = createSlice({
       },
 
       extraReducers:(builder)=>{
-           builder.addCase(getAllShareData.pending,(state)=>{
+           builder.addCase(getAllShareData.pending,(state,action)=>{
                    state.error   = true,
                    state.success = false,
-                   state.loading = false
+                   state.loading = false,
+                   state.message = action.payload
            })
            .addCase(getAllShareData.fulfilled,(state,action)=>{
                    state.error     = false,
@@ -51,10 +53,11 @@ const shareSlice  = createSlice({
                    state.loading   = false,
                    state.savedData = action.payload;
            })
-           .addCase(getAllShareData.rejected,(state)=>{
+           .addCase(getAllShareData.rejected,(state,action)=>{
                    state.error   = true,
                    state.success = false,
                    state.loading = false;
+                   state.message = action.payload
            })
       }
      
@@ -64,6 +67,6 @@ const shareSlice  = createSlice({
 export const selectError   = (state) => state.shareData.error;
 export const selectSucess  = (state) => state.shareData.success;
 export const selectLoading = (state) => state.shareData.loading;
-
-
+export const selectSuccessData = (state) =>state.shareData.savedData;
+export const selectMessage  = (state) =>state.shareData.message;
 export default shareSlice.reducer;

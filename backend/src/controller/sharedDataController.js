@@ -33,8 +33,10 @@ module.exports.addsharedData = async (req, res) => {
 
 module.exports.getsharedData = async (req, res) => {
     try {
-        const { _id } = req.body;
+        const {userId} = req.user
+        console.log(userId)
         const data = await shareModel.find({ _id });
+        console.log(data)
         res.status(200).json({
             data,
             message: "SuccessFully Data Is Get"

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../pages/Navbar'; 
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, PhoneIcon, MapPinIcon, ScaleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllShareData, selectError, selectLoading, selectSucess } from '../redux/slice/shareSlice';
+import { getAllShareData, selectError, selectLoading, selectSucess , selectSuccessData, selectMessage } from '../redux/slice/shareSlice';
+
 
 function SharedDataDashboard() {
   const [riskScore, setRiskScore] = useState(75);
@@ -12,10 +13,11 @@ function SharedDataDashboard() {
    const dispatch      = useDispatch();
   const showselectError   = useSelector(selectError);
   const showselectSucess  = useSelector(selectSucess);
-  const showselectLoading = useSelector(selectLoading) 
-  console.log(showselectError, ' ',showselectSucess, ' ',showselectLoading)
+  const showselectLoading = useSelector(selectLoading); 
+  const showsucessData    = useSelector(selectSuccessData);
+  const showMessage       = useSelector(selectMessage)
 
-
+  console.log(showsucessData)
   useEffect(() => {
       dispatch(getAllShareData())
   }, []);
@@ -47,6 +49,14 @@ function SharedDataDashboard() {
           <h1 className="text-3xl font-bold leading-tight text-gray-900">Shared Data Dashboard</h1>
           <p className="mt-2 text-sm text-gray-600">Track applications where you've shared personal information.</p>
         </header>
+
+         {
+              showselectError === true ? (<div className=' p-5 m-2 rounded-md bg-red-400 font-bold text-white'>
+                  {showMessage}
+              </div>) : (<>   </>)
+         }
+
+
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-start">
           <div className="md:col-span-1 p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow flex items-center space-x-3 h-full">
