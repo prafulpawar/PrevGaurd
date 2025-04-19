@@ -15,7 +15,7 @@ import {
 
 
 function SharedDataDashboard() {
-    const [riskScore, setRiskScore] = useState(75); // Example static score
+    const [riskScore, setRiskScore] = useState(75);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -98,13 +98,13 @@ function SharedDataDashboard() {
         dispatch(resetShareStatus());
         setIsUpdateModalOpen(true);
     };
-
+    
     const handleCloseUpdateModal = () => {
         setIsUpdateModalOpen(false);
         setCurrentItemToUpdate(null);
     };
 
-    // Opens the delete confirmation modal
+    //  --  START Delete Operation
     const handleDeleteClick = (e, item) => {
         e.stopPropagation(); 
         setItemToDelete(item);
@@ -112,19 +112,16 @@ function SharedDataDashboard() {
         setIsDeleteModalOpen(true);
     };
 
-    // Closes the delete confirmation modal
     const handleCloseDeleteModal = () => {
         setIsDeleteModalOpen(false);
         setItemToDelete(null);
     };
-
-    
     const handleConfirmDelete = () => {
         if (!itemToDelete || !itemToDelete._id) return;
         dispatch(deleteAnSahreData(itemToDelete._id)); 
         handleCloseDeleteModal();
     };
-
+    //--   END Delete Operation
 
   
     const handleAddFormChange = (e) => {

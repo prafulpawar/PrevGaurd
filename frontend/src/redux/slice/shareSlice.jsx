@@ -10,7 +10,6 @@ const initialState = {
     message: '',
 };
 
-// Async Thunk for fetching all data
 export const getAllShareData = createAsyncThunk(
     'shareData/getAll', 
     async (_, { rejectWithValue, getState }) => {
@@ -67,7 +66,7 @@ export const deleteAnSahreData = createAsyncThunk(
     }
 );
 
-// The Slice
+
 const shareSlice = createSlice({
     name: "shareData", 
     initialState,
@@ -101,7 +100,6 @@ const shareSlice = createSlice({
                 state.savedData = { data: [] }; 
             })
 
-            // --- DeleteAnSahreData Cases ---
             .addCase(deleteAnSahreData.pending, (state) => {
                 state.loading = true;
                 state.error = false;
@@ -112,9 +110,6 @@ const shareSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.message = action.payload.message;
-                const { deletedId } = action.payload;
-
-               
                 if (state.savedData && state.savedData.data && deletedId) {
                     state.savedData.data = state.savedData.data.filter(
                         item => item._id !== deletedId
@@ -123,8 +118,8 @@ const shareSlice = createSlice({
             })
             .addCase(deleteAnSahreData.rejected, (state, action) => {
                 state.loading = false;
-                state.error = true; // Set error true
-                state.success = false; // Ensure success is false
+                state.error = true;
+                state.success = false; 
                 state.message = action.payload || 'Failed to delete item';
             });
     }
