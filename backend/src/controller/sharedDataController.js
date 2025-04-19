@@ -8,15 +8,16 @@ module.exports.addsharedData = async (req, res) => {
                 message: "Data Is Required"
             });
         }
-        const { app, email, phone, location, notes } = req.body;
+        const {  appName,  emailUsed,  phoneUsed, locationAccess, notes } = req.body;
+        console.log(req.body);
         const userId = req.user._id;
 
         const savedUser = await shareModel.create({
-            appName: app,
-            emailUsed: email,
-            phoneUsed: phone,
-            locationAccess: location,
-            notes: notes,
+            appName,
+            emailUsed,
+            phoneUsed,
+            locationAccess,
+            notes,
             savedBy: userId
         });
 

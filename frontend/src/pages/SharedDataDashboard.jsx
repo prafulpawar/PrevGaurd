@@ -11,6 +11,7 @@ import {
     selectSucess,
     selectSuccessData,
     selectMessage,
+    addAnShareData,
 } from '../redux/slice/shareSlice'; 
 
 
@@ -104,6 +105,13 @@ function SharedDataDashboard() {
         setCurrentItemToUpdate(null);
     };
 
+
+
+
+
+
+
+
     //  --  START Delete Operation
     const handleDeleteClick = (e, item) => {
         e.stopPropagation(); 
@@ -132,6 +140,9 @@ function SharedDataDashboard() {
                    ? (name === 'locationAccess' ? (checked ? 'yes' : '') : checked) 
                    : value
         }));
+
+
+
     };
 
     const handleUpdateFormChange = (e) => {
@@ -152,8 +163,7 @@ function SharedDataDashboard() {
         if (!payload.locationAccess) {
             payload.locationAccess = 'no'; 
         }
-    
-        console.log("Dispatch Add Action (Not Implemented):", payload);
+        dispatch(addAnShareData(payload))
         handleCloseAddModal();
     };
 

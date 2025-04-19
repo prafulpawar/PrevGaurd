@@ -8,6 +8,7 @@ const initialState = {
     success: false,
     loading: false, 
     message: '',
+    Data:{},
 };
 
 export const getAllShareData = createAsyncThunk(
@@ -68,12 +69,20 @@ export const deleteAnSahreData = createAsyncThunk(
 
 export const addAnShareData = createAsyncThunk(
      'shareData/add',
-     async(Data,{rejectWithValue})=>{
+     async(Data,{rejectWithValue,getState})=>{
+             const state = getState();
+             const accessToken = state.auth?.accessToken
           try{
-               const response = api.get()
+               const response =await api.post('/api/dash/data', Data , {
+                    headers:{
+                          Authorization:`Bearer ${accessToken}`
+                    }
+               })
+               return response.savedUser;
           }
           catch(error){
               const message = error?.response?.message?.data || 'Network Error'
+              rejectWithValue(message);
           }
      }
 )
@@ -136,7 +145,27 @@ const shareSlice = createSlice({
                 state.error = true;
                 state.success = false; 
                 state.message = action.payload || 'Failed to delete item';
-            });
+            })
+
+            .addCase(addAnShareData.pending, (state)=>{
+                state.loading = true;
+                state.error = false;
+                state.success = false; 
+                state.message = '';
+            })
+            .addCase(addAnShareData.fulfilled,(state,action)=>{
+                state.loading = false;
+                state.success = true;
+                console.log(action.payload)
+                state.message = action.payload;
+            })
+            .addCase(addAnShareData.rejected,(state,action)=>{
+                state.loading = false;
+                state.error = true;
+                state.success = false; 
+               
+                state.message = action.payload || 'Failed to delete item';
+            })
     }
 });
 
