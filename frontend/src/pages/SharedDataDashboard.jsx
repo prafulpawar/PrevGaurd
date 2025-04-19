@@ -42,8 +42,6 @@ function SharedDataDashboard() {
         notes: ''
     });
 
-
-  
     const dispatch = useDispatch();
     const isLoading = useSelector(selectLoading);
     const isSuccess = useSelector(selectSucess); 
@@ -51,15 +49,11 @@ function SharedDataDashboard() {
     const successData = useSelector(selectSuccessData); 
     const message = useSelector(selectMessage);
 
-   
     const applications = successData?.data || [];
-
   
     useEffect(() => {
         dispatch(getAllShareData());
     }, [dispatch]);
-
-
 
     useEffect(() => {
         let timer;
@@ -104,11 +98,6 @@ function SharedDataDashboard() {
         setIsUpdateModalOpen(false);
         setCurrentItemToUpdate(null);
     };
-
-
-
-
-
 
 
 

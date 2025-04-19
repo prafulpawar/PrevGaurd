@@ -78,7 +78,6 @@ export const addAnShareData = createAsyncThunk(
                           Authorization:`Bearer ${accessToken}`
                     }
                })
-               console.log(response.data.savedUser)
                return { Data: response.data.savedUser , message:response.data.message}
           }
           catch(error){
@@ -131,6 +130,7 @@ const shareSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.message = action.payload.message;
+                const deletedId = action.payload.deletedId
                 if (state.savedData && state.savedData.data && deletedId) {
                     state.savedData.data = state.savedData.data.filter(
                         item => item._id !== deletedId
@@ -155,6 +155,7 @@ const shareSlice = createSlice({
                 state.success = true;
                 console.log(action.payload)
                 state.message = action.payload.message;
+                state.savedData.data.push(action.payload.Data);
             })
             .addCase(addAnShareData.rejected,(state,action)=>{
                 state.loading = false;
