@@ -110,9 +110,7 @@ module.exports.folderVaultController = async (req, res) => {
 
         const newFolder = await FolderModel.create({
             name: folderName.trim(),
-            // Consider adding userRef or vaultRef here if needed for queries/validation
-            // userRef: userId,
-            // vaultRef: vault._id
+            
         });
 
         vault.folders.push(newFolder._id);
@@ -163,7 +161,7 @@ module.exports.itemVaultController = async (req, res) => {
         if (!vault) {
             return res.status(404).json({ message: "Vault not found for user." });
         }
-        // Ensure vault has a salt field - this is crucial for scrypt
+      
         if (!vault.salt) {
             console.error("Vault Salt is missing for user:", userId);
             return res.status(500).json({ message: "Vault configuration error (missing salt)." });
@@ -196,7 +194,7 @@ module.exports.itemVaultController = async (req, res) => {
             iv: iv.toString('hex'),
             encryptedContent: encrypted,
             authTag: authTag.toString('hex'),
-            // folderRef: folder._id // Optional link back if needed
+           
         });
 
         folder.items.push(newItem._id);
