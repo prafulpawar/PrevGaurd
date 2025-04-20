@@ -13,6 +13,7 @@ import WebAuthnVaultDemo from '../pages/WebAuthnVaultDemo';
 
 import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
+import VaultPage from '../pages/VaultPage';
 
 function Approutes() {
   return (
@@ -26,7 +27,7 @@ function Approutes() {
         <Route path='/dashboard' element={<SharedDataDashboard />} />
         <Route path='/generator' element={<FakeDataGenerator />} />
         <Route path='/breach-monitor' element={<BreachMonitor />} />
-        <Route path='/vault' element={<WebAuthnVaultDemo />} />
+        <Route path='/vault' element={<VaultPage />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/settings' element={<Settings />} />
 
