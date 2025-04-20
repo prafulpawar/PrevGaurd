@@ -171,7 +171,6 @@ function SharedDataDashboard() {
          if (!payload.locationAccess) {
              payload.locationAccess = 'no'; 
          }
-          console.log(payload)
         dispatch( updateAnShareData(payload));
         handleCloseUpdateModal();
     };

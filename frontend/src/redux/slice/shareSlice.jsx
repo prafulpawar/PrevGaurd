@@ -8,6 +8,7 @@ const initialState = {
     loading: false, 
     message: '',
     Data:{},
+    updatedData:''
 };
 
 export const getAllShareData = createAsyncThunk(
@@ -97,8 +98,7 @@ export const updateAnShareData = createAsyncThunk(
                     Authorization:`Bearer ${accessToken}`
                    }
              });
-               console.log(response)
-               return { message:response.data.message || 'Item Updated Sucessfully '};
+               return { updatedData:response.data ,  message:response.data.message || 'Item Updated Sucessfully '};
           }
           catch(error){
               const message = error?.response?.message?.data || 'Network Error '
@@ -195,7 +195,7 @@ const shareSlice = createSlice({
                   state.loading   = false;
                   state.success   = true;
                   state.message   = action.payload.message;
-                  const updateId  = action.payload.updateId;
+                  const updateId  = action.payload.updatedData;
                   console.log(updateId)
 
             })
