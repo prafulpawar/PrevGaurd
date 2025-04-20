@@ -55,7 +55,6 @@ module.exports.updatesharedData = async (req, res) => {
     try {
         const { id } = req.params;
         const { appName, emailUsed, phoneUsed, locationAccess, notes } = req.body;
-
         if (!id) {
             return res.status(400).json({
                 message: "Invalid ID"

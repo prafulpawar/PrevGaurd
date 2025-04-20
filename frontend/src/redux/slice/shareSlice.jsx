@@ -92,12 +92,13 @@ export const updateAnShareData = createAsyncThunk(
           const accessToken = state.auth?.accessToken
            
           try{
-             const response = await api.put(`/api/dash/update/${accessToken}`,updateData,{
+             const response = await api.put(`/api/dash/update/${updateData._id}`,updateData,{
                    headers:{
                     Authorization:`Bearer ${accessToken}`
                    }
              });
-               return {updateId :updateId , message:response.data.message || 'Item Updated Sucessfully '};
+               console.log(response)
+               return { message:response.data.message || 'Item Updated Sucessfully '};
           }
           catch(error){
               const message = error?.response?.message?.data || 'Network Error '
@@ -194,8 +195,9 @@ const shareSlice = createSlice({
                   state.loading   = false;
                   state.success   = true;
                   state.message   = action.payload.message;
-                  console.log(action)
                   const updateId  = action.payload.updateId;
+                  console.log(updateId)
+
             })
             .addCase(updateAnShareData.rejected,(state,action)=>{
                 state.loading = false;
