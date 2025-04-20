@@ -67,7 +67,7 @@ module.exports.updatesharedData = async (req, res) => {
             phoneUsed,
             locationAccess,
             notes
-        }, { new: true });
+        }, { new: true }).select('-__v');
 
         if (!updatedData) {
             return res.status(404).json({ message: "Data not found" });

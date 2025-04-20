@@ -151,31 +151,65 @@ function SharedDataDashboard() {
 
     //-- START Send Operation
    
-    const handleAddSubmit = (e) => {
+   // ... (previous code) ...
+
+    //-- START Send Operation
+
+    const handleAddSubmit = async (e) => { 
         e.preventDefault();
         const payload = { ...formData };
         if (!payload.locationAccess) {
-            payload.locationAccess = 'no'; 
+            payload.locationAccess = 'no';
         }
-        dispatch(addAnShareData(payload))
-        handleCloseAddModal();
+
+        try {
+           
+            await dispatch(addAnShareData(payload)).unwrap(); 
+
+         
+            handleCloseAddModal();
+
+          
+            dispatch(getAllShareData());
+
+        } catch (error) {
+           
+            console.error("Failed to add data: ", error);
+           
+        }
     };
 
     //-- End Send Opreation
 
+
     //-- Start Update Operation --> Shared Data
-    const handleUpdateSubmit = (e) => {
+    const handleUpdateSubmit = async (e) => { 
         e.preventDefault();
         if (!currentItemToUpdate) return;
         const payload = { ...updateFormData };
          if (!payload.locationAccess) {
-             payload.locationAccess = 'no'; 
+             payload.locationAccess = 'no';
          }
-        dispatch( updateAnShareData(payload));
-        handleCloseUpdateModal();
+
+        try {
+          
+             await dispatch(updateAnShareData(payload)).unwrap(); 
+
+            
+             handleCloseUpdateModal();
+
+          
+             dispatch(getAllShareData());
+
+        } catch (error) {
+          
+            console.error("Failed to update data: ", error);
+           
+        }
     };
-   
     //-- End Update Opration --> Shared Data
+
+   
 
 
 

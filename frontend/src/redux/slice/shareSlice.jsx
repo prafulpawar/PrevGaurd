@@ -151,7 +151,7 @@ const shareSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.message = action.payload.message;
-                const deletedId = action.payload.deletedId
+                const deletedId = action?.payload?.deletedId
                 if (state.savedData && state.savedData.data && deletedId) {
                     state.savedData.data = state.savedData.data.filter(
                         item => item._id !== deletedId
@@ -174,7 +174,6 @@ const shareSlice = createSlice({
             .addCase(addAnShareData.fulfilled,(state,action)=>{
                 state.loading = false;
                 state.success = true;
-                console.log(action.payload)
                 state.message = action.payload.message;
                 state.savedData.data.push(action.payload.Data);
             })
@@ -195,8 +194,13 @@ const shareSlice = createSlice({
                   state.loading   = false;
                   state.success   = true;
                   state.message   = action.payload.message;
-                  const updateId  = action.payload.updatedData;
-                  console.log(updateId)
+                  const updatedItem = action.payload.updatedData;
+
+                  if (updatedItem?._id) {
+                    state.savedData.data = state.savedData.data.map(item =>
+                      item._id === updatedItem._id ? updatedItem : item
+                    );
+                  }
 
             })
             .addCase(updateAnShareData.rejected,(state,action)=>{
