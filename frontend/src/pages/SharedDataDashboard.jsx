@@ -64,7 +64,7 @@ function SharedDataDashboard() {
             timer = setTimeout(() => {
                 
                  dispatch(resetShareStatus()); 
-            }, 50); 
+            }, 5000); 
         }
         
         return () => clearTimeout(timer);
