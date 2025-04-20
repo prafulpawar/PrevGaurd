@@ -9,7 +9,7 @@ import OtpVerification from '../pages/OtpVerification';
 import SharedDataDashboard from '../pages/SharedDataDashboard';
 import FakeDataGenerator from '../pages/FakeDataGenerator';
 import BreachMonitor from '../pages/BreachMonitor';
-import WebAuthnVaultDemo from '../pages/WebAuthnVaultDemo';
+
 
 import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
