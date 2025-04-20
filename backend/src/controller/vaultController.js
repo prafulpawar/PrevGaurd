@@ -6,6 +6,9 @@ const FolderModel = require('../models/folderData');
 const ItemModel = require('../models/itemData');
 
 
+const ENCRYPTION_ALGORITHM = 'aes-256-gcm';
+const KEY_LENGTH = 32;
+
 module.exports.registerVaultController = async (req, res) => {
     try {
         const { password } = req.body;
@@ -133,10 +136,6 @@ module.exports.folderVaultController = async (req, res) => {
     }
 };
 
-
-
-const ENCRYPTION_ALGORITHM = 'aes-256-gcm';
-const KEY_LENGTH = 32;
 
 module.exports.itemVaultController = async (req, res) => {
     try {

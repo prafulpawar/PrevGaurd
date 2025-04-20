@@ -1,32 +1,32 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto'); // Needed for salt generation
+const crypto = require('crypto'); 
 
 const vaultSchema = new mongoose.Schema({
-    password: { // Stores the HASHED vault password
+    password: { 
         type: String,
-        required: true // Vault must have a password
+        required: true 
     },
     userRef: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Assuming you have a User model
+        ref: 'User',
         required: true,
-        unique: true // Only one vault per user
+        unique: true
     },
     folders: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Folder' // Correct ref name
+        ref: 'Folder' 
     }],
-    // Salt for deriving encryption key from password - STORE THIS
+   
     salt: {
         type: String,
         required: true,
-        default: () => crypto.randomBytes(16).toString('hex') // Generate salt on creation
+        default: () => crypto.randomBytes(16).toString('hex') 
     },
-    locked: { // Optional: for temporary locking
+    locked: {
         type: Boolean,
         default: false
     }
-}, { timestamps: true }); // Add timestamps
+}, { timestamps: true }); 
 
-const VaultModel = mongoose.model('Vault', vaultSchema); // Capitalized name
+const VaultModel = mongoose.model('Vault', vaultSchema); 
 module.exports = VaultModel;
