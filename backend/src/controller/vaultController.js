@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const mongoose = require('mongoose'); 
 const VaultModel = require('../models/vaultData');
 const FolderModel = require('../models/folderData');
-const ItemModel = require('../models/itemData');
+const ItemModel = require('../models/ItemModel');
 
 
 const ENCRYPTION_ALGORITHM = 'aes-256-gcm';

@@ -6,7 +6,7 @@ const {
     loginVaultController,
     folderVaultController,
     itemVaultController
-} = require('../controllers/vaultController');
+} = require('../controller/vaultController');
 
 const { verifyAuth } = require('../middlewares/isAuth');
 

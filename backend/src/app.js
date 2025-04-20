@@ -10,6 +10,7 @@ const fackData = require('./routes/fackData')
 const breachData = require('./routes/breachRoute')
 const shareData = require('./routes/sharedRoute')
 const vaultData = require('./routes/vaultRoutes')
+
 const rebbitMQ = require('./services/rabbitMQ')
 const appAPI = express();
 const cors = require('cors')
