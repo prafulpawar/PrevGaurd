@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../services/api";
 
-// Initial State
 const initialState = {
     savedData: { data: [] }, 
     error: false,
@@ -35,7 +34,6 @@ export const getAllShareData = createAsyncThunk(
         }
     }
 );
-
 
 export const deleteAnSahreData = createAsyncThunk(
     'shareData/delete', // More specific type prefix
