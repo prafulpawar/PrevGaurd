@@ -27,5 +27,5 @@ export const registerVaultThunk = createAsyncThunk(
 )
 
 export const vaultSlice = createSlice(
-       
+        
 )
