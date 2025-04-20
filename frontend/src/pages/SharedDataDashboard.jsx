@@ -12,6 +12,7 @@ import {
     selectSuccessData,
     selectMessage,
     addAnShareData,
+    updateAnShareData,
 } from '../redux/slice/shareSlice'; 
 
 
@@ -80,6 +81,7 @@ function SharedDataDashboard() {
     };
 
     const handleOpenUpdateModal = (item) => {
+
         if (!item) return;
         setCurrentItemToUpdate(item);
         setUpdateFormData({
@@ -92,6 +94,9 @@ function SharedDataDashboard() {
         });
         dispatch(resetShareStatus());
         setIsUpdateModalOpen(true);
+
+
+
     };
     
     const handleCloseUpdateModal = () => {
@@ -167,7 +172,7 @@ function SharedDataDashboard() {
              payload.locationAccess = 'no'; 
          }
         
-        console.log("Dispatch Update Action (Not Implemented) Hello:", payload);
+        dispatch( updateAnShareData(payload));
         handleCloseUpdateModal();
     };
    

@@ -194,6 +194,7 @@ const shareSlice = createSlice({
                   state.loading   = false;
                   state.success   = true;
                   state.message   = action.payload.message;
+                  console.log(action)
                   const updateId  = action.payload.updateId;
             })
             .addCase(updateAnShareData.rejected,(state,action)=>{
