@@ -83,13 +83,35 @@ export const addAnShareData = createAsyncThunk(
               rejectWithValue(message);
           }
      }
-)
+);
+
+export const updateAnShareData = createAsyncThunk(
+    'shareData/UpdateOne/',
+    async(updateData,{rejectWithValue,getState})=>{
+          const state = getState();
+          const accessToken = state.auth?.accessToken
+           
+          try{
+             const response = await api.put(`/api/dash/update/${accessToken}`,updateData,{
+                   headers:{
+                    Authorization:`Bearer ${accessToken}`
+                   }
+             });
+               return {updateId :updateId , message:response.data.message || 'Item Updated Sucessfully '};
+          }
+          catch(error){
+              const message = error?.response?.message?.data || 'Network Error '
+              rejectWithValue(message)
+          }
+    }
+
+);
+
 
 const shareSlice = createSlice({
     name: "shareData", 
     initialState,
     reducers: {
-       
         resetShareStatus: (state) => {
              state.error = false;
              state.success = false;
@@ -160,6 +182,25 @@ const shareSlice = createSlice({
                 state.error = true;
                 state.success = false; 
                 state.message = action.payload.message || 'Failed to delete item';
+            })
+
+            .addCase(updateAnShareData.pending, (state)=>{
+                 state.loading = true;
+                 state.error   = false;
+                 state.success = false;
+                 state.message = '';
+            })
+            .addCase(updateAnShareData.fulfilled,(state,action)=>{
+                  state.loading   = false;
+                  state.success   = true;
+                  state.message   = action.payload.message;
+                  const updateId  = action.payload.updateId;
+            })
+            .addCase(updateAnShareData.rejected,(state,action)=>{
+                state.loading = false;
+                state.error = true;
+                state.success = false; 
+                state.message = action.payload || 'Failed to delete item';
             })
     }
 });
