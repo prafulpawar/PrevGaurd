@@ -6,11 +6,12 @@ import {
     ExclamationTriangleIcon, InformationCircleIcon, TrashIcon, PencilIcon
 } from '@heroicons/react/24/outline';
 
-
+import { registerVaultThunk , selectVaultError , selectVaultSucess , selectVaultLoading } from '../redux/slice/vaultSlice';
+import { useDispatch , useSelector } from 'react-redux';
 
 
 function VaultPage() {
-
+     const dispatch = useDispatch();
     
     const [vaultState, setVaultState] = useState('unknown');
     const [isLoading, setIsLoading] = useState(false);

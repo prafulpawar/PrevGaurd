@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../services/api';
 
 const initialState = {
+    success:false,
     error: "",
     loading: false,
     data: {},
@@ -37,22 +38,29 @@ const vaultSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(registerVaultThunk.pending, (state) => {
+                state.success=false,
                 state.loading = true;
                 state.error = "";
             })
             .addCase(registerVaultThunk.fulfilled, (state, action) => {
+                state.success = true
                 state.loading = false;
                 state.data = action.payload;
                
             })
             .addCase(registerVaultThunk.rejected, (state, action) => {
+                state.success = false,
                 state.loading = false;
                 state.error = action.payload || "Failed to register vault data";
             });
     }
 });
 
+
+
+
+export const selectVaultSucess  = (state) => state.vaultData.success
+export const selectVaultError   = (state) => state.vaultData.error
+export const selectVaultLoading = (state) => state.vaultData.loading
+
 export default vaultSlice.reducer;
-
-
-export const selectRegisterVault = (state) => state.
