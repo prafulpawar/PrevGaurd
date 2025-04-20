@@ -6,22 +6,7 @@ import {
     ExclamationTriangleIcon, InformationCircleIcon, TrashIcon, PencilIcon
 } from '@heroicons/react/24/outline';
 
-const DUMMY_FOLDERS_INITIAL = [
-    { _id: 'folder_1', name: 'Work Credentials' },
-    { _id: 'folder_2', name: 'Social Media' },
-    { _id: 'folder_3', name: 'Secure Notes' },
-];
-const DUMMY_ITEMS_INITIAL = {
-    folder_1: [
-        { _id: 'item_1a', title: 'Company Email', createdAt: new Date(Date.now() - 86400000).toISOString() },
-        { _id: 'item_1b', title: 'VPN Access', createdAt: new Date().toISOString() },
-    ],
-    folder_2: [
-        { _id: 'item_2a', title: 'Twitter Login', createdAt: new Date(Date.now() - 172800000).toISOString() },
-    ],
-    folder_3: [],
-};
-const CORRECT_DUMMY_PASSWORD = "password123";
+
 
 
 function VaultPage() {
