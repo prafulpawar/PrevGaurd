@@ -13,16 +13,17 @@ import {
     selectMessage,
     addAnShareData,
     updateAnShareData,
+    selectDataRisk
 } from '../redux/slice/shareSlice'; 
 
 
 function SharedDataDashboard() {
-    const [riskScore, setRiskScore] = useState(75);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [currentItemToUpdate, setCurrentItemToUpdate] = useState(null);
     const [itemToDelete, setItemToDelete] = useState(null);
+  
 
   
     const [formData, setFormData] = useState({
@@ -49,6 +50,7 @@ function SharedDataDashboard() {
     const isError = useSelector(selectError);
     const successData = useSelector(selectSuccessData); 
     const message = useSelector(selectMessage);
+    const riskScore = useSelector(selectDataRisk)
 
     const applications = successData?.data || [];
   

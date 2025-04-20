@@ -2,23 +2,21 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../services/api";
 
 const initialState = {
-    savedData: { data: [] }, 
+    savedData: { data: [] },
+    dataRisk: '',
     error: false,
     success: false,
-    loading: false, 
+    loading: false,
     message: '',
-    Data:{},
-    updatedData:''
 };
 
 export const getAllShareData = createAsyncThunk(
-    'shareData/getAll', 
+    'shareData/getAll',
     async (_, { rejectWithValue, getState }) => {
         const state = getState();
-       
         const accessToken = state.auth?.accessToken;
         if (!accessToken) {
-             return rejectWithValue('Access token not found');
+            return rejectWithValue('Access token not found');
         }
         try {
             const response = await api.get('/api/dash/data', {
@@ -26,28 +24,28 @@ export const getAllShareData = createAsyncThunk(
                     Authorization: `Bearer ${accessToken}`
                 }
             });
-           
             return response.data;
         } catch (error) {
             console.error("Error fetching data:", error);
             const message = error?.response?.data?.message || error?.message || 'Network Error fetching data';
-            return rejectWithValue(message);
+            const riskScore = error?.response?.data?.riskScore || '0';
+            return rejectWithValue({ message, riskScore });
         }
     }
 );
 
 export const deleteAnSahreData = createAsyncThunk(
-    'shareData/delete', // More specific type prefix
+    'shareData/delete',
     async (deleteId, { rejectWithValue, getState }) => {
         const state = getState();
         const accessToken = state.auth?.accessToken;
 
         if (!deleteId) {
             console.error("deleteAnSahreData thunk called without a deleteId");
-            return rejectWithValue("No ID provided for deletion.");
+            return rejectWithValue({ message: "No ID provided for deletion.", riskScore: '0' });
         }
          if (!accessToken) {
-             return rejectWithValue('Access token not found');
+             return rejectWithValue({ message: 'Access token not found', riskScore: '0' });
          }
 
         try {
@@ -56,12 +54,12 @@ export const deleteAnSahreData = createAsyncThunk(
                     Authorization: `Bearer ${accessToken}`
                 }
             });
-         
-            return { deletedId: deleteId, message: response.data.message || "Item Deleted Successfully" };
+            return response.data;
         } catch (error) {
             console.error("Error deleting data:", error);
             const message = error?.response?.data?.message || error?.message || 'Network Error deleting data';
-            return rejectWithValue(message);
+            const riskScore = error?.response?.data?.riskScore || '0';
+            return rejectWithValue({ message, riskScore });
         }
     }
 );
@@ -69,145 +67,146 @@ export const deleteAnSahreData = createAsyncThunk(
 export const addAnShareData = createAsyncThunk(
      'shareData/add',
      async(Data,{rejectWithValue,getState})=>{
-             const state = getState();
-             const accessToken = state.auth?.accessToken
+           const state = getState();
+           const accessToken = state.auth?.accessToken
           try{
                const response =await api.post('/api/dash/data', Data , {
                     headers:{
-                          Authorization:`Bearer ${accessToken}`
+                         Authorization:`Bearer ${accessToken}`
                     }
                })
-               return { Data: response.data.savedUser , message:response.data.message}
+               return response.data;
           }
           catch(error){
-              const message = error?.response?.message?.data || 'Network Error'
-              rejectWithValue(message);
+             console.error("Error adding data:", error);
+             const message = error?.response?.data?.message || error?.message || 'Network Error';
+             const riskScore = error?.response?.data?.riskScore || '0';
+             return rejectWithValue({ message, riskScore });
           }
      }
 );
 
 export const updateAnShareData = createAsyncThunk(
-    'shareData/UpdateOne/',
+    'shareData/UpdateOne',
     async(updateData,{rejectWithValue,getState})=>{
-          const state = getState();
-          const accessToken = state.auth?.accessToken
-           
-          try{
-             const response = await api.put(`/api/dash/update/${updateData._id}`,updateData,{
+           const state = getState();
+           const accessToken = state.auth?.accessToken
+
+           try{
+              const response = await api.put(`/api/dash/update/${updateData._id}`,updateData,{
                    headers:{
                     Authorization:`Bearer ${accessToken}`
                    }
-             });
-               return { updatedData:response.data ,  message:response.data.message || 'Item Updated Sucessfully '};
-          }
-          catch(error){
-              const message = error?.response?.message?.data || 'Network Error '
-              rejectWithValue(message)
-          }
+              });
+               return response.data;
+           }
+           catch(error){
+             console.error("Error updating data:", error);
+              const message = error?.response?.data?.message || error?.message || 'Network Error ';
+              const riskScore = error?.response?.data?.riskScore || '0';
+              return rejectWithValue({ message, riskScore });
+           }
     }
 
 );
 
 
 const shareSlice = createSlice({
-    name: "shareData", 
+    name: "shareData",
     initialState,
     reducers: {
         resetShareStatus: (state) => {
              state.error = false;
              state.success = false;
              state.message = '';
-           
         }
     },
     extraReducers: (builder) => {
         builder
-           
+
             .addCase(getAllShareData.pending, (state) => {
                 state.loading = true;
                 state.error = false;
                 state.success = false;
-                state.message = ''; 
+                state.message = '';
+                state.dataRisk = '0';
             })
             .addCase(getAllShareData.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.savedData = action.payload || { data: [] }; 
+                state.savedData.data = action.payload.data || [];
+                state.dataRisk  = action.payload.riskScore || '0';
+                state.message = action.payload.message || 'Data fetched successfully';
             })
             .addCase(getAllShareData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-                state.message = action.payload || 'Failed to fetch data';
-                state.savedData = { data: [] }; 
+                state.message = action.payload.message || 'Failed to fetch data';
+                state.savedData = { data: [] };
+                state.dataRisk = action.payload.riskScore || '0';
             })
 
             .addCase(deleteAnSahreData.pending, (state) => {
                 state.loading = true;
                 state.error = false;
-                state.success = false; 
+                state.success = false;
                 state.message = '';
             })
             .addCase(deleteAnSahreData.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.message = action.payload.message;
-                const deletedId = action?.payload?.deletedId
-                if (state.savedData && state.savedData.data && deletedId) {
-                    state.savedData.data = state.savedData.data.filter(
-                        item => item._id !== deletedId
-                    );
-                }
+                state.message = action.payload.message || "Item Deleted Successfully";
+                state.savedData.data = action.payload.data || [];
+                state.dataRisk = action.payload.riskScore || '0';
             })
             .addCase(deleteAnSahreData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-                state.success = false; 
-                state.message = action.payload || 'Failed to delete item';
+                state.success = false;
+                state.message = action.payload.message || 'Failed to delete item';
+                state.dataRisk = action.payload.riskScore || '0';
             })
 
             .addCase(addAnShareData.pending, (state)=>{
-                state.loading = true;
-                state.error = false;
-                state.success = false; 
-                state.message = '';
-            })
-            .addCase(addAnShareData.fulfilled,(state,action)=>{
-                state.loading = false;
-                state.success = true;
-                state.message = action.payload.message;
-                state.savedData.data.push(action.payload.Data);
-            })
-            .addCase(addAnShareData.rejected,(state,action)=>{
-                state.loading = false;
-                state.error = true;
-                state.success = false; 
-                state.message = action.payload.message || 'Failed to delete item';
-            })
-
-            .addCase(updateAnShareData.pending, (state)=>{
                  state.loading = true;
-                 state.error   = false;
+                 state.error = false;
                  state.success = false;
                  state.message = '';
             })
+            .addCase(addAnShareData.fulfilled,(state,action)=>{
+                 state.loading = false;
+                 state.success = true;
+                 state.message = action.payload.message || "Item Added Successfully";
+                 state.savedData.data = action.payload.data || [];
+                 state.dataRisk = action.payload.riskScore || '0';
+            })
+            .addCase(addAnShareData.rejected,(state,action)=>{
+                 state.loading = false;
+                 state.error = true;
+                 state.success = false;
+                 state.message = action.payload.message || 'Failed to add item';
+                 state.dataRisk = action.payload.riskScore || '0';
+            })
+
+            .addCase(updateAnShareData.pending, (state)=>{
+                  state.loading = true;
+                  state.error   = false;
+                  state.success = false;
+                  state.message = '';
+            })
             .addCase(updateAnShareData.fulfilled,(state,action)=>{
-                  state.loading   = false;
-                  state.success   = true;
-                  state.message   = action.payload.message;
-                  const updatedItem = action.payload.updatedData;
-
-                  if (updatedItem?._id) {
-                    state.savedData.data = state.savedData.data.map(item =>
-                      item._id === updatedItem._id ? updatedItem : item
-                    );
-                  }
-
+                   state.loading   = false;
+                   state.success   = true;
+                   state.message   = action.payload.message || 'Item Updated Sucessfully ';
+                   state.savedData.data = action.payload.data || [];
+                   state.dataRisk = action.payload.riskScore || '0';
             })
             .addCase(updateAnShareData.rejected,(state,action)=>{
                 state.loading = false;
                 state.error = true;
-                state.success = false; 
-                state.message = action.payload || 'Failed to delete item';
+                state.success = false;
+                state.message = action.payload.message || 'Failed to update item';
+                state.dataRisk = action.payload.riskScore || '0';
             })
     }
 });
@@ -215,12 +214,11 @@ const shareSlice = createSlice({
 
 export const { resetShareStatus } = shareSlice.actions;
 
-// Selectors
 export const selectError = (state) => state.shareData.error;
 export const selectSucess = (state) => state.shareData.success;
 export const selectLoading = (state) => state.shareData.loading;
-export const selectSuccessData = (state) => state.shareData.savedData; 
+export const selectSuccessData = (state) => state.shareData.savedData;
 export const selectMessage = (state) => state.shareData.message;
+export const selectDataRisk = (state) =>state.shareData.dataRisk
 
-// Export the reducer
 export default shareSlice.reducer;
