@@ -12,6 +12,7 @@ const initialState = {
 export const registerVaultThunk = createAsyncThunk(
     'vault/RegisterData',
     async (data, { rejectWithValue, getState }) => {
+        console.log(data)
         const state = getState();
         const accessToken = state.auth?.accessToken;
 
@@ -40,6 +41,7 @@ const vaultSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(registerVaultThunk.pending, (state) => {
+                
                 state.success=false,
                 state.loading = true;
                 state.error = "";
