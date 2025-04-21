@@ -5,7 +5,7 @@ const initialState = {
     success:false,
     error: "",
     loading: false,
-    data: {},
+    data: '',
     savedData: [{}],
 };
 
@@ -21,8 +21,10 @@ export const registerVaultThunk = createAsyncThunk(
                     Authorization: `Bearer ${accessToken}`
                 }
             });
+            console.log(response)
             return response.data;
         } catch (error) {
+             console.log(error)
             const message = error.response?.data?.message || error.message || 'Something went wrong';
             return rejectWithValue(message);
         }

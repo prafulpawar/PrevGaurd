@@ -12,6 +12,10 @@ const KEY_LENGTH = 32;
 module.exports.registerVaultController = async (req, res) => {
     try {
         const { password } = req.body;
+        if (!req.body) {
+            return res.status(401).json({ message: "Input Validation Error" });
+       }
+        console.log(req.body)
         const userId = req.user?._id;
 
         if (!userId) {
