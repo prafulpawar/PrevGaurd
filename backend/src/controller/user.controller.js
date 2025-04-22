@@ -25,7 +25,7 @@ module.exports.registerUser = async (req, res) => {
 
         const isExists = await userModel.findOne({ $or: [{ email }, { username }] }).lean();
         if (isExists) {
-            
+
             logger.info(`Registration attempt for existing user: ${email} or ${username}`);
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
@@ -46,7 +46,7 @@ module.exports.registerUser = async (req, res) => {
             logger.error("Failed to get RabbitMQ channel for emailQueue");
         }
 
-      
+
         console.log('Sending successful response');
         res.status(200).json({
             email,
@@ -54,7 +54,7 @@ module.exports.registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error in registerUser:', error); 
+        console.error('Error in registerUser:', error);
         logger.error("Error in user registration:", { error: error.message, stack: error.stack });
 
         console.log('Sending error response');
@@ -71,30 +71,30 @@ module.exports.verfifyOtp = async (req, res, next) => {
             return res.status(400).json({ message: "OTP and email are required" });
         }
 
-     
+
         const storedOtpDataJson = await redis.get(`otp:${email}`);
         if (!storedOtpDataJson) {
-             logger.warn(`No OTP data found in Redis for ${email}`);
-            
-             return res.status(400).json({ message: "OTP expired or invalid request. Please register again." });
+            logger.warn(`No OTP data found in Redis for ${email}`);
+
+            return res.status(400).json({ message: "OTP expired or invalid request. Please register again." });
         }
 
         const storedOtpData = JSON.parse(storedOtpDataJson);
         if (storedOtpData.otp !== otp) {
-             logger.warn(`Invalid OTP received for ${email}. Expected: ${storedOtpData.otp}, Received: ${otp}`);
-             // Return error immediately - DO NOT QUEUE
-             return res.status(400).json({ message: "Invalid OTP entered." });
+            logger.warn(`Invalid OTP received for ${email}. Expected: ${storedOtpData.otp}, Received: ${otp}`);
+            // Return error immediately - DO NOT QUEUE
+            return res.status(400).json({ message: "Invalid OTP entered." });
         }
-       
+
         const requestId = crypto.randomUUID();
         logger.info(`Initiating OTP verification for ${email} with RequestID: ${requestId}`);
 
         const channel = await otpcreateChannel();
         if (channel) {
-            
+
             channel.sendToQueue(
                 "otpVerificationQueue",
-                Buffer.from(JSON.stringify({ email,  otp,  requestId })) 
+                Buffer.from(JSON.stringify({ email, otp, requestId }))
             );
             logger.info(`OTP verification task queued for ${email}, RequestID: ${requestId}`);
         } else {
@@ -102,7 +102,7 @@ module.exports.verfifyOtp = async (req, res, next) => {
             return res.status(500).json({ message: "Could not initiate OTP verification process" });
         }
 
-     
+
         return res.status(202).json({
             message: "Verifying OTP .",
             requestId: requestId
@@ -124,12 +124,12 @@ module.exports.getOtpStatus = async (req, res) => {
     try {
         logger.debug(`Polling status for RequestID: ${requestId}`);
 
-        const statusData = await redis.get(`status:${requestId}`); 
-         console.log(statusData)
+        const statusData = await redis.get(`status:${requestId}`);
+        console.log(statusData)
         if (!statusData) {
 
             logger.debug(`No status found yet for RequestID: ${requestId}`);
-            return res.status(202).json({ 
+            return res.status(202).json({
                 statusData,
                 status: "pending",
                 message: "OTP verification is still in progress or request ID is invalid/expired."
@@ -154,20 +154,20 @@ module.exports.getOtpStatus = async (req, res) => {
 module.exports.loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-      
-         
+
+
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email and password are required.",
             });
         }
-     
-          console.log(email)
-       
-         const user = await userModel.findOne({ email });
-        
-        console.log('hello',user)
-       
+
+        console.log(email)
+
+        const user = await userModel.findOne({ email });
+
+        console.log('hello', user)
+
         if (!user) {
             return res.status(401).json({
                 message: "Invalid credentials....",
@@ -176,7 +176,7 @@ module.exports.loginUser = async (req, res) => {
 
 
         const isMatch = await user.comparePassoword(password);
-           console.log(isMatch)
+        console.log(isMatch)
         if (!isMatch) {
             return res.status(401).json({
                 message: "Invalid credentials..........",
@@ -236,7 +236,7 @@ module.exports.logoutUser = async (req, res) => {
         }
 
         const accessToken = authHeader.split(" ")[1];
-         console.log(accessToken)
+        console.log(accessToken)
 
         let decoded;
         try {
@@ -247,12 +247,13 @@ module.exports.logoutUser = async (req, res) => {
                 return res.status(403).json({ message: "Invalid token payload" });
             }
         } catch (verificationError) {
-               console.log(verificationError)
+            console.log(verificationError)
             console.error("Access Token Verification Error:", verificationError.message);
-            return res.status(403).json({ 
+            return res.status(403).json({
                 accessToken,
                 verificationError,
-                message: "Invalid or expired token"});
+                message: "Invalid or expired token"
+            });
         }
 
         const userId = decoded._id;
@@ -287,7 +288,7 @@ module.exports.logoutUser = async (req, res) => {
         return res.status(200).json({ message: "Logged out successfully from all sessions." });
 
     } catch (error) {
-          console.log(error)
+        console.log(error)
         console.error("Logout Error:", error);
         return res.status(500).json({ message: "An internal server error occurred during logout." });
     }
@@ -299,7 +300,7 @@ module.exports.getUserInfo = async (req, res) => {
         if (!user || !user._id) {
             return res.status(400).json({ message: "Invalid user ID" });
         }
-        
+
         const data = await userModel.findById(user._id).select('-password -role -_id').lean();
 
         return res.status(200).json({
