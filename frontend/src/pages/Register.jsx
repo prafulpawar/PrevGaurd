@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import InputField from '../components/forms/InputField';
-import ImageUpload from '../components/forms/ImageUpload';
 import Button from '../components/forms/Button';
 import {
   updateFormData,
@@ -20,20 +19,51 @@ const Register = () => {
   const formData = useSelector(setFormData);
   const error = useSelector(Ierror);
   const isLoadingValue = useSelector(isLoading);
-  const validationErrors = {};
+
+  const [validationErrors, setValidationErrors] = useState({});  // ✅ state for validation errors
 
   const handleChange = (e) => {
     dispatch(updateFormData({ field: e.target.name, value: e.target.value }));
     dispatch(clearError());
-    
+    setValidationErrors({}); // clear validation errors on input change
   };
 
-  const handleImageChange = (e) => {
-    dispatch(updateFormData({ field: 'image', value: e.target.files[0] }));
+  const validateForm = () => {
+    const errors = {};
+
+    if (!formData.username?.trim()) {
+      errors.username = 'Username is required';
+    }
+
+    if (!formData.email?.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Invalid email address';
+    }
+
+    if (!formData.password) {
+      errors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters';
+    }
+
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+
+    return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
 
     const formToSend = new FormData();
     formToSend.append('username', formData?.username);
@@ -43,8 +73,11 @@ const Register = () => {
     if (formData?.image) {
       formToSend.append('image', formData?.image);
     }
-    dispatch(registerUser(formToSend));
-    navigate('/otp-verification')
+
+    const resultAction = await dispatch(registerUser(formToSend));
+    if (registerUser.fulfilled.match(resultAction)) {
+      navigate('/otp-verification');
+    }
   };
 
   return (
@@ -100,7 +133,6 @@ const Register = () => {
               onChange={handleChange}
               required
               placeholder="Create a password (min 8 chars)"
-              minLength="8"
               disabled={isLoadingValue}
               error={validationErrors?.password}
             />
@@ -116,18 +148,8 @@ const Register = () => {
               disabled={isLoadingValue}
               error={validationErrors?.confirmPassword}
             />
-{/* 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Profile Picture (Optional)
-              </label>
-              <ImageUpload name="image" onChange={handleImageChange} />
-              {validationErrors?.profileImage && (
-                <p className="text-xs text-red-600 mt-1">
-                  {validationErrors.profileImage}
-                </p>
-              )}
-            </div> */}
+
+            {/* If you want to add image upload, you can uncomment and add validations later */}
 
             <div>
               <Button type="submit" isLoading={isLoadingValue} fullWidth>

@@ -86,3 +86,4 @@ export const isLoading = (state) => state.register.isLoading;
 export const getemail = (state) => state.register.email;
 
 export default registerSlice.reducer;
+

@@ -15,7 +15,14 @@ import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
 import VaultPage from '../pages/VaultPage';
 
+import {Ierror} from '../redux/slice/registerSlice'
+import { useDispatch, useSelector } from 'react-redux';
+
+
+
 function Approutes() {
+  const error = useSelector(Ierror);
+  console.log(error)
   return (
     <Router>
       <Routes>
