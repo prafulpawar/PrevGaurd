@@ -133,6 +133,7 @@
 //     }
 // }
 
+
 // consumeOtpQueue(); 
 
 
@@ -144,6 +145,7 @@ const userModel = require('../models/user.model');
 const logger = require('../utils/logger');
 
 let channel;
+
 
 async function otpcreateChannel() {
     if (channel) return channel; 
