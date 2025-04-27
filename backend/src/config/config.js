@@ -34,7 +34,8 @@ const config = {
     REDIS_PORT: process.env.REDIS_PORT,
     REDIS_PASSWORD: process.env.REDIS_PASSWORD,
     EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASS: process.env.EMAIL_PASS
+    EMAIL_PASS: process.env.EMAIL_PASS,
+    RABBITMQ_URL:process.env.RABBITMQ_URL
 };
 
 const configData = Object.freeze(config);
