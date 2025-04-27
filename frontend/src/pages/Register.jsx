@@ -116,7 +116,7 @@ const Register = () => {
               disabled={isLoadingValue}
               error={validationErrors?.confirmPassword}
             />
-
+{/* 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Profile Picture (Optional)
@@ -127,7 +127,7 @@ const Register = () => {
                   {validationErrors.profileImage}
                 </p>
               )}
-            </div>
+            </div> */}
 
             <div>
               <Button type="submit" isLoading={isLoadingValue} fullWidth>

@@ -53,7 +53,7 @@ function Profile() {
             </div>
           </div>
 
-          <div className="bg-white shadow rounded-lg p-6">
+          {/* <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-lg font-medium text-gray-900 mb-4">Security</h2>
             <div className="space-y-4">
               <div>
@@ -90,7 +90,9 @@ function Profile() {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
+
+
         </div>
       </main>
     </div>
