@@ -142,7 +142,6 @@ const RABBITMQ_URL = config.RABBITMQ_URL || 'amqp://127.0.0.1';
 const redis = require('../utils/redis');
 const userModel = require('../models/user.model');
 const logger = require('../utils/logger');
-const otpcreateChannel = require('../utils/otpcreateChannel'); 
 
 let channel;
 

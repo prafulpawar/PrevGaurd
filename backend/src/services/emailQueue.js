@@ -42,7 +42,6 @@
 const amqp = require('amqplib');
 const config = require('../config/config'); // ✅ import config
 const RABBITMQ_URL = config.RABBITMQ_URL || 'amqp://127.0.0.1'; // ✅ fallback if not set
-const nodemailer = require('../services/nodeMailer');
 
 let channel;
 
@@ -59,11 +58,11 @@ async function createChannel() {
 
 module.exports = createChannel;
 
+const nodemailer = require('../services/nodeMailer');
 
 
 async function consumeEmailQueue() {
-    console.log('hello from consume');
-    const connection = await amqp.connect(RABBITMQ_URL); // ✅ use RABBITMQ_URL
+    const connection = await amqp.connect(RABBITMQ_URL); 
     const channel = await connection.createChannel();
     await channel.assertQueue('emailQueue');
     
