@@ -171,7 +171,7 @@ function OtpVerification() {
                 <div className="flex items-center text-sm text-green-600 justify-center my-4 text-center px-4">
                     <CheckCircleIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                     <span>
-                        Enter the 4-digit code sent to{' '}
+                        Enter the 6-digit code sent to{' '}
                         <span className="font-medium text-gray-800">{displayEmail || 'your email'}</span>.
                     </span>
                 </div>
@@ -186,14 +186,14 @@ function OtpVerification() {
 
     const handleOtpChange = (e) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
-        if (value.length <= 4) {
+        if (value.length <= 6) {
            dispatch(updateOtpValue(value));
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (canSubmit && otpValue.length === 4 && displayEmail) {
+        if (canSubmit && otpValue.length === 6 && displayEmail) {
             dispatch(verifyOtp({ email: displayEmail, otpValue: otpValue }));
         } else if (!displayEmail) {
              console.error("Cannot submit OTP: Email not found in state.");
@@ -226,15 +226,15 @@ function OtpVerification() {
                                 value={otpValue}
                                 onChange={handleOtpChange}
                                 required
-                                placeholder="Enter 4-digit code"
-                                maxLength={4}
+                                placeholder="Enter 6-digit code"
+                                maxLength={6}
                                 disabled={isProcessing || !!requestId}
                                 autoComplete="one-time-code"
                             />
                             <div>
                                 <Button
                                     type="submit"
-                                    disabled={!canSubmit || otpValue.length !== 4 || isProcessing || !!requestId}
+                                    disabled={!canSubmit || otpValue.length !== 6 || isProcessing || !!requestId}
                                     isLoading={isProcessing}
                                     fullWidth
                                     className='cursor-pointer'

@@ -41,7 +41,7 @@ async function consumeOtpQueue() {
                 logger.info(`[OTP Worker] Processing OTP for Email: ${email}, RequestID: ${requestId}`);
 
              
-                const redisData = await redis.get(`otp:${email}`); // Prefix के साथ key यूज़ करें
+                const redisData = await redis.get(`otp:${email}`); 
                 if (!redisData) {
                     logger.warn(`[OTP Worker] OTP data expired or not found in Redis for ${email} (RequestID: ${requestId})`);
                  

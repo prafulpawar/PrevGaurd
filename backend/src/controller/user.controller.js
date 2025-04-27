@@ -162,11 +162,11 @@ module.exports.loginUser = async (req, res) => {
             });
         }
 
-        console.log(email)
+       
 
         const user = await userModel.findOne({ email });
 
-        console.log('hello', user)
+        
 
         if (!user) {
             return res.status(401).json({
@@ -176,7 +176,7 @@ module.exports.loginUser = async (req, res) => {
 
 
         const isMatch = await user.comparePassoword(password);
-        console.log(isMatch)
+      
         if (!isMatch) {
             return res.status(401).json({
                 message: "Invalid credentials..........",
@@ -227,72 +227,6 @@ module.exports.loginUser = async (req, res) => {
 };
 
 
-// module.exports.logoutUser = async (req, res) => {
-//     try {
-//         const authHeader = req.header("Authorization");
-//         console.log(authHeader)
-//         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//             return res.status(401).json({ message: "Unauthorized: Missing or invalid token format" });
-//         }
-
-//         const accessToken = authHeader.split(" ")[1];
-//         console.log(accessToken)
-
-//         let decoded;
-//         try {
-
-//             decoded = await userModel.verifyAccessToken(accessToken);
-//             if (!decoded || !decoded._id) {
-
-//                 return res.status(403).json({ message: "Invalid token payload" });
-//             }
-//         } catch (verificationError) {
-//             console.log(verificationError)
-//             console.error("Access Token Verification Error:", verificationError.message);
-//             return res.status(403).json({
-//                 accessToken,
-//                 verificationError,
-//                 message: "Invalid or expired token"
-//             });
-//         }
-
-//         const userId = decoded._id;
-//         const userIdString = userId.toString();
-//         const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
-
-
-//         const userRefreshTokens = await redis.smembers(userRefreshTokensKey);
-
-
-//         if (userRefreshTokens && userRefreshTokens.length > 0) {
-//             const pipeline = redis.pipeline();
-
-//             const refreshKeysToDelete = userRefreshTokens.map(token => `refreshtoken:${token}`);
-
-
-//             pipeline.del(refreshKeysToDelete);
-
-
-//             pipeline.del(userRefreshTokensKey);
-
-//             await pipeline.exec();
-//         }
-
-
-//         const blacklistedAccessTokenKey = `blacklisted:accessToken:${accessToken}`;
-
-//         await redis.set(blacklistedAccessTokenKey, '1', 'EX', ACCESS_TOKEN_EXPIRY_SECONDS);
-
-
-
-//         return res.status(200).json({ message: "Logged out successfully from all sessions." });
-
-//     } catch (error) {
-//         console.log(error)
-//         console.error("Logout Error:", error);
-//         return res.status(500).json({ message: "An internal server error occurred during logout." });
-//     }
-// };
 
 module.exports.logoutUser = async (req, res) => {
     const authHeader = req.header("Authorization");
@@ -334,7 +268,7 @@ module.exports.logoutUser = async (req, res) => {
                     logger.error("Logout: Could not decode the invalid/expired token at all:", decodeError.message);
                 }
             } else {
-                 // Log other unexpected verification errors
+                 
                  logger.error("Logout: Unexpected Access Token Verification Error:", verificationError);
             }
             
@@ -385,7 +319,7 @@ module.exports.logoutUser = async (req, res) => {
             logger.error("Logout: Redis error during access token blacklisting:", redisError);
         }
 
-        // 5. Send final success response to the client
+       
         return res.status(200).json({ message: "Logged out successfully." });
 
     } catch (error) {
@@ -417,8 +351,7 @@ module.exports.getUserInfo = async (req, res) => {
 }
 
 module.exports.refreshAccessToken = async (req, res) => {
-    const { refreshToken } = req.body; // Or get from cookies
-
+    const { refreshToken } = req.body; 
     if (!refreshToken) {
         return res.status(401).json({ message: "Refresh token is required." });
     }
