@@ -227,73 +227,173 @@ module.exports.loginUser = async (req, res) => {
 };
 
 
+// module.exports.logoutUser = async (req, res) => {
+//     try {
+//         const authHeader = req.header("Authorization");
+//         console.log(authHeader)
+//         if (!authHeader || !authHeader.startsWith("Bearer ")) {
+//             return res.status(401).json({ message: "Unauthorized: Missing or invalid token format" });
+//         }
+
+//         const accessToken = authHeader.split(" ")[1];
+//         console.log(accessToken)
+
+//         let decoded;
+//         try {
+
+//             decoded = await userModel.verifyAccessToken(accessToken);
+//             if (!decoded || !decoded._id) {
+
+//                 return res.status(403).json({ message: "Invalid token payload" });
+//             }
+//         } catch (verificationError) {
+//             console.log(verificationError)
+//             console.error("Access Token Verification Error:", verificationError.message);
+//             return res.status(403).json({
+//                 accessToken,
+//                 verificationError,
+//                 message: "Invalid or expired token"
+//             });
+//         }
+
+//         const userId = decoded._id;
+//         const userIdString = userId.toString();
+//         const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
+
+
+//         const userRefreshTokens = await redis.smembers(userRefreshTokensKey);
+
+
+//         if (userRefreshTokens && userRefreshTokens.length > 0) {
+//             const pipeline = redis.pipeline();
+
+//             const refreshKeysToDelete = userRefreshTokens.map(token => `refreshtoken:${token}`);
+
+
+//             pipeline.del(refreshKeysToDelete);
+
+
+//             pipeline.del(userRefreshTokensKey);
+
+//             await pipeline.exec();
+//         }
+
+
+//         const blacklistedAccessTokenKey = `blacklisted:accessToken:${accessToken}`;
+
+//         await redis.set(blacklistedAccessTokenKey, '1', 'EX', ACCESS_TOKEN_EXPIRY_SECONDS);
+
+
+
+//         return res.status(200).json({ message: "Logged out successfully from all sessions." });
+
+//     } catch (error) {
+//         console.log(error)
+//         console.error("Logout Error:", error);
+//         return res.status(500).json({ message: "An internal server error occurred during logout." });
+//     }
+// };
+
 module.exports.logoutUser = async (req, res) => {
+    const authHeader = req.header("Authorization");
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        
+         logger.info("Logout request without token, assuming logged out.");
+         return res.status(200).json({ message: "No token provided, assumed logged out." });
+       
+    }
+
+    const accessToken = authHeader.split(" ")[1];
+    let userIdFromToken = null;
+
     try {
-        const authHeader = req.header("Authorization");
-        console.log(authHeader)
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({ message: "Unauthorized: Missing or invalid token format" });
-        }
-
-        const accessToken = authHeader.split(" ")[1];
-        console.log(accessToken)
-
-        let decoded;
+       
         try {
-
-            decoded = await userModel.verifyAccessToken(accessToken);
-            if (!decoded || !decoded._id) {
-
-                return res.status(403).json({ message: "Invalid token payload" });
+           
+            const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN);
+            if (decoded && decoded._id) {
+                userIdFromToken = decoded._id;
+                logger.info(`Logout initiated by user ${userIdFromToken} (valid token).`);
+            } else {
+                 logger.warn("Logout: Token verified but no _id found in payload:", decoded);
             }
         } catch (verificationError) {
-            console.log(verificationError)
-            console.error("Access Token Verification Error:", verificationError.message);
-            return res.status(403).json({
-                accessToken,
-                verificationError,
-                message: "Invalid or expired token"
-            });
+          
+            if (verificationError.name === 'TokenExpiredError' || verificationError.name === 'JsonWebTokenError') {
+                logger.warn(`Logout: Access Token verification failed: ${verificationError.message}. Trying to decode...`);
+                try {
+                    const potentiallyExpiredDecoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN, { ignoreExpiration: true });
+                    if (potentiallyExpiredDecoded && potentiallyExpiredDecoded._id) {
+                        userIdFromToken = potentiallyExpiredDecoded._id;
+                        logger.info(`Logout: Identified user ${userIdFromToken} from expired/invalid token for cleanup.`);
+                    } else {
+                         logger.warn("Logout: Could not extract _id even from decoded expired/invalid token.");
+                    }
+                } catch (decodeError) {
+                    logger.error("Logout: Could not decode the invalid/expired token at all:", decodeError.message);
+                }
+            } else {
+                 // Log other unexpected verification errors
+                 logger.error("Logout: Unexpected Access Token Verification Error:", verificationError);
+            }
+            
         }
 
-        const userId = decoded._id;
-        const userIdString = userId.toString();
-        const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
+       
+        if (userIdFromToken) {
+            const userIdString = userIdFromToken.toString();
+            const userRefreshTokensKey = `user:${userIdString}:refreshTokens`;
+            logger.info(`Logout: Attempting to clear refresh tokens for user ${userIdString}`);
 
+            try {
+                const userRefreshTokens = await redis.smembers(userRefreshTokensKey);
 
-        const userRefreshTokens = await redis.smembers(userRefreshTokensKey);
+                if (userRefreshTokens && userRefreshTokens.length > 0) {
+                    const pipeline = redis.pipeline();
+                  
+                    const refreshKeysToDelete = userRefreshTokens.map(token => `refreshtoken:${token}`);
 
+                    if (refreshKeysToDelete.length > 0) {
+                        pipeline.del(refreshKeysToDelete); 
+                        logger.debug(`Logout: Pipeline: Deleting ${refreshKeysToDelete.length} refresh token keys for user ${userIdString}`);
+                    }
+                    pipeline.del(userRefreshTokensKey); 
+                    logger.debug(`Logout: Pipeline: Deleting user refresh token set key ${userRefreshTokensKey}`);
 
-        if (userRefreshTokens && userRefreshTokens.length > 0) {
-            const pipeline = redis.pipeline();
-
-            const refreshKeysToDelete = userRefreshTokens.map(token => `refreshtoken:${token}`);
-
-
-            pipeline.del(refreshKeysToDelete);
-
-
-            pipeline.del(userRefreshTokensKey);
-
-            await pipeline.exec();
+                    await pipeline.exec();
+                    logger.info(`Logout: Refresh tokens cleared successfully from Redis for user ${userIdString}`);
+                } else {
+                    logger.info(`Logout: No active refresh tokens found in Redis set for user ${userIdString}. Nothing to clear.`);
+                    
+                }
+            } catch (redisError) {
+                logger.error(`Logout: Redis error during refresh token cleanup for user ${userIdString}:`, redisError);
+                
+            }
+        } else {
+            logger.warn("Logout: Could not identify user from token, skipping refresh token cleanup in Redis.");
         }
 
+        
+        try {
+            const blacklistedAccessTokenKey = `blacklisted:accessToken:${accessToken}`;
+            
+            await redis.set(blacklistedAccessTokenKey, '1', 'EX', ACCESS_TOKEN_EXPIRY_SECONDS);
+            logger.info(`Logout: Access token blacklisted in Redis: ${accessToken}`);
+        } catch (redisError) {
+            logger.error("Logout: Redis error during access token blacklisting:", redisError);
+        }
 
-        const blacklistedAccessTokenKey = `blacklisted:accessToken:${accessToken}`;
-
-        await redis.set(blacklistedAccessTokenKey, '1', 'EX', ACCESS_TOKEN_EXPIRY_SECONDS);
-
-
-
-        return res.status(200).json({ message: "Logged out successfully from all sessions." });
+        // 5. Send final success response to the client
+        return res.status(200).json({ message: "Logged out successfully." });
 
     } catch (error) {
-        console.log(error)
-        console.error("Logout Error:", error);
+       
+        logger.error("Logout: Unhandled Internal Server Error:", error);
         return res.status(500).json({ message: "An internal server error occurred during logout." });
     }
 };
-
 module.exports.getUserInfo = async (req, res) => {
     try {
         const user = req.user;
