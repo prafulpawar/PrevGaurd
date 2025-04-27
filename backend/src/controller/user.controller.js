@@ -1,4 +1,4 @@
-const otpGenerator = require('otp-generator')
+
 const redis = require('../utils/redis');
 const bcrypt = require('bcrypt')
 const createChannel = require('../services/emailQueue');
@@ -30,7 +30,7 @@ module.exports.registerUser = async (req, res) => {
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
 
-        const otp = '1234';
+        const otp = crypto.randomInt(100000, 999999).toString();
         logger.info(`Generated OTP ${otp} for ${email}`);
 
         const hashPassword = await bcrypt.hash(password, 10);
