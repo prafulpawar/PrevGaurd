@@ -10,7 +10,7 @@
 // })
 
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+// import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -18,9 +18,9 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-  build: {
-    rollupOptions: {
-      external: ['react-redux'], // Externalize react-redux
-    }
-  }
+  // build: {
+  //   rollupOptions: {
+  //     external: ['react-redux'], // Externalize react-redux
+  //   }
+  // }
 });
