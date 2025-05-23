@@ -53,44 +53,7 @@ function Profile() {
             </div>
           </div>
 
-          {/* <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Security</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-md font-medium text-gray-800">Password</h3>
-                <p className="text-sm text-gray-600 mt-1">Change your account password.</p>
-                <button onClick={handleChangePassword} className="mt-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <KeyIcon className="h-5 w-5 mr-2 text-gray-400" /> Change Password
-                </button>
-              </div>
-
-              <hr />
-
-              <div>
-                <h3 className="text-md font-medium text-gray-800">Passkeys (WebAuthn)</h3>
-                <p className="text-sm text-gray-600 mt-1">Manage your registered passkeys for passwordless login.</p>
-                <div className="mt-3 space-y-2">
-                  <div className="text-sm text-gray-500 italic">No passkeys registered yet (or loading...).</div>
-                  <button onClick={handleAddPasskey} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <FingerPrintIcon className="h-5 w-5 mr-2" /> Add New Passkey
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white shadow rounded-lg p-6 border border-red-300">
-            <h2 className="text-lg font-medium text-red-700 mb-4">Danger Zone</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-md font-medium text-gray-800">Delete Account</h3>
-                <p className="text-sm text-gray-600 mt-1">Permanently delete your account and all associated data. This action cannot be undone.</p>
-                <button onClick={handleDeleteAccount} className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                  <TrashIcon className="h-5 w-5 mr-2" /> Delete My Account
-                </button>
-              </div>
-            </div>
-          </div> */}
+         
 
 
         </div>

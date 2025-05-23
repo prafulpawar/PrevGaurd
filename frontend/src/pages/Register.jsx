@@ -20,12 +20,12 @@ const Register = () => {
   const error = useSelector(Ierror);
   const isLoadingValue = useSelector(isLoading);
 
-  const [validationErrors, setValidationErrors] = useState({});  // ✅ state for validation errors
+  const [validationErrors, setValidationErrors] = useState({});  
 
   const handleChange = (e) => {
     dispatch(updateFormData({ field: e.target.name, value: e.target.value }));
     dispatch(clearError());
-    setValidationErrors({}); // clear validation errors on input change
+    setValidationErrors({});
   };
 
   const validateForm = () => {
@@ -149,7 +149,7 @@ const Register = () => {
               error={validationErrors?.confirmPassword}
             />
 
-            {/* If you want to add image upload, you can uncomment and add validations later */}
+       
 
             <div>
               <Button type="submit" isLoading={isLoadingValue} fullWidth>

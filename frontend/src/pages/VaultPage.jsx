@@ -254,7 +254,7 @@ function VaultPage() {
     
     const handleRegisterSubmit = (e) => {
         e.preventDefault();
-        setRegisterValidationError(''); // Clear local validation
+        setRegisterValidationError('');
         if (password.length < 6) {
             setRegisterValidationError("Password must be at least 6 characters long.");
             return;
@@ -410,7 +410,7 @@ function VaultPage() {
                 
                 return (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Folder List Column */}
+                       
                         <div className="md:col-span-1">
                              <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-xl font-semibold text-gray-800">Folders</h2>
@@ -446,10 +446,10 @@ function VaultPage() {
                         <div className="md:col-span-2">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-xl font-semibold text-gray-800 truncate pr-2">
-                                    {/* Display selected folder name or prompt */}
+                                    
                                     {selectedFolderId ? `Items in "${folders.find(f => f._id === selectedFolderId)?.name || '...'}"` : 'Select a Folder'}
                                 </h2>
-                                {/* Show Add Item button only if a folder is selected */}
+                             
                                 {selectedFolderId && (
                                     <button onClick={() => openAddItemModal(selectedFolderId)} title="Add New Item" className="p-1 rounded-full text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 flex-shrink-0 disabled:opacity-50" disabled={!selectedFolderId || anyDataActionLoading}>
                                         <DocumentPlusIcon className="h-6 w-6" />
@@ -463,12 +463,12 @@ function VaultPage() {
                                             {items.map((item) => (
                                                 <li key={item._id} className="group px-4 py-3 sm:px-6 hover:bg-gray-50 cursor-pointer transition duration-150 ease-in-out relative">
                                                     <div className="flex items-center justify-between">
-                                                        {/* Main item info - clickable */}
+                                                     
                                                         <div className="flex items-center space-x-3 truncate flex-1 mr-2" onClick={() => !anyDataActionLoading && openViewItemModal(item)}>
                                                             <DocumentIcon className="h-5 w-5 text-gray-400 flex-shrink-0" />
                                                             <p className="text-sm font-medium text-gray-900 truncate">{item.title}</p>
                                                         </div>
-                                                        {/* Action buttons - appear on hover */}
+                                                      
                                                          <div className="flex-shrink-0 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                               <button
                                                                   onClick={(e) => { e.stopPropagation(); !anyDataActionLoading && openViewItemModal(item); }} // Prevent li click, open modal

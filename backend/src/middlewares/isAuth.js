@@ -10,7 +10,7 @@ module.exports.verifyAuth = async (req, res, next) => {
 
         const token = authHeader.split(" ")[1];
         
-        // Check if token is blacklisted
+       
         const blacklistedKey = `blacklisted:accessToken:${token}`;
         const isBlacklisted = await redis.exists(blacklistedKey);
         if (isBlacklisted) {

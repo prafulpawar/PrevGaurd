@@ -13,7 +13,7 @@ const rateLimiter = async (req, res, next) => {
         const currentRequests = await redis.incr(key);
 
         if (currentRequests === 1) {
-            await redis.expire(key, WINDOW_SIZE_IN_SECONDS); // Set TTL only for the first request
+            await redis.expire(key, WINDOW_SIZE_IN_SECONDS); 
         }
 
         if (currentRequests > RATE_LIMIT) {

@@ -151,11 +151,7 @@ function SharedDataDashboard() {
         }));
     };
 
-    //-- START Send Operation
-   
-   // ... (previous code) ...
-
-    //-- START Send Operation
+  
 
     const handleAddSubmit = async (e) => { 
         e.preventDefault();
@@ -181,10 +177,7 @@ function SharedDataDashboard() {
         }
     };
 
-    //-- End Send Opreation
-
-
-    //-- Start Update Operation --> Shared Data
+    
     const handleUpdateSubmit = async (e) => { 
         e.preventDefault();
         if (!currentItemToUpdate) return;
@@ -209,7 +202,7 @@ function SharedDataDashboard() {
            
         }
     };
-    //-- End Update Opration --> Shared Data
+ 
 
    
 
@@ -261,11 +254,7 @@ function SharedDataDashboard() {
                     </div>
 
                   
-                    {/* <div className="md:col-span-1 bg-white shadow rounded-lg p-4 min-h-[150px] flex flex-col justify-center items-center text-center">
-                        <InformationCircleIcon className="h-10 w-10 text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-500">Chart data will be displayed here.</p>
-                        <p className="text-xs text-gray-400">(Insights based on shared data types)</p>
-                    </div> */}
+                  
 
                    
                     <div className="md:col-span-1 flex md:justify-end items-start">

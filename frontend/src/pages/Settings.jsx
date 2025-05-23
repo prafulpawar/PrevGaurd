@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../pages/Navbar'; // Adjust path if necessary
 import { Cog6ToothIcon, MoonIcon, SunIcon, BellAlertIcon, EnvelopeIcon, ServerIcon } from '@heroicons/react/24/outline';
 
-// Helper Component for Toggle Switch UI
+
 const ToggleSwitch = ({ label, enabled, onChange, description = "" }) => (
     <div className="flex items-center justify-between py-3">
         <div>
@@ -29,35 +29,33 @@ const ToggleSwitch = ({ label, enabled, onChange, description = "" }) => (
 
 
 function Settings() {
-    // --- Placeholder State (Replace with actual state/logic) ---
-    const [darkModeEnabled, setDarkModeEnabled] = useState(false); // Visual only for now
+  
+    const [darkModeEnabled, setDarkModeEnabled] = useState(false); 
     const [emailNotifications, setEmailNotifications] = useState(true);
     const [pushNotifications, setPushNotifications] = useState(false);
-    // ------------------------------------------------------------
-
-    // --- Placeholder Handlers (Implement actual logic later) ---
+    
     const handleDarkModeToggle = () => {
         setDarkModeEnabled(!darkModeEnabled);
         alert('Dark mode functionality needs full implementation (updating HTML class and saving preference).');
-        // Add logic to actually change theme and save preference
+        
     };
 
     const handleEmailToggle = () => {
         setEmailNotifications(!emailNotifications);
-        // Add logic to save preference to backend
+       
     };
 
     const handlePushToggle = () => {
          setPushNotifications(!pushNotifications);
-        // Add logic to handle push notification subscription/unsubscription
+  
         alert('Push notification functionality requires service workers and backend setup.');
     };
 
     const handleExportData = () => {
         alert('Export data functionality not implemented yet.');
-        // Add logic to call backend API to generate and download user data
+      
     };
-     // -----------------------------------------------------------
+     
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -70,7 +68,7 @@ function Settings() {
                 </header>
 
                 <div className="space-y-8">
-                    {/* Appearance Section */}
+                  
                     <div className="bg-white shadow rounded-lg p-6">
                         <h2 className="text-lg font-medium text-gray-900 mb-1">Appearance</h2>
                          <div className="divide-y divide-gray-200">
@@ -80,11 +78,11 @@ function Settings() {
                                 enabled={darkModeEnabled}
                                 onChange={handleDarkModeToggle}
                              />
-                             {/* Add other appearance settings like font size if needed */}
+                           
                          </div>
                     </div>
 
-                    {/* Notifications Section */}
+                  
                     <div className="bg-white shadow rounded-lg p-6">
                         <h2 className="text-lg font-medium text-gray-900 mb-1">Notifications</h2>
                          <div className="divide-y divide-gray-200">
@@ -103,7 +101,7 @@ function Settings() {
                          </div>
                     </div>
 
-                     {/* Data Management Section */}
+                   
                      <div className="bg-white shadow rounded-lg p-6">
                          <h2 className="text-lg font-medium text-gray-900 mb-4">Data Management</h2>
                          <div className="space-y-4">
@@ -118,7 +116,7 @@ function Settings() {
                                      Export Data
                                  </button>
                              </div>
-                            {/* Maybe add a "Delete All Tracked Data" option here too */}
+                         
                          </div>
                      </div>
 

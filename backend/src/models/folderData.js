@@ -7,10 +7,10 @@ const folderSchema = new mongoose.Schema({
     },
     items: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Item' // Correct ref name
+        ref: 'Item' 
     }],
 
-}, { timestamps: true }); // Add timestamps
+}, { timestamps: true });
 
 const FolderModel = mongoose.model('Folder', folderSchema); 
 module.exports = FolderModel;

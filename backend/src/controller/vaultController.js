@@ -13,7 +13,7 @@ const IV_LENGTH = 12;
 const SALT_LENGTH = 16;
 const AUTH_TAG_LENGTH = 16; 
 
-// --- Vault Registration ---
+
 module.exports.registerVaultController = async (req, res) => {
     try {
         const { password } = req.body;
@@ -194,7 +194,7 @@ module.exports.itemVaultController = async (req, res) => {
             iv: iv.toString('hex'),
             encryptedContent: encryptedContent,
             authTag: authTag.toString('hex'),
-            // folderRef: folderId // Optional: Add if direct queries by folder are needed outside the vault structure
+           
         });
 
         folder.items.push(newItem._id);
@@ -208,7 +208,7 @@ module.exports.itemVaultController = async (req, res) => {
                 title: newItem.title,
                 createdAt: newItem.createdAt
             },
-            folderId: folderId // Include folderId so frontend knows where to place it
+            folderId: folderId 
         });
 
     } catch (error) {
@@ -223,7 +223,7 @@ module.exports.itemVaultController = async (req, res) => {
     }
 };
 
-// --- Fetch Vault Data (Folders and Item Metadata) ---
+
 module.exports.getVaultDataController = async (req, res) => {
     try {
         const userId = req.user?._id;
@@ -236,22 +236,21 @@ module.exports.getVaultDataController = async (req, res) => {
                 path: 'folders',
                 populate: {
                     path: 'items',
-                    model: 'Item', // Ensure model name matches your ItemModel export name
-                    select: '_id title createdAt' // Only fetch non-sensitive fields
+                    model: 'Item',
+                    select: '_id title createdAt' 
                 }
             })
-            .select('folders _id salt'); // Select folders, id, and crucially the salt for client-side derivation checks (if needed) or future ops. Don't send password hash.
+            .select('folders _id salt'); 
 
         if (!vault) {
-            // This implies user exists but no vault is registered
+            
             return res.status(404).json({ message: "Vault not found for this user. Needs registration." });
         }
 
-        // Structure the data for the frontend
+      
         const responseData = {
             vaultId: vault._id,
-            // Salt might be useful if frontend needs to verify password before certain actions without hitting backend again
-            // salt: vault.salt, // Consider implications before sending salt to client
+           
             folders: vault.folders.map(folder => ({
                 _id: folder._id,
                 name: folder.name,
@@ -274,7 +273,7 @@ module.exports.getVaultDataController = async (req, res) => {
     }
 };
 
-// --- Decrypt Item ---
+
 module.exports.decryptItemController = async (req, res) => {
     try {
         const userId = req.user?._id;
@@ -292,7 +291,7 @@ module.exports.decryptItemController = async (req, res) => {
         }
 
         // 1. Find vault, verify password AND get salt
-        const vault = await VaultModel.findOne({ userRef: userId }).select('+password +salt'); // Explicitly select needed fields
+        const vault = await VaultModel.findOne({ userRef: userId }).select('+password +salt');
         if (!vault || !vault.salt || !vault.password) {
             return res.status(404).json({ message: "Vault not found or configuration error." });
         }
@@ -303,7 +302,7 @@ module.exports.decryptItemController = async (req, res) => {
         }
 
         // 2. Find the item including encrypted fields
-        const item = await ItemModel.findById(itemId).select('+encryptedContent +iv +authTag'); // Select all needed fields
+        const item = await ItemModel.findById(itemId).select('+encryptedContent +iv +authTag'); 
         if (!item || !item.iv || !item.authTag || !item.encryptedContent) {
             return res.status(404).json({ message: "Item not found or missing encryption data." });
         }
@@ -327,7 +326,7 @@ module.exports.decryptItemController = async (req, res) => {
             decryptedContent += decipher.final('utf8');
         } catch (decryptionError) {
              console.error("Decryption failed (likely auth tag mismatch):", decryptionError);
-             // This is often due to wrong password OR corrupted data
+            
              return res.status(401).json({ message: "Decryption failed. Incorrect password or data corrupted." });
         }
 
@@ -336,14 +335,14 @@ module.exports.decryptItemController = async (req, res) => {
 
     } catch (error) {
         console.error("Item Decryption Failed:", error);
-         // Catch potential Buffer errors or other unexpected issues
+        
         if (error.code === 'ERR_CRYPTO_AEAD_BAD_TAG') {
-            // This specific error was likely handled above, but catch just in case
+           
              return res.status(401).json({ message: "Decryption failed. Incorrect password or data corrupted." });
         }
         return res.status(500).json({
             message: "Failed to decrypt item",
-            error: "An unexpected error occurred during decryption." // Avoid sending detailed internal errors
+            error: "An unexpected error occurred during decryption." 
         });
     }
 };

@@ -35,7 +35,7 @@ const calculateDataRisk = (applications) => {
         if (app.locationAccess === 'yes') {
             appRisk += riskPoints.location;
         }
-        // Check if notes field exists and has content (not just null/undefined)
+       
         if (app.notes && app.notes.length > 0) {
              appRisk += riskPoints.notes;
         }
